@@ -1,0 +1,2 @@
+# Haku
+A discord bot.
