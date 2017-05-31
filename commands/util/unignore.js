@@ -1,35 +1,27 @@
 const { Command } = require('discord-akairo');
 const { db } = require('../../util.js');
 
+const permCheck = {
+  client: (member) => member.id === member.client.ownerID,
+  guild: (member) => member.hasPermission('MANAGE_SERVER'),
+  channel: (member) => member.hasPermission('MANAGE_CHANNLES')
+};
+
 async function exec(msg, args) {
   const { member, scope } = args;
-  if (!member) return msg.util.reply('you need to specfy a user.');
-  const id = member.id;
-
-  if (scope === 'global') {
-    if (msg.author.id !== msg.client.ownerID) {
-      return msg.util.reply('only the bot owner can unignore globally.');
-    }
-
-    const exists = await db.table('blacklist').get(id);
-    if (!exists) return msg.util.reply(`${member.user.tag} is not ignored.`);
-
-    await db.table('blacklist').get(id).delete();
-    return msg.util.reply(`removed ${member.user.tag} from the blacklist.`);
+  if (!member) return msg.util.error('couldn\'t find member or no member specified.');
+  if (!permCheck[scope](msg.member)) {
+    return msg.util.error('you do not have permission to ignore in that scope.');
   }
 
-  if (scope === 'guild') {
-    if (!msg.member.hasPermission('MANAGE_SERVER')) {
-      return msg.util.reply('you do not have permission to unignore other members.');
-    }
+  const [table, obj] = scope === 'client' ? ['client', msg.client.user] : [`${scope}s`, msg[scope]];
+  const blacklist = await db.get(table, obj, 'blacklist');
 
-    const blacklist = await db.getBlacklist(msg.guild);
-    if (!blacklist.includes(id)) return msg.util.reply(`${member.user.tag} is not ignored.`);
+  if (!blacklist[member.id]) return msg.util.error(`**${member.user.tag}** is not ignored for this ${scope}.`);
 
-    blacklist.splice(blacklist.indexOf(id), 1);
-    await db.update('guild', { blacklist, id: msg.guild.id });
-    return msg.util.reply(`removed ${member.user.tag} from the guild blacklist.`);
-  }
+  blacklist[member.id] = false;
+  await db.update(table, { id: obj.id, blacklist });
+  return msg.util.success(`**${member.user.tag}** has been removed from the blacklist of this ${scope}.`);
 }
 
 module.exports = new Command('unignore', exec, {
@@ -41,7 +33,7 @@ module.exports = new Command('unignore', exec, {
     },
     {
       id: 'scope',
-      type: 'lowercase',
+      type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
   ]

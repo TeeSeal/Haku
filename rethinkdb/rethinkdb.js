@@ -1,64 +1,68 @@
 const r = require('rethinkdbdash')({ db: 'haku' }); // eslint-disable-line
 
 const templates = {
-  user: { profileTemplate: 0 },
-  guild: {
-    blacklist: [],
+  client: {
+    blacklist: {},
+    disabled: {}
+  },
+  users: { gems: 0 },
+  guilds: {
+    blacklist: {},
+    disabled: {},
     reps: {}
+  },
+  channels: {
+    blacklist: {},
+    disabled: {}
   }
 };
 
 const strip = {
-  user(user) {
+  client(client) {
+    return { id: client.id };
+  },
+  users(user) {
     const { id, username, discriminator } = user;
     return { id, username, discriminator };
   },
-  guild(guild) {
+  guilds(guild) {
     const { id, name } = guild;
+    return { id, name };
+  },
+  channels(channel) {
+    const { id, name } = channel;
     return { id, name };
   }
 };
 
 const helpers = {
-  async get(type, obj) {
-    const plural = `${type}s`;
-    const item = await r.table(plural).get(obj.id);
-    if (item) return item;
+  async get(table, obj, key) {
+    await check(table, obj);
 
-    const created = create(type, obj);
-    await await r.table(plural).insert(created);
-    return created;
+    let query = r.table(table).get(obj.id);
+    if (key) query = query(key);
+    return query;
   },
-  async update(type, obj) {
-    const plural = `${type}s`;
-    const query = r.table(plural).get(obj.id);
-    const item = await query;
-    if (item) return await query.update(obj);
-  },
-  async getBlacklist(guild) {
-    if (guild) {
-      await check('guild', guild);
-      return await r.table('guilds').get(guild.id)('blacklist');
-    }
-    return Object.keys(await r.table('blacklist'));
+  async update(table, obj) {
+    await check(table, obj);
+    return r.table(table).get(obj.id).update(obj);
   },
   async rep(member, amount) {
     await check('guild', member.guild);
-    return await r.table('guilds').get(member.guild.id)
+    return r.table('guilds').get(member.guild.id)
       .update({ reps: { [member.id]: r.row('reps')(member.id).default(0).add(amount) } });
   }
 };
 
 async function check(type, obj) {
-  const plural = `${type}s`;
-  const exists = await r.table(plural).hasFields(obj.id);
+  const exists = await r.table(type).hasFields(obj.id);
   if (exists.length > 0) return true;
-  return await r.table(plural).insert(create(type, obj));
+  return r.table(type).insert(create(type, obj));
 }
 
 async function checkTables() {
   const dbTables = await r.tableList();
-  const tables = ['users', 'guilds', 'blacklist'];
+  const tables = ['client', 'users', 'guilds', 'channels'];
 
   for (const table of tables) {
     if (!dbTables.includes(table)) {

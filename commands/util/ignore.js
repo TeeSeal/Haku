@@ -1,35 +1,27 @@
 const { Command } = require('discord-akairo');
 const { db } = require('../../util.js');
 
+const permCheck = {
+  client: (member) => member.id === member.client.ownerID,
+  guild: (member) => member.hasPermission('MANAGE_SERVER'),
+  channel: (member) => member.hasPermission('MANAGE_CHANNLES')
+};
+
 async function exec(msg, args) {
   const { member, scope } = args;
-  if (!member) return msg.util.reply('you need to specfy a user.');
-  const id = member.id;
-
-  if (scope === 'global') {
-    if (msg.author.id !== msg.client.ownerID) {
-      return msg.util.reply('only the bot owner can ignore globally.');
-    }
-
-    const exists = await db.table('blacklist').get(id);
-    if (exists) return msg.util.reply(`${member.user.tag} is already ignored.`);
-
-    await db.table('blacklist').insert({ id });
-    return msg.util.reply(`added ${member.user.tag} to the blacklist.`);
+  if (!member) return msg.util.error('you need to specfy a user.');
+  if (!permCheck[scope](msg.member)) {
+    return msg.util.error('you do not have permission to ignore in that scope.');
   }
 
-  if (scope === 'guild') {
-    if (!msg.member.hasPermission('MANAGE_SERVER')) {
-      return msg.util.reply('you do not have permission to ignore other members.');
-    }
+  const [table, obj] = scope === 'client' ? ['client', msg.client.user] : [`${scope}s`, msg[scope]];
+  const blacklist = await db.get(table, obj, 'blacklist');
 
-    const blacklist = await db.getBlacklist(msg.guild);
-    if (blacklist.includes(id)) return msg.util.reply(`${member.user.tag} is already ignored.`);
+  if (blacklist[member.id]) return msg.util.error(`**${member.user.tag}** is already ignored for this ${scope}.`);
 
-    blacklist.push(id);
-    await db.update('guild', { blacklist, id: msg.guild.id });
-    return msg.util.reply(`added ${member.user.tag} to the guild blacklist.`);
-  }
+  blacklist[member.id] = true;
+  await db.update(table, { id: obj.id, blacklist });
+  return msg.util.success(`**${member.user.tag}** has been added to the blacklist of this ${scope}.`);
 }
 
 module.exports = new Command('ignore', exec, {
@@ -41,7 +33,7 @@ module.exports = new Command('ignore', exec, {
     },
     {
       id: 'scope',
-      type: 'lowercase',
+      type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
   ]

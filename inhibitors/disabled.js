@@ -7,10 +7,10 @@ async function exec(msg) {
       ? ['client', msg.client.user]
       : [`${scope}s`, msg[scope]];
 
-    const blacklist = await db.get(table, obj, 'blacklist');
-    if (blacklist[msg.author.id]) Promise.reject();
+    const disabled = await db.get(table, obj, 'disabled');
+    if (disabled[msg.util.command.id]) return Promise.reject();
   }
   return Promise.resolve();
 }
 
-module.exports = new Inhibitor('blacklist', exec, { reason: 'blacklist' });
+module.exports = new Inhibitor('disabled', exec, { reason: 'disabled' });
