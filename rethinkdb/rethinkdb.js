@@ -9,7 +9,9 @@ const templates = {
   guilds: {
     blacklist: {},
     disabled: {},
-    reps: {}
+    reps: {},
+    defaultVolume: 25,
+    playlists: {}
   },
   channels: {
     blacklist: {},

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = require('../../util.js');
+const { db } = helpers;
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
@@ -36,5 +36,14 @@ module.exports = new Command('ignore', exec, {
       type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
-  ]
+  ],
+  description: stripIndents`
+    Prevent a user from using commands.
+    Optional arguments: \`scope\`
+    Defaults to guild.
+
+    **Usage:**
+    \`ignore TeeSeal\` => ignores the user in the current guild.
+    \`ignore TeeSeal channel\` => ignores the user in the current channel.
+  `
 });

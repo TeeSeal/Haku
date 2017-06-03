@@ -1,3 +1,6 @@
+global.helpers = require('./helpers.js');
+Object.assign(global, require('common-tags'));
+
 const { token, prefix, ownerID } = require('./config');
 const { AkairoClient } = require('discord-akairo');
 const logr = require('logr');

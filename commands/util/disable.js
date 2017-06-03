@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = require('../../util.js');
+const { db } = helpers;
 
 const forbidden = ['enable'];
 const permCheck = {
@@ -38,5 +38,14 @@ module.exports = new Command('disable', exec, {
       type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
-  ]
+  ],
+  description: stripIndents`
+    Disable a command.
+    Optional arguments: \`scope\`
+    Defaults to guild.
+
+    **Usage:**
+    \`disable ping\` => disables the ping command in the guild.
+    \`disable ping channel\` => disables the ping command in the channel.
+  `
 });

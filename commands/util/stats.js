@@ -6,4 +6,7 @@ function exec(msg) {
   msg.util.reply(moment.duration(msg.client.uptime).format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]'));
 }
 
-module.exports = new Command('stats', exec, { aliases: ['stats'] });
+module.exports = new Command('stats', exec, {
+  aliases: ['stats'],
+  description: 'Get some information about the bot.'
+});

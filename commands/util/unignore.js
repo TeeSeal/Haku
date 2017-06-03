@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = require('../../util.js');
+const { db } = helpers;
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
@@ -36,5 +36,14 @@ module.exports = new Command('unignore', exec, {
       type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
-  ]
+  ],
+  description: stripIndents`
+    Unignore an ignored user.
+    Optional arguments: \`scope\`
+    Defaults to guild.
+
+    **Usage:**
+    \`unignore TeeSeal\` => unignores the user in the current guild.
+    \`unignore TeeSeal channel\` => unignores the user in the current channel.
+  `
 });

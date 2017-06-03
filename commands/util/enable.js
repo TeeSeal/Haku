@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = require('../../util.js');
+const { db } = helpers;
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
@@ -36,5 +36,14 @@ module.exports = new Command('enable', exec, {
       type: ['client', 'guild', 'channel'],
       default: 'guild'
     }
-  ]
+  ],
+  description: stripIndents`
+    Enable a disabled command.
+    Optional arguments: \`scope\`
+    Defaults to guild.
+
+    **Usage:**
+    \`enable ping\` => enables the ping command in the guild.
+    \`enable ping channel\` => enables the ping command in the channel.
+  `
 });

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = require('../../util.js');
+const { db } = helpers;
 
 async function exec(msg, args) {
   const { member } = args;
@@ -15,5 +15,6 @@ module.exports = new Command('rep-', exec, {
       id: 'member',
       type: 'member'
     }
-  ]
+  ],
+  description: 'Remove some rep from a user.'
 });

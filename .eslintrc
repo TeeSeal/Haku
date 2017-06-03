@@ -60,7 +60,6 @@
     "eol-last": "error",
     "func-names": "error",
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
-    "id-length": ["error", { "exceptions": ["i", "j", "a", "b"] }],
     "indent": ["error", 2],
     "key-spacing": "error",
     "keyword-spacing": ["error", {
@@ -78,7 +77,6 @@
     "new-cap": "error",
     "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 5 }],
     "no-array-constructor": "error",
-    "no-bitwise": "warn",
     "no-inline-comments": "error",
     "no-lonely-if": "error",
     "no-mixed-operators": "error",
@@ -115,5 +113,9 @@
     "rest-spread-spacing": "error",
     "template-curly-spacing": "error",
     "yield-star-spacing": "error"
+  },
+  "globals": {
+    "helpers": true,
+    "stripIndents": true
   }
 }
