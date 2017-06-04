@@ -1,4 +1,5 @@
 const { Command } = require('discord-akairo');
+const { stripIndents } = helpers;
 
 function exec(msg, args) {
   const [from, to] = args.to === 0

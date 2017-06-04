@@ -26,10 +26,10 @@ const format = {
 };
 
 module.exports = {
-  async getPlaylistItems(link) {
+  async getPlaylistItems(playlistId) {
     const result = await axios.get(`${api}playlistItems`, {
       params: {
-        playlistId: extractId(link),
+        playlistId,
         key,
         maxResults: 50,
         fields: 'items(contentDetails(videoId))',
@@ -37,10 +37,8 @@ module.exports = {
       }
     });
 
-    return Promise.all(result.data.items.map(async video => {
-      const res = await getById(video.contentDetails.videoId);
-      return format.video(res.data.items[0]);
-    }));
+    const id = result.data.items.map(video => video.contentDetails.videoId).join();
+    return getById(id).then(res => res.data.items.map(video => format.video(video)));
   },
   async findVideo(query) {
     if (/^https?:\/\/(www.youtube.com|youtube.com|youtu.be)\//.test(query)) {
@@ -58,7 +56,14 @@ module.exports = {
     return format.video(res.data.items[0]);
   },
   async getVideos(query) {
-    return /playlist/.test(query) ? this.getPlaylistItems(query) : [await this.findVideo(query)];
+    if (/playlist/.test(query)) return this.getPlaylistItems(extractId(query));
+
+    if (/[\w\-_]{34}/.test(query)) {
+      const result = await getById(query, 'playlist');
+      if (result.data.items) return this.getPlaylistItems(query);
+    }
+
+    return [await this.findVideo(query)];
   }
 };
 

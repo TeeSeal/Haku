@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = helpers;
+const { db, stripIndents } = helpers;
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,

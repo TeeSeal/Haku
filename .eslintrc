@@ -115,7 +115,6 @@
     "yield-star-spacing": "error"
   },
   "globals": {
-    "helpers": true,
-    "stripIndents": true
+    "helpers": true
   }
 }

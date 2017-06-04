@@ -9,6 +9,7 @@ const client = new AkairoClient({
   prefix,
   ownerID,
   handleEdits: true,
+  automateCategories: true,
   commandDirectory: './commands/',
   inhibitorDirectory: './inhibitors/'
 });

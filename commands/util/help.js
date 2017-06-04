@@ -1,10 +1,10 @@
 const { Command } = require('discord-akairo');
-
+const { stripIndents } = helpers;
 async function exec(msg, args) {
   const { command } = args;
   if (command) return msg.util.send(command.description);
 
-  const list = this.handler.modules.map(cmd => {
+  const list = this.handler.modules.filter(cmd => !cmd.ownerOnly).map(cmd => {
     let string = `**${cmd.id}** | ${cmd.description.split('\n')[0]}`;
     if (cmd.aliases.length > 1) string += `\nAliases: ${cmd.aliases.slice(1).map(a => `\`${a}\``).join(', ')}`;
     return string;

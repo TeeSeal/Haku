@@ -1,6 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist, db } = helpers;
-// 16763904
+const { Playlist, db, stripIndents } = helpers;
 
 async function exec(msg, args) {
   const { vol, def } = args;

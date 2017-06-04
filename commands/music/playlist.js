@@ -1,9 +1,10 @@
 const { Command } = require('discord-akairo');
-const { Playlist, db } = helpers;
+const { Playlist, db, stripIndents, paginate } = helpers;
 
 async function exec(msg, args) {
   const playlist = Playlist.get(msg.guild.id);
   const { save, del, all, name } = args;
+  let { page } = args;
   const [song, queue] = playlist ? [playlist.song, playlist.queue] : [null, null];
 
   if (save ^ del ^ all) {
@@ -12,13 +13,22 @@ async function exec(msg, args) {
     if (all) {
       const list = Object.keys(playlists).map(key => {
         return `**${key}** | by ${msg.guild.members.get(playlists[key].author).displayName}`;
-      }).join('\n');
+      });
+
+      const paginated = paginate(list);
+      if (page < 1 || !page) page = 1;
+      if (page > paginated.length) page = paginated.length;
 
       return msg.util.send('\u200b', {
         files: [{ attachment: 'assets/icons/list.png' }],
         embed: {
           title: 'Available playlists:',
-          description: list,
+          description: stripIndents`
+            ${paginated[page - 1].join('\n')}
+
+            **Page: ${page}/${paginated.length}**
+            Use: \`playlist page=<integer>\` to view another page.
+          `,
           color: 6711039,
           thumbnail: { url: 'attachment://list.png' }
         }
@@ -60,12 +70,22 @@ async function exec(msg, args) {
 
   if (!playlist) { return msg.util.error('nothing is currently playing.'); }
 
-  const list = queue.map(s => `- ${s.linkString}`).join('\n');
+  const list = queue.map(s => `- ${s.linkString}`);
+  const paginated = paginate(list);
+  if (page > paginated.length) page = paginated.length;
+
   return msg.util.send('\u200b', {
     files: [{ attachment: 'assets/icons/list.png' }],
     embed: {
       title: 'Playlist:',
-      description: `**Now playing:** ${song.linkString}\n\n${list}`,
+      description: stripIndents`
+        **Now playing:** ${song.linkString}
+
+        ${paginated[page - 1].join('\n')}
+
+        **Page: ${page}/${paginated.length}**
+        Use: \`playlist page=<integer>\` to view another page.
+      `,
       color: 6711039,
       thumbnail: { url: 'attachment://list.png' }
     }
@@ -89,6 +109,18 @@ module.exports = new Command('playlist', exec, {
       id: 'all',
       match: 'flag',
       prefix: '-all'
+    },
+    {
+      id: 'page',
+      type: word => {
+        if (!word || isNaN(word)) return null;
+        const num = parseInt(word);
+        if (num < 1) return null;
+        return num;
+      },
+      match: 'prefix',
+      prefix: 'page=',
+      default: 1
     },
     {
       id: 'name',
