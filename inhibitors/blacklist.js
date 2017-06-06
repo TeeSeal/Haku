@@ -4,7 +4,7 @@ const { db } = helpers;
 async function exec(msg) {
   for (const scope of ['client', 'guild', 'channel']) {
     const [table, obj] = scope === 'client'
-      ? ['client', msg.client.user]
+      ? ['client', this.client.user]
       : [`${scope}s`, msg[scope]];
 
     const blacklist = await db.get(table, obj, 'blacklist');

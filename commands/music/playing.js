@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = helpers;
+const { Playlist } = structures;
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -7,7 +7,7 @@ async function exec(msg) {
   if (!playlist) return msg.util.error('nothing is currently playing.');
   const { song } = playlist;
 
-  return msg.util.send('\u200b', {
+  return msg.util.send({
     files: [{ attachment: 'assets/icons/time.png' }],
     embed: {
       title: song.title,

@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo');
 const { stripIndents } = helpers;
-async function exec(msg, args) {
+
+function exec(msg, args) {
   const { command } = args;
   if (command) return msg.util.send(command.description);
 

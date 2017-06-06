@@ -41,12 +41,12 @@ module.exports = {
     return getById(id).then(res => res.data.items.map(video => format.video(video)));
   },
   async findVideo(query) {
-    if (/^https?:\/\/(www.youtube.com|youtube.com|youtu.be)\//.test(query)) {
+    if (/^(https?:\/\/)?(www\.)?youtu\.?be(\.com)?\/.+$/.test(query)) {
       const result = await getById(extractId(query));
       return format.video(result.data.items[0]);
     }
 
-    if (/[\w\-_]{11}/.test(query)) {
+    if (/^[\w\-_]{11}$/.test(query)) {
       const result = await getById(query);
       if (result.data.items) return format.video(result.data.items[0]);
     }
@@ -58,7 +58,7 @@ module.exports = {
   async getVideos(query) {
     if (/playlist/.test(query)) return this.getPlaylistItems(extractId(query));
 
-    if (/[\w\-_]{34}/.test(query)) {
+    if (/^[\w\-_]{34}$/.test(query)) {
       const result = await getById(query, 'playlist');
       if (result.data.items) return this.getPlaylistItems(query);
     }

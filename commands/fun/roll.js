@@ -28,7 +28,9 @@ module.exports = new Command('roll', exec, {
   ],
   description: stripIndents`
     Roll a random number.
-    Optional arguments: \`from\`, \`to\`
+    **Optional arguments:**
+    \`from\` - lower margin
+    \`to\` - higher margin
 
     **Usage:**
     \`roll\` => random number between 1 and 100.

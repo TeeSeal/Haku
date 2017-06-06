@@ -14,7 +14,7 @@ async function exec(msg, args) {
     return msg.util.error('you do not have permission to ignore in that scope.');
   }
 
-  const [table, obj] = scope === 'client' ? ['client', msg.client.user] : [`${scope}s`, msg[scope]];
+  const [table, obj] = scope === 'client' ? ['client', this.client.user] : [`${scope}s`, msg[scope]];
   const blacklist = await db.get(table, obj, 'blacklist');
 
   if (!blacklist[member.id]) return msg.util.error(`**${member.user.tag}** is not ignored for this ${scope}.`);
@@ -39,8 +39,8 @@ module.exports = new Command('unignore', exec, {
   ],
   description: stripIndents`
     Unignore an ignored user.
-    Optional arguments: \`scope\`
-    Defaults to guild.
+    **Optional arguments:** \`scope\`
+    \`scope\` - the scope in which to unignore the user (defaults to guild).
 
     **Usage:**
     \`unignore TeeSeal\` => unignores the user in the current guild.

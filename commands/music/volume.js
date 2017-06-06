@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
-const { Playlist, db, stripIndents } = helpers;
+const { db, stripIndents } = helpers;
+const { Playlist } = structures;
 
 async function exec(msg, args) {
   const { vol, def } = args;
@@ -13,7 +14,7 @@ async function exec(msg, args) {
   const { volume, song } = playlist;
 
   if (!vol) {
-    return msg.util.send('\u200b', {
+    return msg.util.send({
       files: [{ attachment: `assets/icons/volumeUp.png` }],
       embed: {
         title: song.title,
@@ -45,7 +46,7 @@ async function exec(msg, args) {
   const name = vol < volume ? 'volumeDown.png' : 'volumeUp.png';
 
   playlist.setVolume(vol);
-  return msg.util.send('\u200b', {
+  return msg.util.send({
     files: [{ attachment: `assets/icons/${name}` }],
     embed: {
       title: song.title,
@@ -83,7 +84,8 @@ module.exports = new Command('volume', exec, {
   description: stripIndents`
     Change playback volume.
     Ranges from 1 to 100.
-    Optional flags: \`-default\`
+    **Optional flags:**
+    \`-default\` - set the default volume in this guild to the given value
 
     **Usage:**
     \`volume 30\` => sets the volume to 30%.

@@ -1,5 +1,5 @@
-global.helpers = require('./helpers.js');
-Object.assign(global, require('common-tags'));
+global.helpers = require('./util/helpers.js');
+global.structures = require('./structures/all.js');
 
 const { token, prefix, ownerID } = require('./config');
 const { AkairoClient } = require('discord-akairo');

@@ -1,34 +1,62 @@
 const { Command } = require('discord-akairo');
-const { Playlist, Song, youtube, db, stripIndents, paginate } = helpers;
+const { youtube, db, stripIndents, paginate } = helpers;
+const { Playlist, Song } = structures;
 
 async function exec(msg, args) {
-  const { query, load, rand } = args;
-  const playlist = Playlist.get(msg.guild.id);
-  const volume = await db.get('guilds', msg.guild, 'defaultVolume');
+  const { query, load, rand, volume } = args;
+  const { defaultVolume, maxSongDuration } = await db.get('guilds', msg.guild);
 
   if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.');
-  if (playlist && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
+
+  const playlist = Playlist.get(msg.guild.id) || new Playlist({ msg, defaultVolume, maxSongDuration });
+  if (msg.guild.me.voiceChannel && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
   const videos = load ? await loadPlaylist(query, msg.guild) : await youtube.getVideos(query);
   if (!videos) return msg.util.error('there is no such playlist.');
-  let songs = videos.map(video => new Song(video, msg.member));
+  let songs = videos.map(video => new Song(video, msg.member, { volume }));
   if (rand) songs = shuffle(songs);
 
-  if (playlist) songs.forEach(song => playlist.add(song));
-  else new Playlist({ msg, volume, songs }); // eslint-disable-line
+  const [added, removed] = playlist.add(songs);
 
-  const paginated = paginate(songs);
-  const leftOver = paginated.slice(1).reduce((a, b) => a + b.length, 0);
+  if (removed.length !== 0) {
+    const rPaginated = paginate(removed);
+    const rLeftOver = rPaginated.slice(1).reduce((a, b) => a + b.length, 0);
 
-  return msg.util.send('\u200b', {
+    await msg.util.send({
+      files: [{ attachment: 'assets/icons/clear.png' }],
+      embed: {
+        title: 'Failded to add:',
+        description: stripIndents`
+          ${rPaginated[0].map(obj => stripIndents`
+            - ${obj.song.linkString}
+            Reason: ${obj.reason}
+          `).join('\n')}
+          ${rPaginated[1] ? `and ${rLeftOver} more.` : ''}
+        `,
+        color: 16731469,
+        thumbnail: { url: 'attachment://clear.png' },
+        author: {
+          name: msg.member.displayName,
+          icon_url: msg.member.user.avatarURL // eslint-disable-line
+        }
+      }
+    });
+  }
+
+  if (added.length === 0) return msg.util.error('nothing was added to the playlist.');
+
+  const aPaginated = paginate(added);
+  const aLeftOver = aPaginated.slice(1).reduce((a, b) => a + b.length, 0);
+
+  return msg.util.send({
     files: [{ attachment: 'assets/icons/playlistAdd.png' }],
     embed: {
       title: 'Added to playlist:',
       description: stripIndents`
-        ${paginated[0].map(song => `- ${song.linkString}`).join('\n')}
-        ${paginated[1] ? `and ${leftOver} more.` : ''}
+        ${aPaginated[0].map(song => `- ${song.linkString}`).join('\n')}
+        ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
       `,
       color: 6711039,
       thumbnail: { url: 'attachment://playlistAdd.png' },
@@ -59,6 +87,7 @@ function shuffle(array) {
 
 module.exports = new Command('play', exec, {
   aliases: ['play', 'yt'],
+  editable: false,
   args: [
     {
       id: 'load',
@@ -72,17 +101,40 @@ module.exports = new Command('play', exec, {
     },
     {
       id: 'query',
-      match: 'rest'
+      match: 'rest',
+      type: line => {
+        const url = line.split(' ').find(word => /^(https?:\/\/)?(www\.)?youtu\.?be(\.com)?\/.+$/.test(word));
+        if (url) return url;
+        return line;
+      }
+    },
+    {
+      id: 'volume',
+      match: 'prefix',
+      prefix: ['volume=', 'vol=', 'v='],
+      type: word => {
+        if (!word || isNaN(word)) return null;
+        const num = parseInt(word);
+        if (num < 1) return 1;
+        if (num > 100) return 100;
+        return num;
+      }
     }
   ],
   description: stripIndents`
     Play some music.
-    Optional flags: \`-load\`, \`-shuffle\`
+    **Optional arguments:**
+    \`volume\` - play the song(s) at the given volume rather than the default one.
+
+    **Optional flags:**
+    \`-load\` - load a saved playlist.
+    \`-shuffle\` - shuffle the playlist before playing.
 
     **Usage:**
-    \`play something\` => searches youtube for 'something' and adds the first result to the queue
-    \`play -load test\` => loads the saved playlist called 'test' and adds it to the queue
-    \`play -load test -shuffle\` => shuffles the playlist before adding to queue
+    \`play something\` => searches youtube for 'something' and adds the first result to the queue.
+    \`play one two vol=35\` => searches youtube for 'one two' and adds the first result to the queue with the volume at 35%.
+    \`play -load test\` => loads the saved playlist called 'test' and adds it to the queue.
+    \`play -load test -shuffle\` => shuffles the playlist before adding to queue.
     Shuffle also works on youtube playlists.
 
     **The argument can be:**

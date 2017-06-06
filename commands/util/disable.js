@@ -16,7 +16,7 @@ async function exec(msg, args) {
     return msg.util.error('you do not have permission to disable commands in that scope.');
   }
 
-  const [table, obj] = scope === 'client' ? ['client', msg.client.user] : [`${scope}s`, msg[scope]];
+  const [table, obj] = scope === 'client' ? ['client', this.client.user] : [`${scope}s`, msg[scope]];
   const disabled = await db.get(table, obj, 'disabled');
 
   if (disabled[command.id]) return msg.util.error(`**${command.id}** is already disabled for this ${scope}.`);
@@ -41,8 +41,8 @@ module.exports = new Command('disable', exec, {
   ],
   description: stripIndents`
     Disable a command.
-    Optional arguments: \`scope\`
-    Defaults to guild.
+    **Optional arguments:**
+    \`scope\` - the scope in which to disable the command (defaults to guild).
 
     **Usage:**
     \`disable ping\` => disables the ping command in the guild.

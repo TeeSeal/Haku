@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = helpers;
+const { Playlist } = structures;
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -12,7 +12,7 @@ async function exec(msg) {
   const { song } = playlist;
   song.dispatcher.end('skipped');
 
-  return msg.util.send('\u200b', {
+  return msg.util.send({
     files: [{ attachment: 'assets/icons/skip.png' }],
     embed: {
       title: song.title,

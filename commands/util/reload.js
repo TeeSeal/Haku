@@ -9,7 +9,7 @@ function exec(msg, args) {
 
 module.exports = new Command('reload', exec, {
   aliases: ['reload', 'rld'],
-  description: 'Reload a command',
+  description: 'Reload a command.',
   ownderOnly: true,
   args: [
     {

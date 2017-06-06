@@ -14,7 +14,7 @@ async function exec(msg, args) {
     return msg.util.error('you do not have permission to ignore in that scope.');
   }
 
-  const [table, obj] = scope === 'client' ? ['client', msg.client.user] : [`${scope}s`, msg[scope]];
+  const [table, obj] = scope === 'client' ? ['client', this.client.user] : [`${scope}s`, msg[scope]];
   const blacklist = await db.get(table, obj, 'blacklist');
 
   if (blacklist[member.id]) return msg.util.error(`**${member.user.tag}** is already ignored for this ${scope}.`);
@@ -39,8 +39,8 @@ module.exports = new Command('ignore', exec, {
   ],
   description: stripIndents`
     Prevent a user from using commands.
-    Optional arguments: \`scope\`
-    Defaults to guild.
+    **Optional arguments:**
+    \`scope\` - the scope in which to ignore the user (defaults to guild).
 
     **Usage:**
     \`ignore TeeSeal\` => ignores the user in the current guild.

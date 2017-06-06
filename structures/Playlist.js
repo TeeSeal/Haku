@@ -2,16 +2,17 @@ const playlists = new Map();
 
 module.exports = class {
   constructor(options = {}) {
-    this.queue = options.songs;
+    this.maxSongDuration = options.maxSongDuration * 60;
+    this.queue = [];
     this.channel = options.msg.channel;
     this.id = this.channel.guild.id;
     this.voiceChannel = options.msg.member.voiceChannel;
     this.song = null;
     this.connection = null;
-    this._volume = options.volume / 50 || 0.50;
+    this.defaultVolume = this.convert(options.defaultVolume) || 0.50;
+    this._volume = this.defaultVolume;
     this.paused = false;
     playlists.set(this.id, this);
-    this.connectAndPlay();
   }
 
   connectAndPlay() {
@@ -21,9 +22,23 @@ module.exports = class {
     });
   }
 
+  filter(songs) {
+    const removed = [];
+    const filtered = songs.filter(song => {
+      // if (song.member.id === song.member.client.ownerID) return true;
+      if (song.duration > this.maxSongDuration) {
+        removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });
+        return false;
+      }
+      return true;
+    });
+
+    return [filtered, removed];
+  }
+
   play(song) {
     if (!song) {
-      this.channel.send('\u200b', {
+      this.channel.send({
         files: [{ attachment: 'assets/icons/clear.png' }],
         embed: {
           color: 16731469,
@@ -40,7 +55,9 @@ module.exports = class {
       return this.destroy();
     }
 
-    this.channel.send('\u200b', {
+    this.song = song;
+    this._volume = this.convert(song.volume) || this.defaultVolume;
+    this.channel.send({
       files: [{ attachment: 'assets/icons/play.png' }],
       embed: {
         title: song.title,
@@ -50,7 +67,7 @@ module.exports = class {
         fields: [
           {
             name: 'Now playing.',
-            value: `Duration: ${song.durationString}`
+            value: `Duration: ${song.durationString} | Volume: ${this.volume}%`
           }
         ],
         author: {
@@ -60,12 +77,17 @@ module.exports = class {
       }
     });
 
-    this.song = song;
     song.play(this.connection, { volume: this._volume })
-      .on('end', () => setTimeout(() => this.play(this.queue.shift()), 4));
+      .on('end', () => setTimeout(() => this.play(this.queue.shift()), 10));
   }
 
-  add(song) { this.queue.push(song); }
+  add(songs) {
+    const [filtered, removed] = this.filter(songs);
+    this.queue = this.queue.concat(filtered);
+    if (!this.song && filtered.length !== 0) this.connectAndPlay();
+    return [filtered, removed];
+  }
+
   skip() { this.song.dispatcher.end(); }
   shuffle() { this.queue = shuffle(this.queue); }
 
@@ -79,8 +101,8 @@ module.exports = class {
     this.paused = false;
   }
 
-  setVolume(vol) {
-    this._volume = vol / 50;
+  setVolume(volume) {
+    this._volume = this.convert(volume);
     this.song.dispatcher.setVolume(this._volume);
   }
 
@@ -92,6 +114,7 @@ module.exports = class {
     playlists.delete(this.id);
   }
 
+  convert(volume) { return volume / 50; }
   static get(id) { return playlists.get(id); }
   static has(id) { return playlists.has(id); }
 };

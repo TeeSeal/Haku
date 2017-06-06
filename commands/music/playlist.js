@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
-const { Playlist, db, stripIndents, paginate } = helpers;
+const { db, stripIndents, paginate } = helpers;
+const { Playlist } = structures;
 
 async function exec(msg, args) {
   const playlist = Playlist.get(msg.guild.id);
@@ -11,6 +12,9 @@ async function exec(msg, args) {
     const playlists = await db.get('guilds', msg.guild, 'playlists');
 
     if (all) {
+      if (Object.keys(playlists).length === 0) {
+        return msg.util.reply('there aren\'t any playlists yet, why don\'t you create one?');
+      }
       const list = Object.keys(playlists).map(key => {
         return `**${key}** | by ${msg.guild.members.get(playlists[key].author).displayName}`;
       });
@@ -19,7 +23,7 @@ async function exec(msg, args) {
       if (page < 1 || !page) page = 1;
       if (page > paginated.length) page = paginated.length;
 
-      return msg.util.send('\u200b', {
+      return msg.util.send({
         files: [{ attachment: 'assets/icons/list.png' }],
         embed: {
           title: 'Available playlists:',
@@ -27,7 +31,7 @@ async function exec(msg, args) {
             ${paginated[page - 1].join('\n')}
 
             **Page: ${page}/${paginated.length}**
-            Use: \`playlist page=<integer>\` to view another page.
+            Use: \`playlist -all page=<integer>\` to view another page.
           `,
           color: 6711039,
           thumbnail: { url: 'attachment://list.png' }
@@ -74,7 +78,7 @@ async function exec(msg, args) {
   const paginated = paginate(list);
   if (page > paginated.length) page = paginated.length;
 
-  return msg.util.send('\u200b', {
+  return msg.util.send({
     files: [{ attachment: 'assets/icons/list.png' }],
     embed: {
       title: 'Playlist:',
@@ -112,14 +116,14 @@ module.exports = new Command('playlist', exec, {
     },
     {
       id: 'page',
+      match: 'prefix',
+      prefix: ['page=', 'p='],
       type: word => {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
         if (num < 1) return null;
         return num;
       },
-      match: 'prefix',
-      prefix: 'page=',
       default: 1
     },
     {
@@ -129,7 +133,10 @@ module.exports = new Command('playlist', exec, {
   ],
   description: stripIndents`
     Shows the current playlist.
-    Optional flags: \`-save\`, \`-delete\`, \`-all\`
+    **Optional flags:**
+    \`-save\` - save the current playlist
+    \`-delete\` - delete a saved playlist
+    \`-all\` - view all available playlists
 
     **Usage:**
     \`playlist -save test\` => saves the current playlist under the name 'test'

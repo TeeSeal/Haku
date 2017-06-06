@@ -29,7 +29,7 @@ async function exec(msg, args) {
     `}`;
   }
 
-  return msg.util.send('\u200b', {
+  return msg.util.send({
     embed: {
       title: 'EVAL:',
       description: output,

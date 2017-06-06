@@ -1,10 +1,11 @@
 const ytdl = require('ytdl-core');
 
 module.exports = class {
-  constructor(video, member) {
+  constructor(video, member, options) {
     Object.assign(this, video);
     this.member = member;
     this.url = `https://www.youtube.com/watch?v=${this.id}`;
+    this.volume = options.volume;
     this.dispatcher = null;
   }
 
