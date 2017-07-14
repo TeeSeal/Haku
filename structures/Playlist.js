@@ -89,7 +89,7 @@ class Playlist {
       .on('end', () => setTimeout(() => this.play(this.queue.shift()), 10));
   }
 
-  add(songs, beginning) {
+  add(songs) {
     const [filtered, removed] = this.filter(songs);
     this.queue = this.queue.concat(filtered);
     if (!this.song) {

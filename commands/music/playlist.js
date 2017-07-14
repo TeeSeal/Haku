@@ -66,6 +66,7 @@ async function exec(msg, args) {
   const paginated = paginate(list);
   if (page > paginated.length) page = paginated.length;
 
+
   return msg.util.send({
     files: [{ attachment: 'assets/icons/list.png' }],
     embed: {
@@ -73,11 +74,15 @@ async function exec(msg, args) {
       description: stripIndents`
         **Now playing:** ${song.linkString}
 
-        ${paginated[page - 1].join('\n')}
+        ${paginated.length === 0
+          ? ''
+          : `
+              ${paginated[page - 1].join('\n')}
 
-        **Page: ${page}/${paginated.length}**
-        Use: \`playlist page=<integer>\` to view another page.
-      `,
+              **Page: ${page}/${paginated.length}**
+              Use: \`playlist page=<integer>\` to view another page.
+            `
+        }`,
       color: 6711039,
       thumbnail: { url: 'attachment://list.png' }
     }
