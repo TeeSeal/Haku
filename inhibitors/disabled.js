@@ -1,8 +1,9 @@
 const { Inhibitor } = require('discord-akairo');
-const { db } = helpers;
+const { db } = _util;
 
 async function exec(msg) {
-  for (const scope of ['client', 'guild', 'channel']) {
+  if (msg.channel.type === 'dm') return Promise.resolve();
+  for (const scope of ['guild', 'channel']) {
     const [table, obj] = scope === 'client'
       ? ['client', this.client.user]
       : [`${scope}s`, msg[scope]];

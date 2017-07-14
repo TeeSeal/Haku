@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents, paginate } = helpers;
-const { Playlist } = structures;
+const { db, stripIndents, paginate } = _util;
+const { Playlist } = _struct;
 
 async function exec(msg, args) {
   const playlist = Playlist.get(msg.guild.id);
@@ -46,19 +46,7 @@ async function exec(msg, args) {
       if (playlists[name]) return msg.util.error('a playlist with that name already exists.');
       playlists[name] = {
         author: msg.member.id,
-        list: [
-          {
-            id: song.id,
-            title: song.title,
-            duration: song.duration
-          }
-        ].concat(queue.map(s => {
-          return {
-            id: s.id,
-            title: s.title,
-            duration: s.duration
-          };
-        }))
+        list: [song.plain].concat(queue.map(s => s.plain))
       };
     }
 

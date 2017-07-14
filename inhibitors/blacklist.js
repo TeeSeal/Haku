@@ -1,5 +1,5 @@
 const { Inhibitor } = require('discord-akairo');
-const { db } = helpers;
+const { db } = _util;
 
 async function exec(msg) {
   for (const scope of ['client', 'guild', 'channel']) {
@@ -9,6 +9,7 @@ async function exec(msg) {
 
     const blacklist = await db.get(table, obj, 'blacklist');
     if (blacklist[msg.author.id]) Promise.reject();
+    if (scope === 'client' && msg.channel.type === 'dm') return Promise.resolve();
   }
   return Promise.resolve();
 }

@@ -1,22 +1,28 @@
 const { Command } = require('discord-akairo');
-const { Inventory, Item } = structures;
-const { paginate, stripIndents } = helpers;
+const { Inventory, Item } = _struct;
+const { paginate, stripIndents } = _util;
 
 async function exec(msg, args) {
-  const { user, name } = args;
+  const { user, item } = args;
   let { page } = args;
-  const item = name ? await Item.get(name) : null;
-  const [pron, pos] = user.id === msg.author.id ? ['you', 'have'] : [user.username, 'has'];
+  const [pron, neg, pos] = user.id === msg.author.id ? ['you', 'don\'t', 'have'] : [user.username, 'doesn\'t', 'has'];
+
+  const inventory = await Inventory.fetch(user);
 
   if (item) {
-    const balance = await Inventory.get(user, item);
-    return msg.util.reply(`${pron} currently ${pos} **${balance} ${item.format(balance)}**.`);
+    const itemGroup = inventory.get(item.id);
+    if (!itemGroup) return msg.util.error('you don\'t have any of that.');
+    return msg.util.reply(`${pron} currently ${pos} **${itemGroup.amount} ${itemGroup.name}**.`);
   }
 
-  const inventory = await Inventory.get(user);
-  const lines = paginate(Object.keys(inventory), 3).map(arr => {
-    return arr.map(key => `${key}: ${inventory[key]}`).join(' | ');
+  const lines = inventory.items.map(itemGroup => {
+    return `**${itemGroup.amount}** ${itemGroup.name}`;
   });
+
+  const gemGroup = inventory.get('gem');
+  if (gemGroup) lines.unshift(`**${gemGroup.amount} ${gemGroup.name}**`);
+
+  if (lines.length === 0) return msg.util.reply(`can't show what ${pron} ${neg} have.`);
 
   const paginated = paginate(lines);
   if (page < 1 || !page) page = 1;
@@ -30,7 +36,7 @@ async function exec(msg, args) {
         ${paginated[page - 1].join('\n')}
 
         **Page: ${page}/${paginated.length}**
-        Use: \`inventory page=<integer>\` to view another page.
+        Use: \`${this.id} page=<integer>\` to view another page.
       `,
       color: 6711039,
       thumbnail: { url: 'attachment://list.png' }
@@ -39,8 +45,9 @@ async function exec(msg, args) {
 }
 
 module.exports = new Command('balance', exec, {
-  aliases: ['balance', 'inventory'],
+  aliases: ['balance', 'inventory', 'bal'],
   ownderOnly: true,
+  split: 'sticky',
   description: stripIndents`
     View your or someone else's inventory.
 
@@ -60,9 +67,9 @@ module.exports = new Command('balance', exec, {
       default: msg => msg.author
     },
     {
-      id: 'name',
+      id: 'item',
       match: 'prefix',
-      type: 'lowercase',
+      type: word => Item.resolve(word),
       prefix: ['item=', 'i=']
     },
     {

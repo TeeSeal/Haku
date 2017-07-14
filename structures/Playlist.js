@@ -1,15 +1,16 @@
 const playlists = new Map();
 
-module.exports = class {
-  constructor(options = {}) {
-    this.maxSongDuration = options.maxSongDuration * 60;
+class Playlist {
+  constructor(msg, guild) {
+    this.maxSongDuration = guild.maxSongDuration * 60;
+    this.songLimit = guild.songLimit;
     this.queue = [];
-    this.channel = options.msg.channel;
+    this.channel = msg.channel;
     this.id = this.channel.guild.id;
-    this.voiceChannel = options.msg.member.voiceChannel;
+    this.voiceChannel = msg.member.voiceChannel;
     this.song = null;
     this.connection = null;
-    this.defaultVolume = this.convert(options.defaultVolume) || 0.50;
+    this.defaultVolume = this.convert(guild.defaultVolume) || 0.50;
     this._volume = this.defaultVolume;
     this.paused = false;
     playlists.set(this.id, this);
@@ -32,6 +33,13 @@ module.exports = class {
       }
       return true;
     });
+
+    const diff = this.queue.length + filtered.length - this.songLimit;
+    if (diff > 0) {
+      for (const song of filtered.splice(filtered.length - diff, diff)) {
+        removed.push({ song, reason: `playlist song limit reached. (max. ${this.songLimit} songs)` });
+      }
+    }
 
     return [filtered, removed];
   }
@@ -81,10 +89,13 @@ module.exports = class {
       .on('end', () => setTimeout(() => this.play(this.queue.shift()), 10));
   }
 
-  add(songs) {
+  add(songs, beginning) {
     const [filtered, removed] = this.filter(songs);
     this.queue = this.queue.concat(filtered);
-    if (!this.song && filtered.length !== 0) this.connectAndPlay();
+    if (!this.song) {
+      if (filtered.length !== 0) this.connectAndPlay();
+      else this.destroy();
+    }
     return [filtered, removed];
   }
 
@@ -117,7 +128,7 @@ module.exports = class {
   convert(volume) { return volume / 50; }
   static get(id) { return playlists.get(id); }
   static has(id) { return playlists.has(id); }
-};
+}
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -129,3 +140,5 @@ function shuffle(array) {
 
   return array;
 }
+
+module.exports = Playlist;

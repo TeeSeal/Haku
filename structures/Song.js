@@ -1,9 +1,10 @@
 const ytdl = require('ytdl-core');
 
-module.exports = class {
+class Song {
   constructor(video, member, options) {
     Object.assign(this, video);
     this.member = member;
+    this.host = 'youtube';
     this.url = `https://www.youtube.com/watch?v=${this.id}`;
     this.volume = options.volume;
     this.dispatcher = null;
@@ -15,6 +16,16 @@ module.exports = class {
   }
 
   toString() { return this.title; }
+
+  get plain() {
+    return {
+      id: this.id,
+      title: this.title,
+      duration: this.duration,
+      host: this.host
+    };
+  }
+
   get durationString() { return format(this.duration); }
   get linkString() { return `[${this.title}](${this.url}) (${format(this.duration)})`; }
 
@@ -25,7 +36,7 @@ module.exports = class {
 
     return `${current} / ${total}  |  ${left} left`;
   }
-};
+}
 
 function format(sec) {
   const hours = leftPad(~~(sec / 3600));
@@ -37,3 +48,5 @@ function format(sec) {
 function leftPad(num) {
   return num > 9 ? num.toString() : `0${num}`;
 }
+
+module.exports = Song;

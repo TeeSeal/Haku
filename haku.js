@@ -1,13 +1,15 @@
-global.helpers = require('./util/helpers.js');
-global.structures = require('./structures/all.js');
+global._util = require('./util/all.js');
+global._struct = require('./structures/all.js');
+global.logr = require('logr');
 
 const { token, prefix, ownerID } = require('./config');
 const { AkairoClient } = require('discord-akairo');
-const logr = require('logr');
+
 
 const client = new AkairoClient({
   prefix,
   ownerID,
+  allowMention: true,
   handleEdits: true,
   automateCategories: true,
   commandDirectory: './commands/',

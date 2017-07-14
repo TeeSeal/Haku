@@ -29,6 +29,7 @@
     "moment": "^2.18.1",
     "moment-duration-format": "^1.3.0",
     "opusscript": "0.0.3",
+    "pluralize": "^5.0.0",
     "rethinkdbdash": "^2.3.28",
     "tsubaki": "^1.1.1",
     "ytdl-core": "^0.14.2"

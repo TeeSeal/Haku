@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = structures;
+const { Playlist } = _struct;
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -10,7 +10,11 @@ async function exec(msg) {
   }
 
   const { song } = playlist;
-  song.dispatcher.end('skipped');
+  if (!msg.member.permissions.has('MANAGE_CHANNELS') && song.member.id !== msg.member.id) {
+    msg.util.error('you can\'t skip this song.');
+  }
+
+  playlist.skip();
 
   return msg.util.send({
     files: [{ attachment: 'assets/icons/skip.png' }],

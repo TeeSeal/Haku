@@ -1,11 +1,11 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents } = helpers;
+const { db, stripIndents } = _util;
 
 const forbidden = ['enable'];
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
-  guild: (member) => member.hasPermission('MANAGE_SERVER'),
-  channel: (member) => member.hasPermission('MANAGE_CHANNLES')
+  guild: (member) => member.permissions.has('MANAGE_GUILD'),
+  channel: (member) => member.permissions.has('MANAGE_CHANNLES')
 };
 
 async function exec(msg, args) {
@@ -16,7 +16,12 @@ async function exec(msg, args) {
     return msg.util.error('you do not have permission to disable commands in that scope.');
   }
 
-  const [table, obj] = scope === 'client' ? ['client', this.client.user] : [`${scope}s`, msg[scope]];
+  if (scope === 'client') {
+    command.disable();
+    return msg.util.success(`**${command.id}** has been disabled in this ${scope}.`);
+  }
+
+  const [table, obj] = [`${scope}s`, msg[scope]];
   const disabled = await db.get(table, obj, 'disabled');
 
   if (disabled[command.id]) return msg.util.error(`**${command.id}** is already disabled for this ${scope}.`);

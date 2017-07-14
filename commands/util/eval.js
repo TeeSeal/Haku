@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { inspect } = require('util');
-const { stripIndents } = helpers;
+const { stripIndents } = _util;
 
 async function exec(msg, args) {
   const { code } = args;

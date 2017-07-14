@@ -1,17 +1,16 @@
 const r = require('rethinkdbdash'); // eslint-disable-line
 
 const templates = {
-  client: {
-    blacklist: {},
-    disabled: {}
-  },
+  client: { blacklist: {} },
   users: { inventory: {} },
   guilds: {
     blacklist: {},
     disabled: {},
     reps: {},
     defaultVolume: 25,
+    maxVolume: 100,
     maxSongDuration: 15,
+    songLimit: 100,
     playlists: {}
   },
   channels: {
@@ -43,12 +42,10 @@ const strip = {
   }
 };
 
-const defaults = { items: [{ id: 'gem', worth: 1, inShop: false }] };
-
 class RethinkDB {
   constructor(options) {
     this.r = r(options);
-    this.checkTables().then(() => this.generateDefaults());
+    this.checkTables();
   }
 
   async get(table, obj, key) {
@@ -84,7 +81,6 @@ class RethinkDB {
   }
 
   async check(type, obj) {
-    if (!templates[type]) return;
     const exists = await this.r.table(type).get(obj.id);
     if (exists) return true;
     return this.r.table(type).insert(create(type, obj));
@@ -92,17 +88,13 @@ class RethinkDB {
 
   async checkTables() {
     const dbTables = await this.r.tableList();
-    const tables = ['client', 'users', 'guilds', 'channels', 'items'];
+    const tables = ['client', 'users', 'guilds', 'channels'];
 
     for (const table of tables) {
       if (!dbTables.includes(table)) {
         await this.r.tableCreate(table);
       }
     }
-  }
-
-  generateDefaults() {
-    for (const item of defaults.items) this.add('items', item);
   }
 }
 

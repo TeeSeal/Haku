@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = structures;
+const { Playlist } = _struct;
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -17,7 +17,7 @@ async function exec(msg) {
       fields: [
         {
           name: song.time,
-          value: '\u200b'
+          value: `Volume: ${playlist.volume}%`
         }
       ],
       author: {

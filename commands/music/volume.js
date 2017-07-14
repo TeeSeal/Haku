@@ -1,9 +1,9 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents } = helpers;
-const { Playlist } = structures;
+const { db, stripIndents } = _util;
+const { Playlist } = _struct;
 
 async function exec(msg, args) {
-  const { vol, def } = args;
+  const { vol } = args;
   const playlist = Playlist.get(msg.guild.id);
 
   if (!playlist) return msg.util.error('nothing is currently playing.');
@@ -23,7 +23,7 @@ async function exec(msg, args) {
         thumbnail: { url: `attachment://volumeUp.png` },
         fields: [
           {
-            name: `Volume: ${playlist.volume}%`,
+            name: `Volume: ${volume}%`,
             value: `\u200b`
           }
         ],
@@ -33,14 +33,6 @@ async function exec(msg, args) {
         }
       }
     });
-  }
-
-  if (def) {
-    if (!msg.member.hasPermission('MANAGE_SERVER')) {
-      return msg.util.error('you do not have permission to set the default volume.');
-    }
-    db.update('guilds', { id: msg.guild.id, defaultVolume: vol });
-    return msg.util.success(`default volume updated to ${vol}%.`);
   }
 
   const name = vol < volume ? 'volumeDown.png' : 'volumeUp.png';
@@ -73,22 +65,21 @@ module.exports = new Command('volume', exec, {
   args: [
     {
       id: 'vol',
-      type: 'integer'
-    },
-    {
-      id: 'def',
-      match: 'flag',
-      prefix: '-default'
+      type: async (word, msg) => {
+        if (!word || isNaN(word)) return null;
+        const num = parseInt(word);
+        const max = await db.get('guilds', msg.guild, 'maxVolume');
+        if (num < 1) return 1;
+        if (num > max) return max;
+        return num;
+      }
     }
   ],
   description: stripIndents`
     Change playback volume.
     Ranges from 1 to 100.
-    **Optional flags:**
-    \`-default\` - set the default volume in this guild to the given value
 
     **Usage:**
     \`volume 30\` => sets the volume to 30%.
-    \`volume 50 -default\` => sets the default volume to 50%.
   `
 });

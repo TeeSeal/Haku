@@ -1,0 +1,56 @@
+[
+  {
+    "id": "gem",
+    "worth": 1,
+    "shop": false,
+    "description": "The basic monetary unit for Haku.",
+    "emoji": "💎",
+    "url": null,
+    "func": "(msg) => msg.util.reply('you use this for exchange, what else did you expect?')"
+  },
+  {
+    "id": "1card",
+    "worth": 15,
+    "shop": false,
+    "description": "Collect all 3 and get a legendary item.",
+    "emoji": null,
+    "url": null,
+    "func": "(msg, inv) => { const cards = inv.resolve(['1card', '2card', '3card']); if (!cards) return msg.util.error('you do not have all 3 cards.'); for (const card of cards) inv.consume(card); inv.update('sanc\\'s pantsu'); return msg.util.success('you combined the cards and got a legendary item!'); }"
+  },
+  {
+    "id": "2card",
+    "worth": 15,
+    "shop": false,
+    "description": "Collect all 3 and get a legendary item.",
+    "emoji": null,
+    "url": null,
+    "func": "(msg, inv) => { const cards = inv.resolve(['1card', '2card', '3card']); if (!cards) return msg.util.error('you do not have all 3 cards.'); for (const card of cards) inv.consume(card); inv.update('sanc\\'s pantsu'); return msg.util.success('you combined the cards and got a legendary item!'); }"
+  },
+  {
+    "id": "3card",
+    "worth": 15,
+    "shop": false,
+    "description": "Collect all 3 and get a legendary item.",
+    "emoji": null,
+    "url": null,
+    "func": "(msg, inv) => { const cards = inv.resolve(['1card', '2card', '3card']); if (!cards) return msg.util.error('you do not have all 3 cards.'); for (const card of cards) inv.consume(card); inv.update('sanc\\'s pantsu'); return msg.util.success('you combined the cards and got a legendary item!'); }"
+  },
+  {
+    "id": "card pack",
+    "worth": 15,
+    "shop": true,
+    "description": "Get a random card.",
+    "emoji": null,
+    "url": null,
+    "func": "(msg, inv) => { const cards = ['1card', '2card', '3card']; const card = cards[Math.floor(Math.random() * cards.length)]; inv.consume('card pack'); inv.update(card); return msg.util.success(`you got a **${card}**!`); }"
+  },
+  {
+    "id": "sanc's pantsu",
+    "worth": 1000,
+    "shop": false,
+    "description": "The legendary item.",
+    "emoji": null,
+    "url": "http://orig03.deviantart.net/6a2d/f/2014/029/7/b/wallpaper_pantsu_by_thetrueleviathan-d748x1t.png",
+    "func": "(msg) => msg.util.reply('you pervert.')"
+  }
+]

@@ -1,10 +1,10 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents } = helpers;
+const { db, stripIndents } = _util;
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
-  guild: (member) => member.hasPermission('MANAGE_SERVER'),
-  channel: (member) => member.hasPermission('MANAGE_CHANNLES')
+  guild: (member) => member.permissions.has('MANAGE_GUILD'),
+  channel: (member) => member.permissions.has('MANAGE_CHANNLES')
 };
 
 async function exec(msg, args) {

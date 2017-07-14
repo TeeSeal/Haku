@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = helpers;
+const { db } = _util;
 
 async function exec(msg, args) {
   const { member } = args;

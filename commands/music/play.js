@@ -1,14 +1,14 @@
 const { Command } = require('discord-akairo');
-const { youtube, db, stripIndents, paginate } = helpers;
-const { Playlist, Song } = structures;
+const { youtube, db, stripIndents, paginate } = _util;
+const { Playlist, Song } = _struct;
 
 async function exec(msg, args) {
   const { query, load, rand, volume } = args;
-  const { defaultVolume, maxSongDuration } = await db.get('guilds', msg.guild);
+  const guild = await db.get('guilds', msg.guild);
 
   if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.');
 
-  const playlist = Playlist.get(msg.guild.id) || new Playlist({ msg, defaultVolume, maxSongDuration });
+  const playlist = Playlist.get(msg.guild.id) || new Playlist(msg, guild);
   if (msg.guild.me.voiceChannel && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
@@ -27,7 +27,7 @@ async function exec(msg, args) {
     await msg.util.send({
       files: [{ attachment: 'assets/icons/clear.png' }],
       embed: {
-        title: 'Failded to add:',
+        title: 'Failed to add:',
         description: stripIndents`
           ${rPaginated[0].map(obj => stripIndents`
             - ${obj.song.linkString}
@@ -112,11 +112,12 @@ module.exports = new Command('play', exec, {
       id: 'volume',
       match: 'prefix',
       prefix: ['volume=', 'vol=', 'v='],
-      type: word => {
+      type: async (word, msg) => {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
+        const max = await db.get('guilds', msg.guild, 'maxVolume');
         if (num < 1) return 1;
-        if (num > 100) return 100;
+        if (num > max) return max;
         return num;
       }
     }
@@ -141,6 +142,7 @@ module.exports = new Command('play', exec, {
     - Link to youtube video
     - Youtube video id
     - Link to youtube playlist
+    - Youtube playlist id
     - Name of saved playlist (with the -playlist flag)
     - Simple query to search youtube for
   `

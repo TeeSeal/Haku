@@ -1,21 +1,20 @@
 const { Command } = require('discord-akairo');
-const { Inventory } = structures;
+const { Inventory, Item } = _struct;
 
 async function exec(msg, args) {
-  const { user, amount, name } = args;
-  const inventory = await Inventory.get(user);
+  const { user, amount, item } = args;
+  if (!item) return msg.util.error('there is no such item available.');
 
-  let finalAmount = (inventory[name] || 0) + amount;
-  if (finalAmount < 0) finalAmount = 0;
-
-  Inventory.update(user, name, finalAmount);
+  const inventory = await Inventory.fetch(user);
+  inventory.update(item, amount);
   return msg.util.success('inventory updated.');
 }
 
 module.exports = new Command('give', exec, {
   aliases: ['give'],
-  ownderOnly: true,
+  ownerOnly: true,
   description: 'Give someone some items.',
+  split: 'sticky',
   args: [
     {
       id: 'user',
@@ -27,8 +26,9 @@ module.exports = new Command('give', exec, {
       default: 1
     },
     {
-      id: 'name',
-      type: 'lowercase'
+      id: 'item',
+      match: 'rest',
+      type: word => Item.resolve(word)
     }
   ]
 });
