@@ -1,9 +1,11 @@
 const r = require('rethinkdbdash'); // eslint-disable-line
+const { prefix } = require('../config');
 
 const templates = {
   client: { blacklist: {} },
   users: { inventory: {} },
   guilds: {
+    prefix,
     blacklist: {},
     disabled: {},
     reps: {},
@@ -45,7 +47,7 @@ const strip = {
 class RethinkDB {
   constructor(options) {
     this.r = r(options);
-    this.checkTables();
+    this.checkTables().then(() => this.loadPrefixes());
   }
 
   async get(table, obj, key) {
@@ -82,8 +84,10 @@ class RethinkDB {
 
   async check(type, obj) {
     const exists = await this.r.table(type).get(obj.id);
-    if (exists) return true;
-    return this.r.table(type).insert(create(type, obj));
+    if (exists) return;
+    await this.r.table(type).insert(create(type, obj));
+    if (type === 'guilds') this.prefixes.set(obj.id, prefix);
+    return;
   }
 
   async checkTables() {
@@ -95,6 +99,10 @@ class RethinkDB {
         await this.r.tableCreate(table);
       }
     }
+  }
+
+  async loadPrefixes() {
+    this.prefixes = new Map(await this.r.table('guilds').map(guild => [guild('id'), guild('prefix')]));
   }
 }
 
