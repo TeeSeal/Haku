@@ -28,7 +28,7 @@ async function exec(msg) {
       ],
       author: {
         name: msg.member.displayName,
-        icon_url: msg.member.user.avatarURL // eslint-disable-line
+        icon_url: msg.author.avatarURL // eslint-disable-line
       }
     }
   });

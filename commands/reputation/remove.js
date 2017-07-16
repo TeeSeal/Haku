@@ -10,6 +10,7 @@ async function exec(msg, args) {
 
 module.exports = new Command('rep-', exec, {
   aliases: ['rep-', 'rep--'],
+  ownerOnly: true,
   args: [
     {
       id: 'member',

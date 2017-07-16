@@ -7,19 +7,21 @@ function exec(msg, args) {
   const channel = msg.channel.type === 'dm' ? msg.channel : msg.author;
 
   const text = this.handler.categories.map(cat => {
-    const list = cat.filter(cmd => !cmd.ownerOnly).map(cmd => {
+    const filtered = cat.filter(cmd => !cmd.ownerOnly && cmd.enabled);
+    if (filtered.size === 0) return null;
+    const list = filtered.map(cmd => {
       let string = `**${cmd.id}** | ${cmd.description.split('\n')[0]}`;
       if (cmd.aliases.length > 1) string += `\nAliases: ${cmd.aliases.slice(1).map(a => `\`${a}\``).join(', ')}`;
       return string;
     }).join('\n\n');
 
     return `__**${cat.id}**__\n\n${list}`;
-  }).join(`\n\n\n`);
+  }).filter(cat => cat).join(`\n\n\n`);
 
   if (msg.channel.type !== 'dm') msg.util.reply('sent you a DM with info.');
   return channel.send(stripIndents`
     **Haku commands**:
-    Use \`help command\` to view more detailed info on a command.
+    Use \`help <command>\` to view more detailed info on a command.
 
     ${text}
   `);

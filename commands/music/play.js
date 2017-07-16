@@ -39,7 +39,7 @@ async function exec(msg, args) {
         thumbnail: { url: 'attachment://clear.png' },
         author: {
           name: msg.member.displayName,
-          icon_url: msg.member.user.avatarURL // eslint-disable-line
+          icon_url: msg.author.avatarURL // eslint-disable-line
         }
       }
     });
@@ -62,7 +62,7 @@ async function exec(msg, args) {
       thumbnail: { url: 'attachment://playlistAdd.png' },
       author: {
         name: msg.member.displayName,
-        icon_url: msg.member.user.avatarURL // eslint-disable-line
+        icon_url: msg.author.avatarURL // eslint-disable-line
       }
     }
   });
