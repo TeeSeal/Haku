@@ -9,7 +9,7 @@ const { AkairoClient } = require('discord-akairo');
 const client = new AkairoClient({
   prefix: msg => {
     if (msg.channel.type === 'dm') return prefix;
-    return _util.db.prefixes.get(msg.guild.id);
+    return _util.db.prefixes.get(msg.guild.id) || prefix;
   },
   ownerID,
   allowMention: true,

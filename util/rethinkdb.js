@@ -1,4 +1,3 @@
-const r = require('rethinkdbdash'); // eslint-disable-line
 const { prefix } = require('../config');
 
 const templates = {
@@ -45,8 +44,8 @@ const strip = {
 };
 
 class RethinkDB {
-  constructor(options) {
-    this.r = r(options);
+  constructor() {
+    this.r = require('rethinkdbdash')({ db: 'haku' });
     this.checkTables().then(() => this.loadPrefixes());
   }
 
@@ -91,6 +90,7 @@ class RethinkDB {
   }
 
   async checkTables() {
+    if (!await this.r.dbList().contains('haku')) await this.r.dbCreate('haku');
     const dbTables = await this.r.tableList();
     const tables = ['client', 'users', 'guilds', 'channels'];
 
@@ -112,4 +112,4 @@ function create(type, obj) {
   return stripped;
 }
 
-module.exports = new RethinkDB({ db: 'haku' });
+module.exports = new RethinkDB();
