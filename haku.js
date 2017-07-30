@@ -16,7 +16,8 @@ const client = new AkairoClient({
   handleEdits: true,
   automateCategories: true,
   commandDirectory: './commands/',
-  inhibitorDirectory: './inhibitors/'
+  inhibitorDirectory: './inhibitors/',
+  listenerDirectory: './listeners/'
 });
 
 client.on('ready', () => logr.success('Haku ready!'));

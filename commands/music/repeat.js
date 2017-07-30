@@ -16,7 +16,7 @@ async function exec(msg, args) {
     ? playlist.queue.concat(arr)
     : arr.concat(playlist.queue);
 
-  return msg.util.success(`The track will be replayed ${times} times ${end ? 'at the end of the queue' : 'after this one'}.`);
+  return msg.util.success(`The track will be replayed ${times ? `${times} times` : ''} ${end ? 'at the end of the queue' : 'after this one'}.`);
 }
 
 module.exports = new Command('repeat', exec, {
