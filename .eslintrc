@@ -113,10 +113,5 @@
     "rest-spread-spacing": "error",
     "template-curly-spacing": "error",
     "yield-star-spacing": "error"
-  },
-  "globals": {
-    "_util": true,
-    "_struct": true,
-    "logr": true
   }
 }

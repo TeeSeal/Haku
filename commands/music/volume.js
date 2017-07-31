@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents } = _util;
-const { Playlist } = _struct;
+const { db, stripIndents } = require('../../util/all.js');
+const { Playlist } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { vol } = args;

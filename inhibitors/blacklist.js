@@ -1,5 +1,5 @@
 const { Inhibitor } = require('discord-akairo');
-const { db } = _util;
+const { db } = require('../util/all.js');
 
 async function exec(msg) {
   for (const scope of ['client', 'guild', 'channel']) {

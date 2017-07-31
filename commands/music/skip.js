@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = _struct;
+const { Playlist } = require('../../structures/all.js');
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);

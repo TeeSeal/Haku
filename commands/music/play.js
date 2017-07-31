@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { youtube, db, stripIndents, paginate } = _util;
-const { Playlist, Song } = _struct;
+const { youtube, db, stripIndents, paginate } = require('../../util/all.js');
+const { Playlist, Song } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { query, load, rand, volume } = args;

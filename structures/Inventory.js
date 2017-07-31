@@ -1,4 +1,4 @@
-const { db } = _util;
+const { db } = require('../util/all.js');
 const Item = require('./Item.js');
 const Collection = require('./Collection.js');
 

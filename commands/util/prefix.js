@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db } = _util;
+const { db } = require('../../util/all.js');
 
 async function exec(msg, args) {
   const { prefix } = args;

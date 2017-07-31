@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { stripIndents, paginate } = _util;
-const { Item } = _struct;
+const { stripIndents, paginate } = require('../../util/all.js');
+const { Item } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { item } = args;

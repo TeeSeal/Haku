@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Inventory, Item } = _struct;
+const { Inventory, Item } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   let { amount, item } = args;
@@ -9,8 +9,7 @@ async function exec(msg, args) {
     amount = 1;
   }
 
-  const shop = Item.SHOP;
-  if (!item || !shop.has(item.id)) return msg.util.error('there is no such item in the shop.');
+  if (!item || Item.SHOP.has(item.id)) return msg.util.error('there is no such item in the shop.');
 
   const itemGroup = item.groupOf(amount);
   const inventory = await Inventory.fetch(msg.author);
@@ -39,7 +38,7 @@ module.exports = new Command('buy', exec, {
     },
     {
       id: 'item',
-      math: 'rest',
+      match: 'rest',
       type: word => Item.resolve(word)
     }
   ]

@@ -2,7 +2,7 @@ const tags = require('common-tags');
 const path = require('path');
 const { pageItemCount } = require('../config.json');
 
-const _util = {
+const util = {
   db: require('./rethinkdb.js'),
   youtube: require('./youtube.js'),
   rootDir: __dirname.split(path.sep).slice(0, -1).join(path.sep),
@@ -17,5 +17,5 @@ const _util = {
   }
 };
 
-Object.assign(_util, tags);
-module.exports = _util;
+Object.assign(util, tags);
+module.exports = util;

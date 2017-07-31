@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = _struct;
-const { db, stripIndents } = _util;
+const { Playlist } = require('../../structures/all.js');
+const { db, stripIndents } = require('../../util/all.js');
 
 async function exec(msg, args) {
   const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args;

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { db, stripIndents } = _util;
+const { db, stripIndents } = require('../../util/all.js');
 
 const forbidden = ['enable'];
 const permCheck = {

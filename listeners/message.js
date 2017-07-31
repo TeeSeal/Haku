@@ -1,5 +1,5 @@
 const { Listener } = require('discord-akairo');
-const { Inventory, Item } = _struct;
+const { Inventory, Item } = require('../structures/all.js');
 
 const cooldowns = [];
 

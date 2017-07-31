@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { stripIndents } = _util;
+const { stripIndents } = require('../../util/all.js');
 
 function exec(msg, args) {
   const { command } = args;

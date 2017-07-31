@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Item } = _struct;
+const { Item } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   if (!args.id) return msg.util.error('gotta give it a name.');
