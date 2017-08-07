@@ -43,7 +43,7 @@ module.exports = {
   },
   async findVideo(query) {
     if (/^(https?:\/\/)?(www\.)?youtu\.?be(\.com)?\/.+$/.test(query)) {
-      const result = await getById(extractId(query));
+      const result = await getById(extractVideoID(query));
       return format.video(result.data.items[0]);
     }
 
@@ -57,9 +57,9 @@ module.exports = {
     return format.video(res.data.items[0]);
   },
   async getVideos(query) {
-    if (/playlist/.test(query)) return this.getPlaylistItems(extractId(query));
+    if (/playlist/.test(query)) return this.getPlaylistItems(extractPlaylistID(query));
 
-    if (/^[\w\-_]{34}$/.test(query)) {
+    if (/^[\w\-_]{12,}$/.test(query)) {
       const result = await getById(query, 'playlist');
       if (result.data.items) return this.getPlaylistItems(query);
     }
@@ -91,8 +91,9 @@ function getById(id, type = 'video') {
   });
 }
 
-function extractId(url) {
-  return url.match(
-    /^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?.*?(?:v|list)=(.*?)(?:&|$)|^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?(?:(?!=).)*\/(.*)$/
-  )[1];
+function extractPlaylistID(url) {
+  return url.match(/list=([\w\-_]+)/)[1];
+}
+function extractVideoID(url) {
+  return url.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/)[2];
 }
