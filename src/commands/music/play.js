@@ -58,6 +58,7 @@ async function exec(msg, args) {
         ${aPaginated[0].map(song => `- ${song.linkString}`).join('\n')}
         ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
       `,
+      image: { url: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null },
       color: 6711039,
       thumbnail: { url: 'attachment://playlistAdd.png' },
       author: {

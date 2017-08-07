@@ -20,11 +20,16 @@ class Table {
   }
 
   set(id, obj = {}) {
-    const entry = this.entries.get(id) || this.build(id, obj);
-    Object.assign(entry, obj);
+    const entry = this.entries.get(id) || this.create(id);
+    entry.set(obj);
     this.entries.set(id, entry);
-    entry.save();
+    entry.save().catch(e => e);
     return entry;
+  }
+
+  create(id) {
+    const obj = Object.assign({ id }, defaults[this.name]);
+    return this.remote.build(obj);
   }
 
   delete(id) {
@@ -32,13 +37,6 @@ class Table {
       this.entries.get(id).destroy();
       this.entries.delete(id);
     }
-  }
-
-  build(id) {
-    const entry = Object.assign({}, defaults[this.name]);
-    entry.id = id;
-    this.entries.set(id, entry);
-    return this.remote.build(entry);
   }
 }
 

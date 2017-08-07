@@ -3,7 +3,7 @@ const { inspect } = require('util');
 const { stripIndents } = require('common-tags');
 
 async function exec(msg, args) {
-  const { code } = args;
+  const { code, noOutput } = args;
   let evaled;
   try {
     evaled = eval(code);
@@ -18,6 +18,7 @@ async function exec(msg, args) {
     output = output.replace(new RegExp(escapeRegExp(this.client.token), 'g'), '--- token was here ---');
   }
 
+  if (noOutput) return;
   return msg.util.send(stripIndents`
     :inbox_tray: **INPUT:**
     \`\`\`js
@@ -57,8 +58,13 @@ module.exports = new Command('eval', exec, {
   description: 'Evaluate some code.',
   args: [
     {
+      id: 'noOutput',
+      match: 'flag',
+      prefix: ['-no', '-noOutput']
+    },
+    {
       id: 'code',
-      match: 'content'
+      match: 'rest'
     }
   ]
 });

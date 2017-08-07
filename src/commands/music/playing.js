@@ -14,6 +14,7 @@ async function exec(msg) {
       url: song.url,
       color: 12517631,
       thumbnail: { url: 'attachment://time.png' },
+      image: { url: song.thumbnail },
       fields: [
         {
           name: song.time,

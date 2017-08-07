@@ -1,6 +1,7 @@
 const { Inhibitor } = require('discord-akairo');
 
 function exec(msg) {
+  if (msg.author.id === this.client.user.id) return false;
   const scopes = msg.guild ? ['client', 'guild', 'channel'] : ['client'];
 
   for (const scope of scopes) {

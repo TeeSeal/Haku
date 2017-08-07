@@ -4,7 +4,7 @@ const key = require('../../config.json').googleAPI;
 const api = 'https://www.googleapis.com/youtube/v3/';
 
 const fields = {
-  video: 'items(id, snippet(title), contentDetails(duration))',
+  video: 'items(id, snippet(title, thumbnails(high(url))), contentDetails(duration))',
   playlist: 'items(id, snippet(title))'
 };
 
@@ -14,6 +14,7 @@ const format = {
     return {
       id: video.id,
       title: video.snippet.title,
+      thumbnail: video.snippet.thumbnails.high.url,
       duration
     };
   },
