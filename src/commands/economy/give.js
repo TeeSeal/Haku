@@ -18,7 +18,10 @@ module.exports = new Command('give', exec, {
   args: [
     {
       id: 'user',
-      type: 'user'
+      type(word, msg) {
+        if (word === 'me') return msg.author;
+        return this.client.util.resolveUser(word, msg.guild.members.map(m => m.user));
+      }
     },
     {
       id: 'item',
