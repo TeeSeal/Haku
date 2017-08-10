@@ -8,8 +8,8 @@ const permCheck = {
 };
 
 function exec(msg, args) {
-  const { command, scope } = args;
-  if (!command) return msg.util.error('you need to specfy a command to enable.');
+  const { toEnable, scope } = args;
+  if (!toEnable) return msg.util.error('you need to specfy a command to enable.');
 
   const [table, id, formattedScope] = getDBData(msg, scope);
   if (!permCheck[table](msg.member)) {
@@ -18,20 +18,38 @@ function exec(msg, args) {
 
   const db = this.client.db[table];
   const { disabled } = db.get(id);
+  let filtered;
 
-  if (!disabled.includes(command.id)) return msg.util.error(`**${command.id}** is not disabled ${formattedScope}.`);
+  if (toEnable instanceof Command) {
+    if (!disabled.includes(toEnable.id)) return msg.util.error(`**${toEnable.id}** is not disabled ${formattedScope}.`);
+    filtered = [toEnable.id];
+  } else {
+    filtered = toEnable.filter(c => disabled.includes(c.id)).map(c => c.id);
+    if (filtered.size === 0) return msg.util.error(`all commands in **${toEnable.id}** are enabled.`);
+  }
 
-  disabled.splice(disabled.indexOf(command.id), 1);
+  for (const cmd of filtered) disabled.splice(disabled.indexOf(cmd.id), 1);
+
   db.set(id, { disabled });
-  return msg.util.success(`**${command.id}** has been enabled ${formattedScope}.`);
+  return msg.util.success(`**${toEnable.id}** has been enabled ${formattedScope}.`);
 }
 
 module.exports = new Command('enable', exec, {
   aliases: ['enable'],
   args: [
     {
-      id: 'command',
-      type: 'command'
+      id: 'toEnable',
+      type(word) {
+        if (word.startsWith('!')) {
+          word = word.slice(1);
+          const result = this.handler.categories.get(word);
+          if (result) return result;
+        }
+
+        const result = this.handler.findCommand(word);
+        if (result) return result;
+        return this.handler.categories.get(word);
+      }
     },
     {
       id: 'scope',
@@ -43,9 +61,11 @@ module.exports = new Command('enable', exec, {
     Enable a disabled command.
     **Optional arguments:**
     \`scope\` - the scope in which to enable a command (defaults to guild).
+    \`category\` - an entire command category to enable (will overwrite the command given).
 
     **Usage:**
     \`enable ping\` => enables the ping command in the guild.
     \`enable ping channel\` => enables the ping command in the channel.
+    \`enable !music\` => enables all music commands in the guild.
   `
 });

@@ -3,6 +3,7 @@ const { stripIndents } = require('../../util/all.js');
 
 function exec(msg, args) {
   const { a, flag, prefix } = args;
+  console.log(a);
   return msg.channel.send(stripIndents`
     \`\`\`json
     a = ${a},
@@ -18,7 +19,10 @@ module.exports = new Command('test', exec, {
   description: 'test.',
   split: 'sticky',
   args: [
-    { id: 'a' },
+    {
+      id: 'a',
+      type: 'commandCategory'
+    },
     {
       id: 'flag',
       match: 'flag',

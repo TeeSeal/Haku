@@ -9,9 +9,9 @@ const permCheck = {
 };
 
 function exec(msg, args) {
-  const { command, scope } = args;
-  if (!command) return msg.util.error('you need to specfy a command to disable.');
-  if (forbidden.includes(command.id)) return msg.util.error(`you can't disable **${command.id}**.`);
+  const { toDisable, scope } = args;
+  if (!toDisable) return msg.util.error('you need to specfy a command/category to disable.');
+  if (toDisable instanceof Command && forbidden.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`);
 
   const [table, id, formattedScope] = getDBData(msg, scope);
   if (!permCheck[table](msg.member)) {
@@ -21,19 +21,35 @@ function exec(msg, args) {
   const db = this.client.db[table];
   const { disabled } = db.get(id);
 
-  if (disabled.includes(command.id)) return msg.util.error(`**${command.id}** is already disabled ${formattedScope}.`);
+  let filtered;
+  if (toDisable instanceof Command) {
+    if (disabled.includes(toDisable.id)) return msg.util.error(`**${toDisable.id}** is already disabled ${formattedScope}.`);
+    filtered = [toDisable.id];
+  } else {
+    filtered = toDisable.filter(c => [disabled, forbidden].every(arr => !arr.includes(c.id))).map(c => c.id);
+    if (filtered.size === 0) return msg.util.error(`all commands in **${toDisable.id}** are already disabled.`);
+  }
 
-  disabled.push(command.id);
-  db.set(id, { disabled });
-  return msg.util.success(`**${command.id}** has been disabled ${formattedScope}.`);
+  db.set(id, { disabled: disabled.concat(filtered) });
+  return msg.util.success(`**${toDisable.id}** has been disabled ${formattedScope}.`);
 }
 
 module.exports = new Command('disable', exec, {
   aliases: ['disable'],
   args: [
     {
-      id: 'command',
-      type: 'command'
+      id: 'toDisable',
+      type(word) {
+        if (word.startsWith('!')) {
+          word = word.slice(1);
+          const result = this.handler.categories.get(word);
+          if (result) return result;
+        }
+
+        const result = this.handler.findCommand(word);
+        if (result) return result;
+        return this.handler.categories.get(word);
+      }
     },
     {
       id: 'scope',
@@ -44,10 +60,12 @@ module.exports = new Command('disable', exec, {
   description: stripIndents`
     Disable a command.
     **Optional arguments:**
-    \`scope\` - the scope in which to disable the command (defaults to guild).
+    \`scope\` - the scope in which to disable a command (defaults to guild).
+    \`category\` - an entire command category to disable (will overwrite the command given).
 
     **Usage:**
     \`disable ping\` => disables the ping command in the guild.
     \`disable ping channel\` => disables the ping command in the channel.
+    \`disable !music\` => disables all music commands in the guild.
   `
 });
