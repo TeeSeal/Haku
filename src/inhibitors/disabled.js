@@ -1,14 +1,16 @@
 const { Inhibitor } = require('discord-akairo');
+const { getDBData } = require('../util/all.js');
 
 function exec(msg) {
-  const scopes = msg.guild ? ['client', 'guild', 'channel'] : ['client'];
+  const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally'];
 
   for (const scope of scopes) {
-    const [table, id] = scope === 'client'
-      ? [scope, 'haku'] : [`${scope}s`, msg[scope].id];
+    const [table, id, formattedScope] = getDBData(msg, scope);
 
-    if (this.client.db[table].get(id)
-      .disabled.includes(msg.util.command.id)) return true;
+    if (this.client.db[table].get(id).disabled.includes(msg.util.command.id)) {
+      msg.util.error(`**${msg.util.command.id}** is disabled ${formattedScope}.`);
+      return true;
+    }
   }
   return false;
 }

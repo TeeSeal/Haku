@@ -13,6 +13,11 @@ const util = {
   },
   capitalize(string) {
     return string[0].toUpperCase() + string.slice(1);
+  },
+  getDBData(msg, scope) {
+    return scope === 'globally'
+      ? ['client', 'haku', scope]
+      : [`${scope}s`, msg[scope].id, `in this ${scope}`];
   }
 };
 
