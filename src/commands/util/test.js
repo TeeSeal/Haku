@@ -3,7 +3,6 @@ const { stripIndents } = require('../../util/all.js');
 
 function exec(msg, args) {
   const { a, flag, prefix } = args;
-  console.log(a);
   return msg.channel.send(stripIndents`
     \`\`\`json
     a = ${a},

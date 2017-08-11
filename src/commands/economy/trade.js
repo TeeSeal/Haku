@@ -5,42 +5,55 @@ const { Inventory, Item } = require('../../structures/all.js');
 async function exec(msg, args) {
   let { member, offer, demand } = args;
   if (!member) return msg.util.error('you need to specify a user to trade with.');
-  if (!offer) return msg.util.error('you must offer something when trading. Use `help trade` to see how to correctly trade.');
+  if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
+    return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly');
+  }
+  if (offer.length > 5 || (demand && (demand.length > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
 
   const oInv = new Inventory(msg.author);
   const dInv = new Inventory(member);
 
-  const oBal = oInv.get(offer.id);
-  if (!oBal || oBal.amount < offer.ammount) return msg.util.error('you do not have sufficient funds.');
+  const oBal = offer.map(item => oInv.get(item.id));
+  if (oBal.length !== offer.length || oBal.some((item, idx) => item.amount < offer[idx].amount)) {
+    return msg.util.error('you do not have sufficient funds.');
+  }
 
-  const dBal = demand ? dInv.get(demand.id) : null;
-  if (demand && (!dBal || dBal.amount < demand.amount)) return msg.util.error(`${member.displayName} doesn't have sufficient funds.`);
+  const dBal = demand ? demand.map(item => dInv.get(item.id)) : null;
+  if (demand && (dBal.length !== demand.length || dBal.some((item, idx) => item.amount < demand[idx].amount))) {
+    return msg.util.error(`**${member.displayName}** doesn't have sufficient funds.`);
+  }
 
-  const statusMsg = await msg.util.send(`${msg.member} ${member}`, {
+  // --- MESSAGE OTPIONS ---
+  const options = {
+    files: [{ attachment: 'src/assets/icons/trade.png' }],
     embed: {
       title: 'ITEM TRADE',
       description: stripIndents`
-        Both parties must click on the ✅ for the trade to be completed.
-        Otherwise click on the ❌ or ignore this message.
-      `,
+      Both parties must click on the ✅ for the trade to be completed.
+      Otherwise click on the ❌ or ignore this message.
+    `,
       fields: [
         {
           name: `${msg.author.tag}`,
-          value: `**${offer.amount}** ${offer.name}`
+          value: offer.map(item => `**${item.amount}** ${item.name}`).join('\n')
         },
         {
           name: `${member.user.tag}`,
-          value: demand ? `**${demand.amount}** ${demand.name}` : '---'
+          value: demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---'
         }
       ],
-      color: 16758861
+      color: 16758861,
+      thumbnail: { url: 'attachment://trade.png' }
     }
-  });
+  };
+  // --- MESSAGE OPTIONS ---
+
+  const statusMsg = await msg.util.send(`${msg.member} ${member}`, options);
 
   await statusMsg.react('✅').then(() => statusMsg.react('❌'));
   const collector = statusMsg.createReactionCollector(
     (r, u) => ['✅', '❌'].includes(r.emoji.name) && [msg.author.id, member.id].includes(u.id),
-    { time: 20e3 }
+    { time: 6e4 }
   );
 
   collector.on('collect', r => {
@@ -57,32 +70,21 @@ async function exec(msg, args) {
     if (!checkMark || ![msg.author.id, member.id].every(id => Array.from(checkMark.users.keys()).includes(id))) {
       status = '**TRADE CANCLED**';
     } else {
-      oInv.update(offer.id, -offer.amount);
-      dInv.update(offer);
+      for (const item of offer) {
+        oInv.update(item.id, -item.amount);
+        dInv.update(item);
+      }
       if (demand) {
-        dInv.update(demand.id, -demand.amount);
-        oInv.update(demand);
+        for (const item of demand) {
+          dInv.update(item.id, -item.amount);
+          oInv.update(item);
+        }
       }
       status = '**TRADE COMPLETED**';
     }
 
-    return statusMsg.edit(`${msg.member} ${member}`, {
-      embed: {
-        title: 'ITEM TRADE',
-        description: status,
-        fields: [
-          {
-            name: `${msg.author.tag}`,
-            value: `**${offer.amount}** ${offer.name}`
-          },
-          {
-            name: `${member.user.tag}`,
-            value: demand ? `**${demand.amount}** ${demand.name}` : '---'
-          }
-        ],
-        color: 16758861
-      }
-    });
+    options.embed.description = status;
+    return statusMsg.edit(`${msg.member} ${member}`, options);
   });
 }
 
@@ -96,11 +98,17 @@ module.exports = new Command('trade', exec, {
     },
     {
       id: 'offer',
-      type: Item.resolveGroup
+      type(string) {
+        if (!string) return null;
+        return string.split(/\s?\+\s?/).map(word => Item.resolveGroup(word));
+      }
     },
     {
       id: 'demand',
-      type: Item.resolveGroup
+      type(string) {
+        if (!string) return null;
+        return string.split(/\s?\+\s?/).map(word => Item.resolveGroup(word));
+      }
     }
   ],
   description: stripIndents`
