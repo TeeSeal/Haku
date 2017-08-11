@@ -3,7 +3,7 @@ const { stripIndents } = require('../../util/all.js');
 const { Inventory, Item } = require('../../structures/all.js');
 
 async function exec(msg, args) {
-  let { member, offer, demand } = args;
+  const { member, tradeDetails: [offer, demand] } = args;
   if (!member) return msg.util.error('you need to specify a user to trade with.');
   if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
     return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly');
@@ -97,17 +97,13 @@ module.exports = new Command('trade', exec, {
       type: 'member'
     },
     {
-      id: 'offer',
+      id: 'tradeDetails',
+      match: 'rest',
       type(string) {
-        if (!string) return null;
-        return string.split(/\s?\+\s?/).map(word => Item.resolveGroup(word));
-      }
-    },
-    {
-      id: 'demand',
-      type(string) {
-        if (!string) return null;
-        return string.split(/\s?\+\s?/).map(word => Item.resolveGroup(word));
+        return string.split(' for ').map(str => {
+          if (!str) return null;
+          return str.split(/[+,]|and/).map(word => Item.resolveGroup(word.trim()));
+        });
       }
     }
   ],
@@ -120,10 +116,13 @@ module.exports = new Command('trade', exec, {
     **Optional arguments:**
     \`demand\` - the items you wish to receive for your offer.
 
-    **NOTE:** when giving both amount and item name, wrap both in double quotes (as seen below).
     **Usage:**
-    \`trade User "50 gems" apple\` - offer User to trade 50 gems for 1 of their apples.
-    \`trade User apple book\` - offer User to trade an apple for a book.
-    \`trade User "300 gems"\` - offer a gift of 300 gems to User.
+    \`trade User 50 gems for apple\` - offer User to trade 50 gems for 1 of their apples.
+    \`trade User apple for book\` - offer User to trade an apple for a book.
+    \`trade User 300 gems\` - offer a gift of 300 gems to User.
+    \`trade User 13 gems, 3 apples for 5 books, 5 chairs\` - self explanatory.
+
+    **NOTE:** to ask for items in return place them after the \`for\` keyword.
+    Most item names used above are not actual items, they were used for demonstrational purposes.
   `
 });

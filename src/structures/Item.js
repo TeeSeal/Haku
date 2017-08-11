@@ -23,7 +23,7 @@ class Item {
   groupOf(amount) {
     const obj = Object.assign({}, this);
     obj.amount = amount;
-    obj.name = capitalize(this.format(amount));
+    obj.name = this.format(amount).split(' ').map(word => capitalize(word)).join(' ');
     obj.price = this.worth * amount;
     return new Item(obj);
   }
