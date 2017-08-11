@@ -63,10 +63,10 @@ class Item {
 
   static resolveGroup(string) {
     const words = string.split(' ');
-    let amount = words.find(word => /^-?\d+$/.test(word));
+    let amount = words.find(word => /(^-?\d+$)|(^an?$)/.test(word));
     if (amount) {
       words.splice(words.indexOf(amount), 1);
-      amount = parseInt(amount);
+      amount = parseInt(amount) || 1;
     } else { amount = 1; }
 
     const item = Item.resolve(words.join(' '));
