@@ -24,7 +24,7 @@ function exec(msg) {
     author: msg.member,
     icon: 'skip',
     color: 'cyan'
-  })).then(() => playlist.fadeVolume(0)).then(() => playlist.skip());
+  })).then(() => playlist.skip());
 }
 
 module.exports = new Command('skip', exec, {

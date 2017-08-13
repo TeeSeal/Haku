@@ -99,7 +99,7 @@ class Playlist {
     return [filtered, removed];
   }
 
-  skip() { this.song.dispatcher.end(); }
+  skip() { this.fadeVolume(0).then(() => this.song.dispatcher.end()); }
   shuffle() { this.queue = shuffle(this.queue); }
 
   pause() {
@@ -130,16 +130,17 @@ class Playlist {
         if (current > (this._volume - 0.05) && current < (this._volume + 0.05)) {
           this.song.dispatcher.setVolume(this._volume);
           clearInterval(interval);
-          setTimeout(resolve, 400);
+          setTimeout(resolve, 800);
         }
       }, 35);
     });
   }
 
   destroy() {
-    this.queue = [];
-    this.voiceChannel.leave();
-    playlists.delete(this.id);
+    this.fadeVolume(0).then(() => {
+      this.voiceChannel.leave();
+      playlists.delete(this.id);
+    });
   }
 
   convert(volume) { return volume / 50; }
