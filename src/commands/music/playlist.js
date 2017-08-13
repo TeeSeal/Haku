@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { stripIndents, paginate } = require('../../util/all.js');
+const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
 const { Playlist } = require('../../structures/all.js');
 
 function exec(msg, args) {
@@ -23,20 +23,17 @@ function exec(msg, args) {
       if (page < 1 || !page) page = 1;
       if (page > paginated.length) page = paginated.length;
 
-      return msg.util.send({
-        files: [{ attachment: 'src/assets/icons/list.png' }],
-        embed: {
-          title: 'Available playlists:',
-          description: stripIndents`
-            ${paginated[page - 1].join('\n')}
+      return msg.util.send(buildEmbed({
+        title: 'Available playlists:',
+        content: stripIndents`
+          ${paginated[page - 1].join('\n')}
 
-            **Page: ${page}/${paginated.length}**
-            Use: \`playlist -all page=<integer>\` to view another page.
-          `,
-          color: 6711039,
-          thumbnail: { url: 'attachment://list.png' }
-        }
-      });
+          **Page: ${page}/${paginated.length}**
+          Use: \`playlist -all page=<integer>\` to view another page.
+        `,
+        icon: 'list',
+        color: 'blue'
+      }));
     }
 
     if (!name) return msg.util.error('you need to give a name for the playlist.');
@@ -66,27 +63,23 @@ function exec(msg, args) {
   const paginated = paginate(list);
   if (page > paginated.length) page = paginated.length;
 
+  return msg.util.send(buildEmbed({
+    title: 'Playlist:',
+    content: stripIndents`
+      **Now playing:** ${song.linkString}
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/list.png' }],
-    embed: {
-      title: 'Playlist:',
-      description: stripIndents`
-        **Now playing:** ${song.linkString}
+      ${paginated.length === 0
+        ? ''
+        : `
+            ${paginated[page - 1].join('\n')}
 
-        ${paginated.length === 0
-          ? ''
-          : `
-              ${paginated[page - 1].join('\n')}
-
-              **Page: ${page}/${paginated.length}**
-              Use: \`playlist page=<integer>\` to view another page.
-            `
-        }`,
-      color: 6711039,
-      thumbnail: { url: 'attachment://list.png' }
-    }
-  });
+            **Page: ${page}/${paginated.length}**
+            Use: \`playlist page=<integer>\` to view another page.
+          `
+      }`,
+    icon: 'list',
+    color: 'blue'
+  }));
 }
 
 module.exports = new Command('playlist', exec, {

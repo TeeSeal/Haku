@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Playlist } = require('../../structures/all.js');
+const { buildEmbed } = require('../../util/all.js');
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -13,25 +14,16 @@ async function exec(msg) {
   playlist.pause();
   const { song } = playlist;
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/pause.png' }],
-    embed: {
-      title: song.title,
-      url: song.url,
-      color: 16763904,
-      thumbnail: { url: 'attachment://pause.png' },
-      fields: [
-        {
-          name: 'Playback paused.',
-          value: '\u200b'
-        }
-      ],
-      author: {
-        name: msg.member.displayName,
-        icon_url: msg.author.avatarURL // eslint-disable-line
-      }
-    }
-  });
+  return msg.util.send(buildEmbed({
+    title: song.title,
+    fields: [
+      ['Playback paused.', '\u200b']
+    ],
+    url: song.url,
+    author: msg.member,
+    icon: 'pause',
+    color: 'yellow'
+  }));
 }
 
 module.exports = new Command('pause', exec, {

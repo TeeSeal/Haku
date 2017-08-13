@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { stripIndents, paginate } = require('../../util/all.js');
+const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
 const { Item } = require('../../structures/all.js');
 
 function exec(msg, args) {
@@ -15,30 +15,27 @@ function exec(msg, args) {
   }
 
   const fields = shop.map(itm => {
-    return {
-      name: `${itm.id}${itm.emoji ? `\u2000${itm.emoji}` : ''}`,
-      value: `${itm.worth} 💎`,
-      inline: true
-    };
+    return [
+      `${itm.id}${itm.emoji ? `\u2000${itm.emoji}` : ''}`,
+      `${itm.worth} 💎`,
+      true
+    ];
   });
 
   const paginated = paginate(fields, 10);
   if (page < 1 || !page) page = 1;
   if (page > paginated.length) page = paginated.length;
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/shop.png' }],
-    embed: {
-      title: `**SHOP:**`,
-      fields: paginated[page - 1],
-      description: stripIndents`
-        **Page: ${page}/${paginated.length}**
-        Use: \`${this.id} page=<integer>\` to view another page.
-      `,
-      color: 16758861,
-      thumbnail: { url: 'attachment://shop.png' }
-    }
-  });
+  return msg.util.send(buildEmbed({
+    title: '**SHOP:**',
+    fields: paginated[page - 1],
+    content: stripIndents`
+      **Page: ${page}/${paginated.length}**
+      Use: \`${this.id} page=<integer>\` to view another page.
+    `,
+    icon: 'shop',
+    color: 'gold'
+  }));
 }
 
 module.exports = new Command('shop', exec, {

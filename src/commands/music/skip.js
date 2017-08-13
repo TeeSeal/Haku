@@ -1,7 +1,8 @@
 const { Command } = require('discord-akairo');
 const { Playlist } = require('../../structures/all.js');
+const { buildEmbed } = require('../../util/all.js');
 
-async function exec(msg) {
+function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
 
   if (!playlist) return msg.util.error('nothing is currently playing.');
@@ -14,27 +15,16 @@ async function exec(msg) {
     msg.util.error('you can\'t skip this song.');
   }
 
-  playlist.skip();
-
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/skip.png' }],
-    embed: {
-      title: song.title,
-      url: song.url,
-      color: 6750207,
-      thumbnail: { url: 'attachment://skip.png' },
-      fields: [
-        {
-          name: 'Skipped.',
-          value: `\u200b`
-        }
-      ],
-      author: {
-        name: msg.member.displayName,
-        icon_url: msg.author.avatarURL // eslint-disable-line
-      }
-    }
-  });
+  return msg.util.send(buildEmbed({
+    title: song.title,
+    fields: [
+      ['Skipped.', '\u200b']
+    ],
+    url: song.url,
+    author: msg.member,
+    icon: 'skip',
+    color: 'cyan'
+  })).then(() => playlist.fadeVolume(0)).then(() => playlist.skip());
 }
 
 module.exports = new Command('skip', exec, {

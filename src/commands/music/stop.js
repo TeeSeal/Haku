@@ -9,8 +9,7 @@ async function exec(msg) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  playlist.destroy();
-  return msg.util.reply('alright then...');
+  return msg.util.reply('alright then...').then(() => playlist.destroy());
 }
 
 module.exports = new Command('stop', exec, {

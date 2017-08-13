@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { youtube, stripIndents, paginate } = require('../../util/all.js');
+const { buildEmbed, YouTube, stripIndents, paginate } = require('../../util/all.js');
 const { Playlist, Song } = require('../../structures/all.js');
 
 async function exec(msg, args) {
@@ -13,7 +13,7 @@ async function exec(msg, args) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  const videos = load ? guild.playlists[query] : await youtube.getVideos(query);
+  const videos = load ? guild.playlists[query] : await YouTube.getVideos(query);
   if (!videos) return msg.util.error('there is no such playlist.');
   let songs = videos.map(video => new Song(video, msg.member, { volume }));
   if (rand) songs = shuffle(songs);
@@ -24,25 +24,19 @@ async function exec(msg, args) {
     const rPaginated = paginate(removed);
     const rLeftOver = rPaginated.slice(1).reduce((a, b) => a + b.length, 0);
 
-    await msg.util.send({
-      files: [{ attachment: 'src/assets/icons/clear.png' }],
-      embed: {
-        title: 'Failed to add:',
-        description: stripIndents`
-          ${rPaginated[0].map(obj => stripIndents`
-            - ${obj.song.linkString}
-            Reason: ${obj.reason}
-          `).join('\n')}
-          ${rPaginated[1] ? `and ${rLeftOver} more.` : ''}
-        `,
-        color: 16731469,
-        thumbnail: { url: 'attachment://clear.png' },
-        author: {
-          name: msg.member.displayName,
-          icon_url: msg.author.avatarURL // eslint-disable-line
-        }
-      }
-    });
+    await msg.util.send(buildEmbed({
+      title: 'Failed to add:',
+      content: stripIndents`
+        ${rPaginated[0].map(obj => stripIndents`
+          - ${obj.song.linkString}
+          Reason: ${obj.reason}
+        `).join('\n')}
+        ${rPaginated[1] ? `and ${rLeftOver} more.` : ''}
+      `,
+      author: msg.member,
+      icon: 'clear',
+      color: 'red'
+    }));
   }
 
   if (added.length === 0) return msg.util.error('nothing was added to the playlist.');
@@ -50,23 +44,17 @@ async function exec(msg, args) {
   const aPaginated = paginate(added);
   const aLeftOver = aPaginated.slice(1).reduce((a, b) => a + b.length, 0);
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/playlistAdd.png' }],
-    embed: {
-      title: 'Added to playlist:',
-      description: stripIndents`
-        ${aPaginated[0].map(song => `- ${song.linkString}`).join('\n')}
-        ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
-      `,
-      image: { url: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null },
-      color: 6711039,
-      thumbnail: { url: 'attachment://playlistAdd.png' },
-      author: {
-        name: msg.member.displayName,
-        icon_url: msg.author.avatarURL // eslint-disable-line
-      }
-    }
-  });
+  return msg.util.send(buildEmbed({
+    title: 'Added to playlist:',
+    content: stripIndents`
+      ${aPaginated[0].map(song => `- ${song.linkString}`).join('\n')}
+      ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
+    `,
+    image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
+    author: msg.member,
+    icon: 'playlistAdd',
+    color: 'blue'
+  }));
 }
 
 function shuffle(array) {

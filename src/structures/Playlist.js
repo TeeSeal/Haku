@@ -117,7 +117,24 @@ class Playlist {
     this.song.dispatcher.setVolume(this._volume);
   }
 
-  get volume() { return this._volume * 50; }
+  fadeVolume(volume) {
+    let current = this._volume;
+    this._volume = this.convert(volume);
+    const modifier = current < this._volume ? 0.05 : -0.05;
+
+    return new Promise(resolve => {
+      const interval = setInterval(() => {
+        current += modifier;
+        this.song.dispatcher.setVolume(current);
+
+        if (current > (this._volume - 0.05) && current < (this._volume + 0.05)) {
+          this.song.dispatcher.setVolume(this._volume);
+          clearInterval(interval);
+          setTimeout(resolve, 400);
+        }
+      }, 35);
+    });
+  }
 
   destroy() {
     this.queue = [];
@@ -126,6 +143,7 @@ class Playlist {
   }
 
   convert(volume) { return volume / 50; }
+  get volume() { return this._volume * 50; }
   static get(id) { return playlists.get(id); }
   static has(id) { return playlists.has(id); }
 }

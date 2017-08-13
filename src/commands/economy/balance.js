@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Inventory, Item } = require('../../structures/all.js');
-const { paginate, stripIndents } = require('../../util/all.js');
+const { buildEmbed, paginate, stripIndents } = require('../../util/all.js');
 
 function exec(msg, args) {
   const { user, item } = args;
@@ -28,20 +28,17 @@ function exec(msg, args) {
   if (page < 1 || !page) page = 1;
   if (page > paginated.length) page = paginated.length;
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/list.png' }],
-    embed: {
-      title: `${user.username}'s items:`,
-      description: stripIndents`
-        ${paginated[page - 1].join('\n')}
+  return msg.util.send(buildEmbed({
+    title: `${user.username}'s items:`,
+    content: stripIndents`
+      ${paginated[page - 1].join('\n')}
 
-        **Page: ${page}/${paginated.length}**
-        Use: \`${this.id} page=<integer>\` to view another page.
-      `,
-      color: 6711039,
-      thumbnail: { url: 'attachment://list.png' }
-    }
-  });
+      **Page: ${page}/${paginated.length}**
+      Use: \`${this.id} page=<integer>\` to view another page.
+    `,
+    icon: 'list',
+    color: 'blue'
+  }));
 }
 
 module.exports = new Command('balance', exec, {

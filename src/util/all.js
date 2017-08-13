@@ -3,7 +3,9 @@ const path = require('path');
 const { pageItemCount } = require('../../config.json');
 
 const util = {
-  youtube: require('./youtube.js'),
+  YouTube: require('./YouTube.js'),
+  Color: require('./Color.js'),
+  buildEmbed: require('./buildEmbed.js'),
   rootDir: __dirname.split(path.sep).slice(0, -1).join(path.sep),
   paginate(arr, amount) {
     const array = arr.slice(0);

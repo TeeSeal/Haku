@@ -1,9 +1,9 @@
 const { Command } = require('discord-akairo');
-const { stripIndents } = require('../../util/all.js');
+const { buildEmbed, stripIndents } = require('../../util/all.js');
 const { Playlist } = require('../../structures/all.js');
 
 function exec(msg, args) {
-  const { vol } = args;
+  const { newVolume } = args;
   const playlist = Playlist.get(msg.guild.id);
 
   if (!playlist) return msg.util.error('nothing is currently playing.');
@@ -13,50 +13,32 @@ function exec(msg, args) {
 
   const { volume, song } = playlist;
 
-  if (!vol) {
-    return msg.util.send({
-      files: [{ attachment: `src/assets/icons/volumeUp.png` }],
-      embed: {
-        title: song.title,
-        url: song.url,
-        color: 16763904,
-        thumbnail: { url: `attachment://volumeUp.png` },
-        fields: [
-          {
-            name: `Volume: ${volume}%`,
-            value: `\u200b`
-          }
-        ],
-        author: {
-          name: msg.member.displayName,
-        icon_url: msg.author.avatarURL // eslint-disable-line
-        }
-      }
-    });
+  if (!newVolume) {
+    return msg.util.send(buildEmbed({
+      title: song.title,
+      fields: [
+        [`Volume: ${volume}%`, '\u200b']
+      ],
+      url: song.url,
+      author: msg.member,
+      icon: 'volumeUp',
+      color: 'yellow'
+    }));
   }
 
-  const name = vol < volume ? 'volumeDown.png' : 'volumeUp.png';
+  const icon = newVolume < volume ? 'volumeDown' : 'volumeUp';
 
-  playlist.setVolume(vol);
-  return msg.util.send({
-    files: [{ attachment: `src/assets/icons/${name}` }],
-    embed: {
-      title: song.title,
-      url: song.url,
-      color: 16763904,
-      thumbnail: { url: `attachment://${name}` },
-      fields: [
-        {
-          name: `Volume: ${vol}%`,
-          value: `\u200b`
-        }
-      ],
-      author: {
-        name: msg.member.displayName,
-        icon_url: msg.author.avatarURL // eslint-disable-line
-      }
-    }
-  });
+  playlist.fadeVolume(newVolume);
+  return msg.util.send(buildEmbed({
+    title: song.title,
+    fields: [
+      [`Volume: ${newVolume}%`, '\u200b']
+    ],
+    url: song.url,
+    author: msg.member,
+    icon,
+    color: 'yellow'
+  }));
 }
 
 
@@ -64,7 +46,7 @@ module.exports = new Command('volume', exec, {
   aliases: ['volume', 'vol'],
   args: [
     {
-      id: 'vol',
+      id: 'newVolume',
       type(word, msg) {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);

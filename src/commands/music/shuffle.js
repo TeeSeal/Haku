@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Playlist } = require('../../structures/all.js');
+const { buildEmbed } = require('../../util/all.js');
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -12,15 +13,12 @@ async function exec(msg) {
   playlist.shuffle();
   const list = playlist.queue.map(s => `- ${s.linkString}`).join('\n');
 
-  return msg.util.send({
-    files: [{ attachment: 'src/assets/icons/list.png' }],
-    embed: {
-      title: 'Shuffled playlist:',
-      description: `**Now playing:** ${playlist.song.linkString}\n\n${list}`,
-      color: 6711039,
-      thumbnail: { url: 'attachment://list.png' }
-    }
-  });
+  return msg.util.send(buildEmbed({
+    title: 'Shuffled playlist:',
+    content: `**Now playing:** ${playlist.song.linkString}\n\n${list}`,
+    icon: 'list',
+    color: 'blue'
+  }));
 }
 
 module.exports = new Command('shuffle', exec, {
