@@ -3,5 +3,6 @@ module.exports = {
   Song: require('./Song.js'),
   Inventory: require('./Inventory.js'),
   Item: require('./Item.js'),
-  Collection: require('./Collection.js')
+  Collection: require('./Collection.js'),
+  ReactionPoll: require('./ReactionPoll.js')
 };

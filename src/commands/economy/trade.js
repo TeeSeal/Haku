@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { stripIndents } = require('../../util/all.js');
-const { Inventory, Item } = require('../../structures/all.js');
+const { buildEmbed, stripIndents } = require('../../util/all.js');
+const { ReactionPoll, Inventory, Item } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { member, tradeDetails: [offer, demand] } = args;
@@ -24,52 +24,42 @@ async function exec(msg, args) {
   }
 
   // --- MESSAGE OTPIONS ---
-  const options = {
-    files: [{ attachment: 'src/assets/icons/trade.png' }],
-    embed: {
-      title: 'ITEM TRADE',
-      description: stripIndents`
+  const options = buildEmbed({
+    title: 'ITEM TRADE:',
+    fields: [
+      [
+        msg.author.tag,
+        offer.map(item => `**${item.amount}** ${item.name}`).join('\n')
+      ],
+      [
+        member.user.tag,
+        demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---'
+      ]
+    ],
+    content: stripIndents`
       Both parties must click on the ✅ for the trade to be completed.
       Otherwise click on the ❌ or ignore this message.
     `,
-      fields: [
-        {
-          name: `${msg.author.tag}`,
-          value: offer.map(item => `**${item.amount}** ${item.name}`).join('\n')
-        },
-        {
-          name: `${member.user.tag}`,
-          value: demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---'
-        }
-      ],
-      color: 16758861,
-      thumbnail: { url: 'attachment://trade.png' }
-    }
-  };
+    icon: 'trade',
+    color: 'gold'
+  });
   // --- MESSAGE OPTIONS ---
 
   const statusMsg = await msg.util.send(`${msg.member} ${member}`, options);
-
-  await statusMsg.react('✅').then(() => statusMsg.react('❌'));
-  const collector = statusMsg.createReactionCollector(
-    (r, u) => ['✅', '❌'].includes(r.emoji.name) && [msg.author.id, member.id].includes(u.id),
-    { time: 6e4 }
-  );
-
-  collector.on('collect', r => {
-    if ((r.emoji.name === '✅' && [msg.author.id, member.id].every(id => Array.from(r.users.keys()).includes(id)))
-      || r.emoji.name === '❌') {
-      collector.stop();
-    }
+  const poll = new ReactionPoll(statusMsg, {
+    emojis: ['✅', '❌'],
+    users: [msg.author.id, member.id],
+    time: 6e4
   });
 
-  collector.once('end', collected => {
-    const checkMark = collected.get('✅');
-    let status;
+  poll.on('vote', () => {
+    if (poll.votes.get('✅').length === 2 || poll.votes.get('❌').length > 0) poll.stop();
+  });
 
-    if (!checkMark || ![msg.author.id, member.id].every(id => Array.from(checkMark.users.keys()).includes(id))) {
-      status = '**TRADE CANCLED**';
-    } else {
+  poll.once('end', votes => {
+    const success = votes.get('✅').length === 2;
+
+    if (success) {
       for (const item of offer) {
         oInv.update(item.id, -item.amount);
         dInv.update(item);
@@ -80,10 +70,9 @@ async function exec(msg, args) {
           oInv.update(item);
         }
       }
-      status = '**TRADE COMPLETED**';
     }
 
-    options.embed.description = status;
+    options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`;
     return statusMsg.edit(`${msg.member} ${member}`, options);
   });
 }

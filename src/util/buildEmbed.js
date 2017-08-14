@@ -18,7 +18,7 @@ function buildEmbed(obj) {
   if (obj.author) {
     result.embed.author = {
       name: obj.author.displayName,
-      icon_url: obj.author.user.displayAvatarURL // eslint-disable-line
+      icon_url: obj.author.user.displayAvatarURL() // eslint-disable-line
     };
   }
 
