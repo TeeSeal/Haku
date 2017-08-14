@@ -13,12 +13,12 @@ async function exec(msg, args) {
   const oInv = new Inventory(msg.author);
   const dInv = new Inventory(member);
 
-  const oBal = offer.map(item => oInv.get(item.id));
+  const oBal = offer.map(item => oInv.get(item.id)).filter(i => i);
   if (oBal.length !== offer.length || oBal.some((item, idx) => item.amount < offer[idx].amount)) {
     return msg.util.error('you do not have sufficient funds.');
   }
 
-  const dBal = demand ? demand.map(item => dInv.get(item.id)) : null;
+  const dBal = demand ? demand.map(item => dInv.get(item.id)).filter(i => i) : null;
   if (demand && (dBal.length !== demand.length || dBal.some((item, idx) => item.amount < demand[idx].amount))) {
     return msg.util.error(`**${member.displayName}** doesn't have sufficient funds.`);
   }
