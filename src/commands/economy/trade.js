@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/all.js');
-const { ReactionPoll, Inventory, Item } = require('../../structures/all.js');
+const { ItemCollection, Inventory, ReactionPoll } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { member, tradeDetails: [offer, demand] } = args;
@@ -8,20 +8,13 @@ async function exec(msg, args) {
   if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
     return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly');
   }
-  if (offer.length > 5 || (demand && (demand.length > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
+  if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
 
-  const oInv = new Inventory(msg.author);
-  const dInv = new Inventory(member);
+  const offInv = new Inventory(msg.author);
+  const demInv = new Inventory(member);
 
-  const oBal = offer.map(item => oInv.get(item.id)).filter(i => i);
-  if (oBal.length !== offer.length || oBal.some((item, idx) => item.amount < offer[idx].amount)) {
-    return msg.util.error('you do not have sufficient funds.');
-  }
-
-  const dBal = demand ? demand.map(item => dInv.get(item.id)).filter(i => i) : null;
-  if (demand && (dBal.length !== demand.length || dBal.some((item, idx) => item.amount < demand[idx].amount))) {
-    return msg.util.error(`**${member.displayName}** doesn't have sufficient funds.`);
-  }
+  if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.');
+  if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`);
 
   // --- MESSAGE OTPIONS ---
   const options = buildEmbed({
@@ -60,14 +53,14 @@ async function exec(msg, args) {
     const success = votes.get('✅').length === 2;
 
     if (success) {
-      for (const item of offer) {
-        oInv.update(item.id, -item.amount);
-        dInv.update(item);
+      for (const itemGroup of offer) {
+        offInv.get(itemGroup.id).consume(itemGroup.amount);
+        demInv.add(itemGroup);
       }
       if (demand) {
-        for (const item of demand) {
-          dInv.update(item.id, -item.amount);
-          oInv.update(item);
+        for (const itemGroup of demand) {
+          demInv.get(itemGroup.id).consume(itemGroup.amount);
+          offInv.add(itemGroup);
         }
       }
     }
@@ -75,6 +68,15 @@ async function exec(msg, args) {
     options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`;
     return statusMsg.edit(`${msg.member} ${member}`, options);
   });
+}
+
+function checkInventory(itemColl, inventory) {
+  const hasItems = itemColl.items()
+    .every(itemGroup => inventory.has(itemGroup.id) || inventory.get(itemGroup.id).amount >= itemGroup.amount);
+  const hasCurrency = inventory.currencyValue() >= itemColl.currencyValue();
+
+  if (hasItems && hasCurrency) return true;
+  return false;
 }
 
 module.exports = new Command('trade', exec, {
@@ -89,10 +91,7 @@ module.exports = new Command('trade', exec, {
       id: 'tradeDetails',
       match: 'rest',
       type(string) {
-        return string.split(' for ').map(str => {
-          if (!str) return null;
-          return str.split(/[+,]|and/).map(word => Item.resolveGroup(word.trim()));
-        });
+        return string.split(' for ').map(str => ItemCollection.resolve(str));
       }
     }
   ],

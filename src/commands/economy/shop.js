@@ -1,25 +1,21 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
-const { Item } = require('../../structures/all.js');
+const { ItemGroup } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { item } = args;
   let { page } = args;
 
-  const shop = Item.SHOP;
+  const shop = ItemGroup.SHOP;
   if (shop.size === 0) return msg.util.error('sorry, there\'s nothing in the shop yet.');
 
   if (item) {
     if (!shop.has(item.id)) return msg.util.reply('that item is not being sold in the shop.');
-    return msg.util.reply(`a ${item.id} goes for ${item.worth}💎 in the shop.`);
+    return msg.util.reply(`**${item.amount}** ${item.name} => ${item.priceString()}.`);
   }
 
   const fields = shop.map(itm => {
-    return [
-      `${itm.id}${itm.emoji ? `\u2000${itm.emoji}` : ''}`,
-      `${itm.worth} 💎`,
-      true
-    ];
+    return [itm.name, itm.priceString(), true];
   });
 
   const paginated = paginate(fields, 10);
@@ -45,7 +41,8 @@ module.exports = new Command('shop', exec, {
   args: [
     {
       id: 'item',
-      type: word => Item.resolve(word)
+      match: 'rest',
+      type: ItemGroup.resolve
     },
     {
       id: 'page',

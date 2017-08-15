@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Item } = require('../../structures/all.js');
+const { ItemGroup } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { item } = args;
@@ -18,7 +18,7 @@ module.exports = new Command('destroy', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: word => Item.resolve(word)
+      type: ItemGroup.resolve
     }
   ]
 });

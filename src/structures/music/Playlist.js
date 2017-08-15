@@ -137,10 +137,8 @@ class Playlist {
   }
 
   destroy() {
-    this.fadeVolume(0).then(() => {
-      this.voiceChannel.leave();
-      playlists.delete(this.id);
-    });
+    this.voiceChannel.leave();
+    playlists.delete(this.id);
   }
 
   convert(volume) { return volume / 50; }

@@ -1,10 +1,14 @@
 const { Command } = require('discord-akairo');
-const { Item } = require('../../structures/all.js');
+const { capitalize } = require('../../util/all.js');
+const structs = require('../../structures/all.js');
 
 function exec(msg, args) {
+  if (!args.type) return msg.util.error('please specify a type.');
   if (!args.id) return msg.util.error('gotta give it a name.');
   if (args.url) args.url = args.url.toString();
-  new Item(args).add();
+
+  const className = args.type === 'item' ? 'ItemGroup' : capitalize(args.type);
+  new structs[className](args).create();
   return msg.util.success('item created.');
 }
 
@@ -15,14 +19,19 @@ module.exports = new Command('create', exec, {
   split: 'sticky',
   args: [
     {
+      id: 'type',
+      type: ['item', 'recipe', 'currency']
+    },
+    {
       id: 'id',
-      match: 'rest',
+      match: 'prefix',
+      prefix: ['name=', 'n='],
       type: 'lowercase'
     },
     {
-      id: 'worth',
+      id: 'value',
       match: 'prefix',
-      prefix: ['worth=', 'w='],
+      prefix: ['value=', 'v='],
       type: word => {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
@@ -48,6 +57,13 @@ module.exports = new Command('create', exec, {
       match: 'prefix',
       prefix: ['emoji=', 'e='],
       default: ''
+    },
+    {
+      id: 'rarity',
+      match: 'prefix',
+      prefix: ['rarity=', 'r='],
+      type: ['common', 'uncommon', 'rare', 'epic', 'legendary'],
+      default: 'common'
     },
     {
       id: 'use',

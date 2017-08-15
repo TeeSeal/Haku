@@ -1,11 +1,11 @@
 const { Command } = require('discord-akairo');
-const { Inventory, Item } = require('../../structures/all.js');
+const { ItemGroup, Inventory } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { item } = args;
   const inventory = new Inventory(msg.author);
   if (!inventory.has(item.id)) return msg.util.error('you don\'t have any of that.');
-  return inventory.use(item, msg);
+  return inventory.get(item.id).use(msg);
 }
 
 module.exports = new Command('use', exec, {
@@ -16,7 +16,7 @@ module.exports = new Command('use', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: word => Item.resolve(word)
+      type: ItemGroup.resolve
     }
   ]
 });

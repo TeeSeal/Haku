@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { Inventory, Item } = require('../../structures/all.js');
 const { buildEmbed, paginate, stripIndents } = require('../../util/all.js');
+const { ItemGroup, Inventory } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { user, item } = args;
@@ -11,16 +11,15 @@ function exec(msg, args) {
 
   if (item) {
     const itemGroup = inventory.get(item.id);
-    if (!itemGroup) return msg.util.error('you don\'t have any of that.');
+    if (!itemGroup) return msg.util.error(`${pron} ${neg} have any of that.`);
     return msg.util.reply(`${pron} currently ${pos} **${itemGroup.amount} ${itemGroup.name}**.`);
   }
 
-  const lines = inventory.items.map(itemGroup => {
+  const lines = inventory.items().concat(inventory.recipes()).map(itemGroup => {
     return `**${itemGroup.amount}** ${itemGroup.name}`;
   });
 
-  const { gems } = inventory;
-  if (gems) lines.unshift(`**${gems.amount} ${gems.name}**`);
+  if (inventory.currencyString()) lines.unshift(inventory.currencyString());
 
   if (lines.length === 0) return msg.util.reply(`can't show what ${pron} ${neg} have.`);
 
@@ -65,9 +64,8 @@ module.exports = new Command('balance', exec, {
     },
     {
       id: 'item',
-      match: 'prefix',
-      type: word => Item.resolve(word),
-      prefix: ['item=', 'i=']
+      match: 'rest',
+      type: ItemGroup.resolve
     },
     {
       id: 'page',

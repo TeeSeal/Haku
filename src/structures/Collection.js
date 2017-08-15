@@ -196,11 +196,9 @@ class Collection extends Map {
     });
   }
 
-  toObject() {
+  toJSON() {
     const obj = {};
-    for (const item of this.values()) {
-      obj[item.id] = item;
-    }
+    for (const item of this.values()) obj[item.id] = item;
     return obj;
   }
 

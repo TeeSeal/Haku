@@ -1,18 +1,18 @@
 const { Command } = require('discord-akairo');
-const { Inventory, Item } = require('../../structures/all.js');
+const { ItemGroup, Inventory } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { item } = args;
   if (!item) return msg.util.error('dunno what you\'re trying to buy.');
 
-  if (!Item.SHOP.has(item.id)) return msg.util.error('there is no such item in the shop.');
+  if (!ItemGroup.SHOP.has(item.id)) return msg.util.error('there is no such item in the shop.');
 
   const inventory = new Inventory(msg.author);
-  const gems = inventory.gems || { amount: 0 };
-  if (gems.amount < item.price) return msg.util.error('you don\'t have enough gems to buy that.');
+  const balance = inventory.currencyValue();
+  if (balance < item.price) return msg.util.error('you have insufficeint to buy that.');
 
-  inventory.update(item);
-  inventory.consume(Item.GEM, item.price);
+  inventory.setBalance(balance - item.price);
+  inventory.add(item);
 
   return msg.util.success(`you have acquired ${item.amount} ${item.name}.`);
 }
@@ -25,7 +25,7 @@ module.exports = new Command('buy', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: Item.resolveGroup
+      type: ItemGroup.resolve
     }
   ]
 });
