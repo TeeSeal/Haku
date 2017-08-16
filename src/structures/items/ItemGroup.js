@@ -1,6 +1,6 @@
 const fs = require('fs');
 const pluralize = require('pluralize');
-const { rootDir, capitalize } = require('../../util/all.js');
+const { rootDir, capitalize, filterObject } = require('../../util/all.js');
 
 class ItemGroup {
   constructor(options) {
@@ -20,16 +20,21 @@ class ItemGroup {
   }
 
   toJSON() {
-    const result = Object.assign({}, this);
-    if (result.use) result.use = result.use.toString();
-    return result;
+    return filterObject(this, ['id', 'value', 'shop', 'description', 'emoji', 'rarity', 'url', 'type']);
   }
 
   setAmount(amount) {
     this.amount = amount;
     this.price = this.value * amount;
-    this.name = this.emoji
-      || pluralize(this.id, amount).split(' ').map(word => capitalize(word)).join(' ');
+
+    let name = this.emoji || '';
+    if (!name || this.type === 'item') name += ` ${this.formatID(amount)}`;
+
+    this.name = name;
+  }
+
+  formatID(amount) {
+    return ItemGroup.formatName(this.id, amount);
   }
 
   bindTo(inventory) {
@@ -69,7 +74,7 @@ class ItemGroup {
   }
 
 
-  inspect() {
+  examine() {
     return this.description;
   }
 
@@ -91,7 +96,7 @@ class ItemGroup {
     return writeItems();
   }
 
-  toString() { return this.name; }
+  toString() { return `**${this.amount} ${this.name}**`; }
 
   static convertToCurrency(amount) {
     const result = [];
@@ -107,9 +112,19 @@ class ItemGroup {
 
   static resolve(string, count) {
     if (!string) return null;
-    const { name, amount } = ItemGroup.findAmountAndName(string, count);
+    let { name, amount } = ItemGroup.findAmountAndName(string, count);
+    let recipe;
 
-    const regexp = new RegExp(`^${pluralize(name.toLowerCase(), 1)}`, 'i');
+    if (name.toLowerCase().includes('recipe')) {
+      const words = name.split(' ');
+      const recipeWord = words.find(word => /recipe/.test(word));
+      words.splice(words.indexOf(recipeWord), 1);
+      name = words.join(' ');
+      recipe = true;
+    }
+
+    const formatted = pluralize(name, 1);
+    const regexp = new RegExp(`^${recipe ? `recipe: ${formatted}` : formatted}`, 'i');
     const item = items.find(i => regexp.test(i.id));
     if (!item) return null;
 
@@ -130,9 +145,12 @@ class ItemGroup {
       amount = parseInt(amount) || 1;
     } else { amount = 1; }
 
-    return { name: words.join(' '), amount };
+    return { name: words.join(' ').toLowerCase(), amount };
   }
 
+  static formatName(name, amount) {
+    return pluralize(name, amount).split(' ').map(word => capitalize(word)).join(' ');
+  }
 
   static baseCurrency() { return new types[baseCurrency.type](baseCurrency); }
   static all(filter) { return items.filter(filter); }

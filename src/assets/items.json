@@ -21,52 +21,73 @@
     "description": "Biggest monetary unit."
   },
   {
-    "inventory": null,
     "id": "cake",
     "value": 100,
-    "shop": true,
+    "shop": false,
     "description": "Tasty cake",
+    "emoji": "🍰",
     "rarity": "rare",
-    "type": "item",
-    "amount": 1,
-    "price": 100,
-    "name": "Cake"
+    "type": "item"
   },
   {
-    "inventory": null,
     "id": "pizza",
     "value": 1013,
     "shop": true,
     "description": "Tasty cake",
     "rarity": "rare",
-    "type": "item",
-    "amount": 1,
-    "price": 1013,
-    "name": "Pizza"
+    "type": "item"
   },
   {
-    "inventory": null,
     "id": "GTX 1080 Ti",
     "value": 132542,
     "shop": true,
     "description": "Tasty cake",
     "rarity": "rare",
-    "type": "item",
-    "amount": 1,
-    "price": 132542,
-    "name": "GTX 1080 Ti"
+    "type": "item"
   },
   {
-    "inventory": null,
-    "id": "snek",
-    "value": 30,
+    "id": "egg",
+    "value": 50,
     "shop": true,
-    "description": "slithers",
+    "description": "Fresh egg.",
     "emoji": "",
-    "rarity": "legendary",
-    "type": "item",
-    "amount": 1,
-    "price": 30,
-    "name": "Snek"
+    "rarity": "common",
+    "type": "item"
+  },
+  {
+    "id": "milk",
+    "value": 80,
+    "shop": true,
+    "description": "Fresh milk.",
+    "emoji": "",
+    "rarity": "common",
+    "type": "item"
+  },
+  {
+    "id": "flour",
+    "value": 100,
+    "shop": true,
+    "description": "Regular flour.",
+    "emoji": "",
+    "rarity": "common",
+    "type": "item"
+  },
+  {
+    "id": "recipe: cake",
+    "value": 10,
+    "shop": true,
+    "recipe": {
+      "result": {
+        "id": "cake",
+        "amount": 1
+      },
+      "ingredients": {
+        "egg": 2,
+        "flour": 1,
+        "milk": 1
+      }
+    },
+    "rarity": "common",
+    "type": "recipe"
   }
 ]

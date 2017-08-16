@@ -20,6 +20,11 @@ const util = {
     return scope === 'globally'
       ? ['client', 'haku', scope]
       : [`${scope}s`, msg[scope].id, `in this ${scope}`];
+  },
+  filterObject(obj, keys) {
+    const result = {};
+    for (const key of keys) result[key] = obj[key];
+    return result;
   }
 };
 

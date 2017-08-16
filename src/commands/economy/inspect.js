@@ -8,7 +8,7 @@ function exec(msg, args) {
   const inventory = new Inventory(msg.author);
   if (!inventory.has(item.id)) return msg.util.error('you may not inspect items that you don\'t have.');
 
-  return msg.util.send(item.inspect(), { files: item.imagePath ? [item.imagePath] : [] });
+  return msg.util.send(item.examine(), { files: item.imagePath ? [item.imagePath] : [] });
 }
 
 module.exports = new Command('inspect', exec, {

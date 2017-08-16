@@ -14,7 +14,7 @@ function exec(msg, args) {
   inventory.setBalance(balance - item.price);
   inventory.add(item);
 
-  return msg.util.success(`you have acquired ${item.amount} ${item.name}.`);
+  return msg.util.success(`you have acquired ${item}`);
 }
 
 module.exports = new Command('buy', exec, {

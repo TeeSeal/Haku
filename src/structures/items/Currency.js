@@ -1,9 +1,9 @@
 const ItemGroup = require('./ItemGroup.js');
+const { filterObject } = require('../../util/all.js');
 
 class Currency extends ItemGroup {
   toJSON() {
-    const { id, value, type, emoji, description } = this;
-    return { id, value, type, emoji, description };
+    return filterObject(this, ['id', 'value', 'type', 'emoji', 'description']);
   }
 
   use(item) {
