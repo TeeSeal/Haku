@@ -25,10 +25,9 @@ class ItemHandler {
 
     if (typeof overwriteAmount === 'number') {
       amount = overwriteAmount;
-    } else if (amount) {
-      words.splice(words.indexOf(amount), 1);
+    } else {
       amount = parseInt(amount) || 1;
-    } else { amount = 1; }
+    }
 
     return { name: words.join(' ').toLowerCase(), amount };
   }

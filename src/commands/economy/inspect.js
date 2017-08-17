@@ -17,7 +17,7 @@ function exec(msg, args) {
       fields: [
         [
           'Ingredients',
-          Object.keys(item.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
+          Object.entries(item.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
             .join(' + ')
         ],
         [
