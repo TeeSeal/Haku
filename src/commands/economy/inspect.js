@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Items, Inventory } = require('../../structures/all.js');
+const { buildEmbed } = require('../../util/all.js');
 
 function exec(msg, args) {
   const { item } = args;
@@ -8,6 +9,25 @@ function exec(msg, args) {
   const inventory = new Inventory(msg.author);
   if (!inventory.has(item.id) && !Items.SHOP.has(item.id)) {
     return msg.util.error('you can only inspect items in your inventory or in the shop.');
+  }
+
+  if (item.type === 'recipe') {
+    return msg.util.send(buildEmbed({
+      title: item.name.toUpperCase(),
+      fields: [
+        [
+          'Ingredients',
+          Object.keys(item.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
+            .join(' + ')
+        ],
+        [
+          'Result',
+          Items.resolveGroup(item.result.id, item.result.amount).toString()
+        ]
+      ],
+      icon: 'craft',
+      color: 'gold'
+    }));
   }
 
   return msg.util.send(item.examine(), { files: item.imagePath ? [item.imagePath] : [] });

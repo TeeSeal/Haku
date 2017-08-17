@@ -19,9 +19,9 @@ class Recipe extends ItemGroup {
   }
 
   get name() {
-    const suffix = pluralize('recipe', this.amount || 1);
-    const resultName = this.id.split(' ').slice(1).map(word => capitalize(word)).join(' ');
-    return `${resultName} ${suffix}`;
+    const name = this.id.split(' ').slice(1).concat('recipe')
+      .map(word => capitalize(word)).join(' ');
+    return `${pluralize(name, this.amount || 1)} 📃`;
   }
 
   examine() {
@@ -35,7 +35,7 @@ class Recipe extends ItemGroup {
       const hasItems = Object.entries(this.ingredients)
         .every(([id, amount]) => this.inventory.has(id) && this.inventory.get(id).amount >= amount);
 
-      if (!hasItems) return reject('you have insufficient funds.');
+      if (!hasItems) return reject('you have insufficient funds. Inspect this recipe to see what ingredients are needed.');
 
       for (const [id, amount] of Object.entries(this.ingredients)) {
         this.inventory.get(id).consume(amount);
@@ -43,7 +43,7 @@ class Recipe extends ItemGroup {
       this.consume(1);
 
       this.inventory.add(this.result.id, this.result.amount);
-      return resolve(this.result);
+      return resolve(this.recipe);
     });
   }
 }

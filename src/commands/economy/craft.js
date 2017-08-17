@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Items, Inventory } = require('../../structures/all.js');
+const { buildEmbed } = require('../../util/all.js');
 
 async function exec(msg, args) {
   const { recipe } = args;
@@ -8,7 +9,25 @@ async function exec(msg, args) {
   const inventory = new Inventory(msg.author);
   if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`);
   return inventory.get(recipe.id).craft()
-    .then(result => msg.util.success(`you have successfully crafted ${Items.resolveGroup(result.id, result.amount)}`))
+    .then(() => {
+      msg.channel.send(buildEmbed({
+        title: 'SUCCESS',
+        fields: [
+          [
+            'Ingredients',
+            Object.keys(recipe.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
+              .join(' + ')
+          ],
+          [
+            'Result',
+            Items.resolveGroup(recipe.result.id, recipe.result.amount).toString()
+          ]
+        ],
+        author: msg.member,
+        icon: 'craft',
+        color: 'gold'
+      }));
+    })
     .catch(err => msg.util.error(err));
 }
 
