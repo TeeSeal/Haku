@@ -2,23 +2,23 @@
   {
     "id": "silver",
     "value": 1,
-    "type": "currency",
+    "description": "The basic monetary unit for Haku.",
     "emoji": "💿",
-    "description": "The basic monetary unit for Haku."
+    "type": "currency"
   },
   {
     "id": "gold",
     "value": 100,
-    "type": "currency",
+    "description": "Secondary monetary unit.",
     "emoji": "📀",
-    "description": "Secondary monetary unit."
+    "type": "currency"
   },
   {
     "id": "gem",
     "value": 10000,
-    "type": "currency",
+    "description": "Biggest monetary unit.",
     "emoji": "💎",
-    "description": "Biggest monetary unit."
+    "type": "currency"
   },
   {
     "id": "cake",
@@ -76,6 +76,8 @@
     "id": "recipe: cake",
     "value": 10,
     "shop": true,
+    "type": "recipe",
+    "rarity": "common",
     "recipe": {
       "result": {
         "id": "cake",
@@ -86,8 +88,6 @@
         "flour": 1,
         "milk": 1
       }
-    },
-    "rarity": "common",
-    "type": "recipe"
+    }
   }
 ]

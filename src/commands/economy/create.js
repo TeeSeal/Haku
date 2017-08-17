@@ -1,14 +1,26 @@
 const { Command } = require('discord-akairo');
-const { capitalize } = require('../../util/all.js');
-const structs = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 
 function exec(msg, args) {
   if (!args.type) return msg.util.error('please specify a type.');
   if (!args.id) return msg.util.error('gotta give it a name.');
   if (args.url) args.url = args.url.toString();
 
-  const className = args.type === 'item' ? 'ItemGroup' : capitalize(args.type);
-  new structs[className](args).create();
+  if (args.type === 'recipe') {
+    if (!args.result || !args.ingredients) {
+      return msg.util.error('give the recipe both a result and some ingredients.');
+    }
+
+    args.recipe = {
+      result: {
+        id: args.result.id,
+        amount: args.result.amount
+      },
+      ingredients: args.ingredients.toJSON()
+    };
+  }
+
+  Items.create(args);
   return msg.util.success('item created.');
 }
 
@@ -66,21 +78,22 @@ module.exports = new Command('create', exec, {
       default: 'common'
     },
     {
-      id: 'use',
-      match: 'prefix',
-      prefix: ['use=', 'u='],
-      type: line => {
-        const evaled = eval(line);
-        if (typeof evaled !== 'function') return null;
-        return evaled;
-      },
-      default: () => (msg) => msg.util.reply('this item has no usage capabilites.')
-    },
-    {
       id: 'url',
       match: 'prefix',
       prefix: ['url=', 'link='],
       type: 'url'
+    },
+    {
+      id: 'result',
+      match: 'prefix',
+      prefix: ['result=', 'r='],
+      type: Items.resolveGroup
+    },
+    {
+      id: 'ingredients',
+      match: 'prefix',
+      prefix: ['ingredients=', 'i='],
+      type: Items.resolveCollection
     }
   ]
 });

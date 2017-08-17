@@ -107,7 +107,7 @@ class Collection extends Map {
 
   filter(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
-    const results = new Collection();
+    const results = new this.constructor();
     for (const [key, val] of this) {
       if (fn(val, key, this)) results.set(key, val);
     }

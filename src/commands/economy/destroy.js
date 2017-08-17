@@ -1,12 +1,11 @@
 const { Command } = require('discord-akairo');
-const { ItemGroup } = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { item } = args;
   if (!item) return msg.util.error('couldn\'t find that item.');
-  const id = item.id;
-  item.destroy();
-  return msg.util.success(`destroyed **${id}**.`);
+  Items.destroy(item.id);
+  return msg.util.success(`destroyed **${item.name}**.`);
 }
 
 module.exports = new Command('destroy', exec, {
@@ -18,7 +17,7 @@ module.exports = new Command('destroy', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: ItemGroup.resolve
+      type: Items.resolveGroup
     }
   ]
 });

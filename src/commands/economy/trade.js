@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/all.js');
-const { ItemCollection, Inventory, ReactionPoll } = require('../../structures/all.js');
+const { Items, Inventory, ReactionPoll } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { member, tradeDetails: [offer, demand] } = args;
@@ -53,15 +53,12 @@ async function exec(msg, args) {
     const success = votes.get('✅').length === 2;
 
     if (success) {
-      for (const itemGroup of offer) {
-        offInv.get(itemGroup.id).consume(itemGroup.amount);
-        demInv.add(itemGroup);
-      }
+      offInv.consume(offer);
+      demInv.add(offer);
+
       if (demand) {
-        for (const itemGroup of demand) {
-          demInv.get(itemGroup.id).consume(itemGroup.amount);
-          offInv.add(itemGroup);
-        }
+        demInv.consume(demand);
+        offInv.add(demand);
       }
     }
 
@@ -71,8 +68,8 @@ async function exec(msg, args) {
 }
 
 function checkInventory(itemColl, inventory) {
-  const hasItems = itemColl.items()
-    .every(itemGroup => inventory.has(itemGroup.id) || inventory.get(itemGroup.id).amount >= itemGroup.amount);
+  const hasItems = itemColl.exceptCurrencies()
+    .every(item => inventory.has(item.id) && inventory.get(item.id).amount >= item.amount);
   const hasCurrency = inventory.currencyValue() >= itemColl.currencyValue();
 
   if (hasItems && hasCurrency) return true;
@@ -91,7 +88,7 @@ module.exports = new Command('trade', exec, {
       id: 'tradeDetails',
       match: 'rest',
       type(string) {
-        return string.split(' for ').map(str => ItemCollection.resolve(str));
+        return string.split(' for ').map(str => Items.resolveCollection(str));
       }
     }
   ],

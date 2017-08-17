@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, paginate, stripIndents } = require('../../util/all.js');
-const { ItemGroup, Inventory } = require('../../structures/all.js');
+const { Items, Inventory } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const { user, item } = args;
@@ -12,15 +12,11 @@ function exec(msg, args) {
   if (item) {
     const itemGroup = inventory.get(item.id);
     if (!itemGroup) return msg.util.error(`${pron} ${neg} have any of that.`);
-    return msg.util.reply(`${pron} currently ${pos} **${itemGroup.amount} ${itemGroup.name}**.`);
+    return msg.util.reply(`${pron} currently ${pos} **${itemGroup}**.`);
   }
 
-  const lines = inventory.items().concat(inventory.recipes()).map(itemGroup => {
-    return `**${itemGroup.amount}** ${itemGroup.name}`;
-  });
-
+  const lines = inventory.items().concat(inventory.recipes()).map(itemGroup => itemGroup.toString());
   if (inventory.currencyString()) lines.unshift(inventory.currencyString());
-
   if (lines.length === 0) return msg.util.reply(`can't show what ${pron} ${neg} have.`);
 
   const paginated = paginate(lines);
@@ -65,7 +61,7 @@ module.exports = new Command('balance', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: ItemGroup.resolve
+      type: Items.resolveGroup
     },
     {
       id: 'page',

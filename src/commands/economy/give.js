@@ -1,13 +1,12 @@
 const { Command } = require('discord-akairo');
-const { ItemGroup, Inventory } = require('../../structures/all.js');
+const { Items, Inventory } = require('../../structures/all.js');
 
 function exec(msg, args) {
-  const { user, item } = args;
-  if (!item) return msg.util.error('there is no such item available.');
+  const { user, items } = args;
+  if (!items.every(i => i)) return msg.util.error('couldn\'t resolve items.');
 
-  const inventory = new Inventory(user);
-  inventory.add(item);
-  return msg.util.success('inventory updated.');
+  new Inventory(user).add(items);
+  return msg.util.success(`gave ${user}: ${items}`);
 }
 
 module.exports = new Command('give', exec, {
@@ -24,9 +23,9 @@ module.exports = new Command('give', exec, {
       }
     },
     {
-      id: 'item',
+      id: 'items',
       match: 'rest',
-      type: ItemGroup.resolve
+      type: Items.resolveCollection
     }
   ]
 });

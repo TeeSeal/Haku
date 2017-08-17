@@ -1,10 +1,16 @@
 const ItemGroup = require('./ItemGroup.js');
-const { filterObject } = require('../../util/all.js');
+const pluralize = require('pluralize');
+const { filterObject, capitalize } = require('../../util/all.js');
+
 
 class Recipe extends ItemGroup {
   constructor(options) {
     super(options);
+
+    this.shop = options.shop;
+    this.rarity = options.rarity;
     this.recipe = options.recipe;
+    this.result = options.recipe.result;
     this.ingredients = this.recipe.ingredients;
   }
 
@@ -12,20 +18,16 @@ class Recipe extends ItemGroup {
     return filterObject(this, ['id', 'value', 'shop', 'type', 'rarity', 'recipe']);
   }
 
-  setAmount(amount) {
-    this.amount = amount;
-    this.price = this.value * amount;
-
-    const prefix = `recipe${Math.abs(amount) > 1 ? 's' : ''}`;
-    const resultName = ItemGroup.formatName(this.id.split(' ').slice(1).join(' '), 1);
-    this.name = `${prefix}: ${resultName}`;
+  get name() {
+    const suffix = pluralize('recipe', this.amount || 1);
+    const resultName = this.id.split(' ').slice(1).map(word => capitalize(word)).join(' ');
+    return `${resultName} ${suffix}`;
   }
 
   examine() {
-    const result = this.recipe.result;
     return Object.entries(this.ingredients)
-      .map(([id, amount]) => `**${amount} ${ItemGroup.formatName(id, amount)}**`).join(' | ')
-      .concat(` => **${result.amount} ${ItemGroup.formatName(result.id, result.amount)}**`);
+      .map(([id, amount]) => `**${amount} ${id}**`).join(' | ')
+      .concat(` => **${this.result.amount} ${this.result.id}**`);
   }
 
   craft() {
@@ -40,9 +42,8 @@ class Recipe extends ItemGroup {
       }
       this.consume(1);
 
-      const result = ItemGroup.resolve(this.recipe.result.id).groupOf(this.recipe.result.amount || 1);
-      this.inventory.add(result);
-      return resolve(result);
+      this.inventory.add(this.result.id, this.result.amount);
+      return resolve(this.result);
     });
   }
 }

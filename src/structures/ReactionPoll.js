@@ -20,7 +20,7 @@ class ReactionPoll extends EventEmitter {
       for (const emoji of this.emojis) {
         await this.message.react(emoji);
       }
-      resolve(this.message);
+      return resolve(this.message);
     });
   }
 

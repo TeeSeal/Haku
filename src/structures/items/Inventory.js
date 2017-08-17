@@ -1,11 +1,11 @@
-const ItemGroup = require('./ItemGroup.js');
 const ItemCollection = require('./ItemCollection.js');
+const ItemHandler = require('./ItemHandler.js');
 
 class Inventory extends ItemCollection {
   constructor(user) {
     const { inventory } = user.client.db.users.get(user.id);
-    super(Object.keys(inventory)
-      .map(key => ItemGroup.resolve(key, inventory[key]))
+    super(Object.entries(inventory)
+      .map(([id, amount]) => [id, ItemHandler.resolveGroup(id, amount)])
     );
 
     for (const itemGroup of this.values()) itemGroup.bindTo(this);
@@ -13,28 +13,39 @@ class Inventory extends ItemCollection {
     this.db = user.client.db.users;
   }
 
-  toJSON() {
-    const result = {};
-    for (const itemGroup of this.values()) result[itemGroup.id] = itemGroup.amount;
-    return result;
-  }
-
-  add(item, amount) {
-    if (!(item instanceof ItemGroup)) item = ItemGroup.resolve(item, amount);
-    if (this.has(item.id)) {
-      return this.get(item.id).add(item.amount);
+  add(items, amount) {
+    if (items instanceof ItemCollection) {
+      for (const item of items.values()) this.addItemGroup(item);
+      return this;
+    } else if (!items.amount) {
+      items = ItemHandler.resolveGroup(items, amount);
     }
 
-    this.set(item.id, item.bindTo(this));
-    if (item.type === 'currency' && item.amount > 99) this.convertCurrencies();
-    this.save();
-
+    this.addItemGroup(items);
     return this;
   }
 
+  addItemGroup(item) {
+    if (!this.has(item.id)) {
+      this.set(item.id, item.groupOf(0).bindTo(this));
+    }
+
+    this.get(item.id).add(item.amount);
+  }
+
+  consume(items, amount) {
+    if (!(items instanceof ItemCollection)) return this.add(items, -amount || -1);
+    for (const item of items.values()) {
+      if (this.has(item.id)) this.get(item.id).consume(item.amount);
+    }
+  }
+
   setBalance(amount) {
-    const currencies = ItemGroup.convertToCurrency(amount);
-    for (const currency of currencies.values()) this.set(currency.id, currency.bindTo(this));
+    const currencies = ItemHandler.convertToCurrency(amount);
+    for (const key of this.currencies().keys()) this.delete(key);
+    for (const currency of currencies.values()) {
+      if (currency.amount > 0) this.set(currency.id, currency.bindTo(this));
+    }
     this.save();
   }
 

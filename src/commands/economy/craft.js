@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { ItemGroup, Inventory } = require('../../structures/all.js');
+const { Items, Inventory } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { recipe } = args;
@@ -8,7 +8,7 @@ async function exec(msg, args) {
   const inventory = new Inventory(msg.author);
   if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`);
   return inventory.get(recipe.id).craft()
-    .then(result => msg.util.success(`you have successfully crafted ${result}`))
+    .then(result => msg.util.success(`you have successfully crafted ${Items.resolveGroup(result.id, result.amount)}`))
     .catch(err => msg.util.error(err));
 }
 
@@ -22,7 +22,7 @@ module.exports = new Command('craft', exec, {
       match: 'rest',
       type(string) {
         if (!string.includes('recipe')) string = `recipe: ${string}`;
-        return ItemGroup.resolve(string);
+        return Items.resolveGroup(string);
       }
     }
   ]

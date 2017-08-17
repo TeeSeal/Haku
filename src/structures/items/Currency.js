@@ -1,22 +1,22 @@
 const ItemGroup = require('./ItemGroup.js');
-const { filterObject } = require('../../util/all.js');
+const pluralize = require('pluralize');
+const { filterObject, capitalize } = require('../../util/all.js');
 
 class Currency extends ItemGroup {
-  toJSON() {
-    return filterObject(this, ['id', 'value', 'type', 'emoji', 'description']);
+  constructor(options) {
+    super(options);
+
+    this.emoji = options.emoji;
+    this.description = options.description;
   }
 
-  use(item) {
-    return new Promise((resolve, reject) => {
-      if (!this.exchangeRates[item.id]) {
-        return reject(`you cannot exchange **${this.id}** for **${item.id}**`);
-      }
+  toJSON() {
+    return filterObject(this, ['id', 'value', 'description', 'emoji', 'type']);
+  }
 
-      this.inventory.consume(this);
-      this.inventory.update(item.groupOf(this.amount * this.exchangeRates[item.id]));
-
-      return resolve(this.inventory.get(item.id));
-    });
+  get name() {
+    return this.emoji || pluralize(this.id, Math.abs(this.amount) || 1)
+      .split(' ').map(word => capitalize(word)).join(' ');
   }
 }
 

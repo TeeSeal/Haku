@@ -1,21 +1,24 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
-const { ItemGroup } = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 
 function exec(msg, args) {
-  const { item } = args;
-  let { page } = args;
+  let { items, page } = args;
 
-  const shop = ItemGroup.SHOP;
+  const shop = Items.SHOP;
   if (shop.size === 0) return msg.util.error('sorry, there\'s nothing in the shop yet.');
 
-  if (item) {
-    if (!shop.has(item.id)) return msg.util.reply('that item is not being sold in the shop.');
-    return msg.util.reply(`**${item.amount}** ${item.name} => ${item.priceString()}.`);
+  if (items) {
+    items = items.filter(item => shop.has(item.id));
+    if (items.size > 0) {
+      return msg.util.send(items.map(item => {
+        return `**${item.name}** | ${Items.convertToCurrency(item.price).currencyString()}`;
+      }).join('\n'));
+    }
   }
 
-  const fields = shop.map(itm => {
-    return [itm.name, itm.priceString(), true];
+  const fields = shop.map(item => {
+    return [item.name, Items.convertToCurrency(item.price).currencyString(), true];
   });
 
   const paginated = paginate(fields, 10);
@@ -40,9 +43,9 @@ module.exports = new Command('shop', exec, {
   split: 'sticky',
   args: [
     {
-      id: 'item',
+      id: 'items',
       match: 'rest',
-      type: ItemGroup.resolve
+      type: Items.resolveCollection
     },
     {
       id: 'page',
