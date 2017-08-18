@@ -1,5 +1,6 @@
 const axios = require('axios');
 const moment = require('moment');
+const ytdl = require('ytdl-core');
 const key = require('../../../config.json').googleAPI;
 
 const fields = {
@@ -10,11 +11,15 @@ const fields = {
 const format = {
   video(video) {
     const duration = moment.duration(video.contentDetails.duration, moment.ISO_8601).asSeconds();
+    const url = `https://www.youtube.com/watch?v=${video.id}`;
     return {
       id: video.id,
       title: video.snippet.title,
       thumbnail: video.snippet.thumbnails.high.url,
-      duration
+      stream: ytdl(url),
+      host: 'youtube',
+      duration,
+      url
     };
   },
   playlist(playlist) {
@@ -100,10 +105,6 @@ class YouTube {
 
   static extractPlaylistID(url) {
     return url.match(/list=([\w\-_]+)/)[1];
-  }
-
-  static makeURL(id) {
-    return `https://www.youtube.com/watch?v=${id}`;
   }
 }
 

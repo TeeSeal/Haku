@@ -1,5 +1,3 @@
-const ytdl = require('ytdl-core');
-
 class Song {
   constructor(video, options) {
     Object.assign(this, video);
@@ -9,7 +7,7 @@ class Song {
   }
 
   play(connection, options) {
-    this.dispatcher = connection.playStream(ytdl(this.url, { filter: 'audioonly' }), options);
+    this.dispatcher = connection.playStream(this.stream, options);
     return this.dispatcher;
   }
 

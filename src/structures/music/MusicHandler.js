@@ -12,11 +12,6 @@ class MusicHandler {
     const songs = await providers[provider].resolveResource(query);
 
     if (!songs || songs.length === 0) return null;
-    for (const song of songs) {
-      song.host = provider;
-      song.url = providers[provider].makeURL(song.id);
-    }
-
     return songs.map(song => new Song(song, options));
   }
 }

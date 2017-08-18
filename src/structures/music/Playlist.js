@@ -86,7 +86,10 @@ class Playlist {
     });
 
     song.play(this.connection, { volume: this._volume })
-      .on('end', () => setTimeout(() => this.play(this.queue.shift()), 10));
+      .on('end', reason => {
+        if (reason === 'stop') return this.destroy();
+        return setTimeout(() => this.play(this.queue.shift()), 10);
+      });
   }
 
   add(songs) {
@@ -99,7 +102,6 @@ class Playlist {
     return [filtered, removed];
   }
 
-  skip() { this.fadeVolume(0).then(() => this.song.dispatcher.end()); }
   shuffle() { this.queue = shuffle(this.queue); }
 
   pause() {
@@ -136,9 +138,13 @@ class Playlist {
     });
   }
 
+  skip() {
+    this.fadeVolume(0).then(() => this.song.dispatcher.end('skip'));
+  }
+
   stop() {
     this.queue = [];
-    this.song.dispatcher.end();
+    this.song.dispatcher.end('stop');
   }
 
   destroy() {
