@@ -136,6 +136,11 @@ class Playlist {
     });
   }
 
+  stop() {
+    this.queue = [];
+    this.song.dispatcher.end();
+  }
+
   destroy() {
     this.voiceChannel.leave();
     playlists.delete(this.id);

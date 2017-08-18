@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed, YouTube, stripIndents, paginate } = require('../../util/all.js');
-const { Playlist, Song } = require('../../structures/all.js');
+const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
+const { Playlist, Music } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { query, load, rand, volume } = args;
@@ -13,9 +13,8 @@ async function exec(msg, args) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  const videos = load ? guild.playlists[query] : await YouTube.getVideos(query);
-  if (!videos) return msg.util.error('there is no such playlist.');
-  let songs = videos.map(video => new Song(video, msg.member, { volume }));
+  let songs = load ? guild.playlists[query] : await Music.resolveSongs(query, { member: msg.member, volume });
+  if (!songs) return msg.util.error('there is no such playlist.');
   if (rand) songs = shuffle(songs);
 
   const [added, removed] = playlist.add(songs);

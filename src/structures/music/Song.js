@@ -1,11 +1,9 @@
 const ytdl = require('ytdl-core');
 
 class Song {
-  constructor(video, member, options) {
+  constructor(video, options) {
     Object.assign(this, video);
-    this.member = member;
-    this.host = 'youtube';
-    this.url = `https://www.youtube.com/watch?v=${this.id}`;
+    this.member = options.member;
     this.volume = options.volume;
     this.dispatcher = null;
   }

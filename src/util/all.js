@@ -3,7 +3,6 @@ const path = require('path');
 const { pageItemCount } = require('../../config.json');
 
 const util = {
-  YouTube: require('./YouTube.js'),
   Color: require('./Color.js'),
   buildEmbed: require('./buildEmbed.js'),
   rootDir: __dirname.split(path.sep).slice(0, -1).join(path.sep),
