@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Playlist } = require('../../structures/all.js');
-const { buildEmbed } = require('../../util/all.js');
+const { buildEmbed, stripIndents, paginate } = require('../../util/all.js');
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
@@ -11,11 +11,21 @@ async function exec(msg) {
   }
 
   playlist.shuffle();
-  const list = playlist.queue.map(s => `- ${s.linkString}`).join('\n');
+  const list = playlist.queue.map(s => `- ${s.linkString}`);
+  const paginated = paginate(list);
+  const leftOver = paginated[1]
+    ? paginated.slice(1).reduce((a, b) => a + b.length, 0)
+    : null;
 
   return msg.util.send(buildEmbed({
-    title: 'Shuffled playlist:',
-    content: `**Now playing:** ${playlist.song.linkString}\n\n${list}`,
+    title: 'SHUFFLED PLAYLIST:',
+    content: stripIndents`
+      **Now playing:** ${playlist.song.linkString}
+
+      ${paginated.length === 0
+        ? ''
+        : `${paginated[0].join('\n')}${leftOver ? `\nand ${leftOver} more.` : ''}`
+      }`,
     icon: 'list',
     color: 'blue'
   }));

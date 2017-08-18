@@ -1,3 +1,4 @@
+const { shuffle } = require('../../util/all.js');
 const playlists = new Map();
 
 class Playlist {
@@ -102,7 +103,7 @@ class Playlist {
     return [filtered, removed];
   }
 
-  shuffle() { this.queue = shuffle(this.queue); }
+  shuffle() { shuffle(this.queue); }
 
   pause() {
     this.song.dispatcher.pause();
@@ -156,17 +157,6 @@ class Playlist {
   get volume() { return this._volume * 50; }
   static get(id) { return playlists.get(id); }
   static has(id) { return playlists.has(id); }
-}
-
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-
-  return array;
 }
 
 module.exports = Playlist;
