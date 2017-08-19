@@ -29,9 +29,14 @@ class Util {
       : [`${scope}s`, msg[scope].id, `in this ${scope}`];
   }
 
-  static filterObject(obj, keys) {
+  static filterObject(obj, keys, onlyTruthy) {
+    if (keys && !Array.isArray(keys)) onlyTruthy = keys;
+
     const result = {};
-    for (const key of keys) result[key] = obj[key];
+    for (const key of keys) {
+      if (onlyTruthy && !obj[key]) continue;
+      result[key] = obj[key];
+    }
     return result;
   }
 

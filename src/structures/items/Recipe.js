@@ -15,7 +15,7 @@ class Recipe extends ItemGroup {
   }
 
   toJSON() {
-    return filterObject(this, ['id', 'value', 'shop', 'type', 'rarity', 'recipe']);
+    return filterObject(this, ['id', 'value', 'shop', 'type', 'rarity', 'recipe'], true);
   }
 
   get name() {

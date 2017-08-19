@@ -2,8 +2,10 @@ const { Command } = require('discord-akairo');
 const { Items } = require('../../structures/all.js');
 
 function exec(msg, args) {
-  if (!args.type) return msg.util.error('please specify a type.');
-  if (!args.id) return msg.util.error('gotta give it a name.');
+  for (const prop of ['type', 'id', 'value']) {
+    if (!args[prop]) return msg.util.error(`please specify **${prop}**`);
+  }
+
   if (args.url) args.url = args.url.toString();
 
   if (args.type === 'recipe') {
@@ -49,8 +51,7 @@ module.exports = new Command('create', exec, {
         const num = parseInt(word);
         if (num < 1) return 1;
         return num;
-      },
-      default: 1
+      }
     },
     {
       id: 'shop',
@@ -62,13 +63,12 @@ module.exports = new Command('create', exec, {
       id: 'description',
       match: 'prefix',
       prefix: ['description=', 'desc=', 'd='],
-      default: ''
+      default: 'This item has no description.'
     },
     {
       id: 'emoji',
       match: 'prefix',
-      prefix: ['emoji=', 'e='],
-      default: ''
+      prefix: ['emoji=', 'e=']
     },
     {
       id: 'rarity',

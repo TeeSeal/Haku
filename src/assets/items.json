@@ -23,7 +23,6 @@
   {
     "id": "cake",
     "value": 100,
-    "shop": false,
     "description": "Tasty cake",
     "emoji": "🍰",
     "rarity": "rare",
@@ -42,7 +41,6 @@
     "value": 50,
     "shop": true,
     "description": "Fresh egg.",
-    "emoji": "",
     "rarity": "common",
     "type": "item"
   },
@@ -51,7 +49,6 @@
     "value": 80,
     "shop": true,
     "description": "Fresh milk.",
-    "emoji": "",
     "rarity": "common",
     "type": "item"
   },
@@ -60,7 +57,6 @@
     "value": 100,
     "shop": true,
     "description": "Regular flour.",
-    "emoji": "",
     "rarity": "common",
     "type": "item"
   },

@@ -13,7 +13,7 @@ class Item extends ItemGroup {
   }
 
   toJSON() {
-    return filterObject(this, ['id', 'value', 'shop', 'description', 'emoji', 'rarity', 'url', 'type']);
+    return filterObject(this, ['id', 'value', 'shop', 'description', 'emoji', 'rarity', 'url', 'type'], true);
   }
 }
 

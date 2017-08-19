@@ -56,7 +56,6 @@ class Inventory extends ItemCollection {
   }
 
   save() {
-    console.log(this.toJSON());
     return this.db.set(this.userID, { inventory: this.toJSON() });
   }
 }

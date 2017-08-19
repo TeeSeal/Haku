@@ -11,7 +11,7 @@ class Currency extends ItemGroup {
   }
 
   toJSON() {
-    return filterObject(this, ['id', 'value', 'description', 'emoji', 'type']);
+    return filterObject(this, ['id', 'value', 'description', 'emoji', 'type'], true);
   }
 
   get name() {
