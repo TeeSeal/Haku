@@ -5,7 +5,9 @@ class Inventory extends ItemCollection {
   constructor(user) {
     const { inventory } = user.client.db.users.get(user.id);
     super(Object.entries(inventory)
-      .map(([id, amount]) => [id, ItemHandler.resolveGroup(id, amount)])
+      .map(([id, amount]) => ItemHandler.resolveGroup(id, amount))
+      .filter(item => item)
+      .map(item => [item.id, item])
     );
 
     for (const itemGroup of this.values()) itemGroup.bindTo(this);
@@ -54,6 +56,7 @@ class Inventory extends ItemCollection {
   }
 
   save() {
+    console.log(this.toJSON());
     return this.db.set(this.userID, { inventory: this.toJSON() });
   }
 }

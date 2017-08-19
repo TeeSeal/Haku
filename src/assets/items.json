@@ -38,14 +38,6 @@
     "type": "item"
   },
   {
-    "id": "GTX 1080 Ti",
-    "value": 132542,
-    "shop": true,
-    "description": "Tasty cake",
-    "rarity": "rare",
-    "type": "item"
-  },
-  {
     "id": "egg",
     "value": 50,
     "shop": true,

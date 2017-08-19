@@ -21,7 +21,7 @@ class ItemHandler {
 
   static findAmountAndName(string, overwriteAmount) {
     const words = string.split(' ');
-    let amount = words.find(word => /(^-?\d+$)|(^an?$)/.test(word));
+    let amount = [words[0], words[words.length - 1]].find(word => /(^-?\d+$)|(^an?$)/.test(word));
     if (amount) words.splice(words.indexOf(amount), 1);
 
     if (typeof overwriteAmount === 'number') {
