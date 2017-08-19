@@ -16,7 +16,6 @@ async function exec(msg, args) {
   if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.');
   if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`);
 
-  // --- MESSAGE OTPIONS ---
   const options = buildEmbed({
     title: 'ITEM TRADE:',
     fields: [
@@ -36,7 +35,6 @@ async function exec(msg, args) {
     icon: 'trade',
     color: 'gold'
   });
-  // --- MESSAGE OPTIONS ---
 
   const statusMsg = await msg.util.send(`${msg.member} ${member}`, options);
   const poll = new ReactionPoll(statusMsg, {
