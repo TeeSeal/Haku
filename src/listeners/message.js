@@ -1,14 +1,14 @@
 const { Listener } = require('discord-akairo');
 const { Items, Inventory } = require('../structures/all.js');
 
-const cooldowns = [];
+const cooldowns = new Set();
 
 function exec(msg) {
-  if (!cooldowns.includes(msg.author.id) && !msg.author.bot) {
+  if (!cooldowns.has(msg.author.id) && !msg.author.bot) {
     const inventory = new Inventory(msg.author);
     inventory.add(Items.baseCurrency().groupOf(Math.floor((Math.random() * (5 - 10)) + 10)));
-    cooldowns.push(msg.author.id);
-    setTimeout(() => cooldowns.splice(cooldowns.indexOf(msg.author.id), 1), 6e4);
+    cooldowns.add(msg.author.id);
+    setTimeout(() => cooldowns.delete(msg.author.id), 6e4);
   }
 }
 

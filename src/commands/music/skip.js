@@ -2,6 +2,8 @@ const { Command } = require('discord-akairo');
 const { Playlist, ReactionPoll } = require('../../structures/all.js');
 const { buildEmbed } = require('../../util/Util.js');
 
+const voteSkips = new Set();
+
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);
 
@@ -26,6 +28,11 @@ async function exec(msg) {
     })).then(() => playlist.skip());
   }
 
+  if (voteSkips.has(msg.guild.id)) {
+    return msg.util.error('a voteskip is already in process.');
+  }
+  voteSkips.add(msg.guild.id);
+
   const members = msg.member.voiceChannel.members
     .filter(member => ![this.client.user.id, msg.author.id].includes(member.id));
   const votesNeeded = Math.ceil(members.size / 2);
@@ -35,7 +42,7 @@ async function exec(msg) {
     fields: [
       [
         'VOTESKIP',
-        `Click the ✅ to vote.\n${votesNeeded + 1} needed.\nVote will end in 30 seconds.`
+        `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
       ]
     ],
     url: song.url,
@@ -57,8 +64,14 @@ async function exec(msg) {
 
   poll.once('end', votes => {
     const success = votes.get('✅').length >= votesNeeded;
+    voteSkips.delete(msg.guild.id);
 
-    options.embed.description = `**${success ? '✅ Skipped.' : '❌ Voteskip failed.'}**`;
+    options.embed.fields = [
+      {
+        name: success ? '✅ Skipped.' : '❌ Voteskip failed.',
+        value: '\u200b'
+      }
+    ];
     return statusMsg.edit(members.array().join(), options)
       .then(() => success ? playlist.skip() : null);
   });

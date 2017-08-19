@@ -2,9 +2,16 @@ const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/Util.js');
 const { Items, Inventory, ReactionPoll } = require('../../structures/all.js');
 
+const tradingUsers = new Set();
+
 async function exec(msg, args) {
   const { member, tradeDetails: [offer, demand] } = args;
   if (!member) return msg.util.error('you need to specify a user to trade with.');
+
+  if ([member.id, msg.author.id].some(id => tradingUsers.has(id))) {
+    return msg.util.error('please end your current trade before starting a new one.');
+  }
+
   if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
     return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly');
   }
@@ -36,6 +43,9 @@ async function exec(msg, args) {
     color: 'gold'
   });
 
+  tradingUsers.add(msg.author.id);
+  tradingUsers.add(member.id);
+
   const statusMsg = await msg.util.send(`${msg.member} ${member}`, options);
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅', '❌'],
@@ -59,6 +69,9 @@ async function exec(msg, args) {
         offInv.add(demand);
       }
     }
+
+    tradingUsers.delete(msg.author.id);
+    tradingUsers.delete(member.id);
 
     options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`;
     return statusMsg.edit(`${msg.member} ${member}`, options);
