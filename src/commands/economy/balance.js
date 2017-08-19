@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed, paginate, stripIndents } = require('../../util/all.js');
+const { buildEmbed, paginate, stripIndents } = require('../../util/Util.js');
 const { Items, Inventory } = require('../../structures/all.js');
 
 function exec(msg, args) {

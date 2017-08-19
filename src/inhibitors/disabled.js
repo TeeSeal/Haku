@@ -1,5 +1,5 @@
 const { Inhibitor } = require('discord-akairo');
-const { getDBData } = require('../util/all.js');
+const { getDBData } = require('../util/Util.js');
 
 function exec(msg) {
   const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally'];

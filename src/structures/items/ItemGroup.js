@@ -1,6 +1,6 @@
 const pluralize = require('pluralize');
 const fs = require('fs');
-const { capitalize, rootDir } = require('../../util/all.js');
+const { capitalize, rootDir } = require('../../util/Util.js');
 
 class ItemGroup {
   constructor(options) {

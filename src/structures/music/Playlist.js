@@ -1,4 +1,4 @@
-const { shuffle } = require('../../util/all.js');
+const { shuffle, buildEmbed } = require('../../util/Util.js');
 const playlists = new Map();
 
 class Playlist {
@@ -27,7 +27,7 @@ class Playlist {
   filter(songs) {
     const removed = [];
     const filtered = songs.filter(song => {
-      // if (song.member.id === song.member.client.ownerID) return true;
+      if (song.member.id === song.member.client.ownerID) return true;
       if (song.duration > this.maxSongDuration) {
         removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });
         return false;
@@ -47,44 +47,29 @@ class Playlist {
 
   play(song) {
     if (!song) {
-      this.channel.send({
-        files: [{ attachment: 'src/assets/icons/clear.png' }],
-        embed: {
-          color: 16731469,
-          fields: [
-            {
-              name: 'We\'re out of songs.',
-              value: 'Better queue up some more!'
-            }
-          ],
-          thumbnail: { url: 'attachment://clear.png' }
-        }
-      });
-
+      this.channel.send(buildEmbed({
+        fields: [
+          ['We\'re out of songs.', 'Better queue up some more!']
+        ],
+        icon: 'clear',
+        color: 'red'
+      }));
       return this.destroy();
     }
 
     this.song = song;
     this._volume = this.convert(song.volume) || this.defaultVolume;
-    this.channel.send({
-      files: [{ attachment: 'src/assets/icons/play.png' }],
-      embed: {
-        title: song.title,
-        url: song.url,
-        color: 5025610,
-        thumbnail: { url: 'attachment://play.png' },
-        fields: [
-          {
-            name: 'Now playing.',
-            value: `Duration: ${song.durationString} | Volume: ${this.volume}%`
-          }
-        ],
-        author: {
-          name: song.member.displayName,
-          icon_url: song.member.user.avatarURL // eslint-disable-line
-        }
-      }
-    });
+
+    this.channel.send(buildEmbed({
+      title: song.title,
+      url: song.url,
+      fields: [
+        ['Now playing.', `Duration: ${song.durationString} | Volume: ${this.volume}%`]
+      ],
+      author: song.member,
+      icon: 'play',
+      color: 'green'
+    }));
 
     song.play(this.connection, { volume: this._volume })
       .on('end', reason => {

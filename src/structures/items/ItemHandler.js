@@ -1,6 +1,6 @@
 const fs = require('fs');
 const pluralize = require('pluralize');
-const { rootDir, capitalize } = require('../../util/all.js');
+const { rootDir, capitalize } = require('../../util/Util.js');
 const ItemCollection = require('./ItemCollection.js');
 const itemTypes = {
   item: require('./Item.js'),

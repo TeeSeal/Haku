@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed } = require('../../util/all.js');
+const { buildEmbed } = require('../../util/Util.js');
 const { Playlist } = require('../../structures/all.js');
 
 async function exec(msg) {

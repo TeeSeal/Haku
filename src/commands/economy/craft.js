@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { Items, Inventory } = require('../../structures/all.js');
-const { buildEmbed } = require('../../util/all.js');
+const { buildEmbed } = require('../../util/Util.js');
 
 async function exec(msg, args) {
   const { recipe } = args;
