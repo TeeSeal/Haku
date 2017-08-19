@@ -84,6 +84,7 @@ function exec(msg, args) {
 
 module.exports = new Command('playlist', exec, {
   aliases: ['playlist', 'playlists', 'queue', 'q'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'save',

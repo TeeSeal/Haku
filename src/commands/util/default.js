@@ -47,7 +47,8 @@ function getExpression(obj) {
 }
 
 module.exports = new Command('default', exec, {
-  aliases: ['default', 'def'],
+  aliases: ['default', 'def', 'set'],
+  channelRestriction: 'guild',
   userPermissions: ['MANAGE_GUILD'],
   args: [
     {

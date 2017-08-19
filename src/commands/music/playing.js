@@ -22,5 +22,6 @@ async function exec(msg) {
 
 module.exports = new Command('playing', exec, {
   aliases: ['playing', 'nowplaying', 'np', 'time'],
+  channelRestriction: 'guild',
   description: 'Show details on the currently palying song.'
 });

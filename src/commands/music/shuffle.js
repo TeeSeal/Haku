@@ -33,5 +33,6 @@ async function exec(msg) {
 
 module.exports = new Command('shuffle', exec, {
   aliases: ['shuffle'],
+  channelRestriction: 'guild',
   description: 'Shuffle the current playlist.'
 });

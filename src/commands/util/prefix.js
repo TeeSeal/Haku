@@ -17,6 +17,7 @@ async function exec(msg, args) {
 
 module.exports = new Command('prefix', exec, {
   aliases: ['prefix', 'pre'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'prefix',

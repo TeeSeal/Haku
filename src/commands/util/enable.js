@@ -36,6 +36,7 @@ function exec(msg, args) {
 
 module.exports = new Command('enable', exec, {
   aliases: ['enable'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'toEnable',

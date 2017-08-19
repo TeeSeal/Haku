@@ -89,6 +89,7 @@ function checkInventory(itemColl, inventory) {
 
 module.exports = new Command('trade', exec, {
   aliases: ['trade'],
+  channelRestriction: 'guild',
   split: 'sticky',
   args: [
     {

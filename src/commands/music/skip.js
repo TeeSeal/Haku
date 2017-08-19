@@ -79,5 +79,6 @@ async function exec(msg) {
 
 module.exports = new Command('skip', exec, {
   aliases: ['skip'],
+  channelRestriction: 'guild',
   description: 'Skip the currently palying song.'
 });

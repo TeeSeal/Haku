@@ -28,5 +28,6 @@ async function exec(msg) {
 
 module.exports = new Command('resume', exec, {
   aliases: ['resume'],
+  channelRestriction: 'guild',
   description: 'Resume paused playback.'
 });

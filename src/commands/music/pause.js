@@ -28,5 +28,6 @@ async function exec(msg) {
 
 module.exports = new Command('pause', exec, {
   aliases: ['pause'],
+  channelRestriction: 'guild',
   description: 'Pause sound playback'
 });

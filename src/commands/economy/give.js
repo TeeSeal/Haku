@@ -12,6 +12,7 @@ function exec(msg, args) {
 module.exports = new Command('give', exec, {
   aliases: ['give'],
   ownerOnly: true,
+  channelRestriction: 'guild',
   description: 'Give someone some items.',
   split: 'sticky',
   args: [

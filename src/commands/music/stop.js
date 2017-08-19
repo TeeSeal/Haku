@@ -9,6 +9,7 @@ async function exec(msg) {
 
 module.exports = new Command('stop', exec, {
   aliases: ['stop', 'stfu'],
+  channelRestriction: 'guild',
   userPermissions: 'MANAGE_GUILD',
   description: 'Stop playback and disconnect.'
 });

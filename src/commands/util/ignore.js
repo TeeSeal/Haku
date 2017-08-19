@@ -28,6 +28,7 @@ function exec(msg, args) {
 
 module.exports = new Command('ignore', exec, {
   aliases: ['ignore', 'blacklist'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'member',

@@ -21,6 +21,7 @@ async function exec(msg, args) {
 
 module.exports = new Command('repeat', exec, {
   aliases: ['repeat', 'replay'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'times',

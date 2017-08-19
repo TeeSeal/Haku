@@ -44,6 +44,7 @@ function exec(msg, args) {
 
 module.exports = new Command('volume', exec, {
   aliases: ['volume', 'vol'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'newVolume',

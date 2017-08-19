@@ -28,6 +28,7 @@ function exec(msg, args) {
 
 module.exports = new Command('unignore', exec, {
   aliases: ['unignore', 'whitelist'],
+  channelRestriction: 'guild',
   args: [
     {
       id: 'member',

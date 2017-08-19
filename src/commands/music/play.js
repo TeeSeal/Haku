@@ -58,6 +58,7 @@ async function exec(msg, args) {
 
 module.exports = new Command('play', exec, {
   aliases: ['play', 'yt'],
+  channelRestriction: 'guild',
   editable: false,
   args: [
     {
