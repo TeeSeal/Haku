@@ -1,6 +1,8 @@
 const ItemCollection = require('./ItemCollection.js');
 const ItemHandler = require('./ItemHandler.js');
 
+const inventories = new Map();
+
 class Inventory extends ItemCollection {
   constructor(inventory, user) {
     super(Object.entries(inventory)
@@ -9,9 +11,16 @@ class Inventory extends ItemCollection {
       .map(item => [item.id, item])
     );
 
-    for (const item of this.values()) item.bindTo(this);
-    this.userID = user.id;
+    this.id = user.id;
     this.db = user.client.db.users;
+
+    for (const item of this.values()) item.bindTo(this);
+
+    inventories.set(this.id, this);
+    setTimeout(() => {
+      this.save();
+      inventories.delete(this.id);
+    }, 6e5);
   }
 
   add(items, amount) {
@@ -55,10 +64,11 @@ class Inventory extends ItemCollection {
   }
 
   save() {
-    return this.db.set(this.userID, 'inventory', this.toJSON());
+    return this.db.set(this.id, 'inventory', this.toJSON());
   }
 
   static async fetch(user) {
+    if (inventories.has(user.id)) return inventories.get(user.id);
     const inventory = await user.client.db.users.fetch(user.id, 'inventory');
     return new Inventory(inventory, user);
   }

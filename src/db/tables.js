@@ -91,6 +91,6 @@ module.exports = {
         defaultValue: {}
       }
     },
-    cacheTimeout: 1e4
+    cacheTimeout: 6e5
   }
 };
