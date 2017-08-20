@@ -111,11 +111,8 @@ module.exports = new Command('play', exec, {
     Shuffle also works on youtube playlists.
 
     **The argument can be:**
-    - Link to youtube video
-    - Youtube video id
-    - Link to youtube playlist
-    - Youtube playlist id
+    - Link to the YouTube/SoundCloud resource. (song or playlist)
     - Name of saved playlist (with the -playlist flag)
-    - Simple query to search youtube for
+    - Simple query to search YouTube for
   `
 });

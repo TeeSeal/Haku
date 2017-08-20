@@ -43,7 +43,7 @@ function exec(msg, args) {
       if (playlists[name]) return msg.util.error('a playlist with that name already exists.');
       playlists[name] = {
         author: msg.member.id,
-        list: [song.plain].concat(queue.map(s => s.plain))
+        list: [song.plain].concat(queue.map(s => s.toJSON()))
       };
     }
 

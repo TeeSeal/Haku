@@ -1,4 +1,4 @@
-const { shuffle, buildEmbed } = require('../../util/Util.js');
+const { shuffle, buildEmbed, stripIndents } = require('../../util/Util.js');
 const playlists = new Map();
 
 class Playlist {
@@ -27,11 +27,17 @@ class Playlist {
   filter(songs) {
     const removed = [];
     const filtered = songs.filter(song => {
+      if (!song.stream) {
+        removed.push({ song, reason: 'Resource unavailable.' });
+        return false;
+      }
+
       if (song.member.id === song.member.client.ownerID) return true;
       if (song.duration > this.maxSongDuration) {
         removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });
         return false;
       }
+
       return true;
     });
 
@@ -56,6 +62,17 @@ class Playlist {
       }));
       return this.destroy();
     }
+
+    // if (song.error) {
+    //   this.channel.send(stripIndents`
+    //     An error occured while trying to play **${song.title}**:
+    //     ${song.error}
+    //
+    //     Skipping song.
+    //   `);
+    //
+    //   return this.play(this.queue.shift());
+    // }
 
     this.song = song;
     this._volume = this.convert(song.volume) || this.defaultVolume;

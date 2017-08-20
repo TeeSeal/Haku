@@ -1,6 +1,8 @@
+const { filterObject } = require('../../util/Util.js');
+
 class Song {
-  constructor(video, options) {
-    Object.assign(this, video);
+  constructor(song, options) {
+    Object.assign(this, song);
     this.member = options.member;
     this.volume = options.volume;
     this.dispatcher = null;
@@ -13,13 +15,8 @@ class Song {
 
   toString() { return this.title; }
 
-  get plain() {
-    return {
-      id: this.id,
-      title: this.title,
-      duration: this.duration,
-      host: this.host
-    };
+  toJSON() {
+    return filterObject(this, ['id', 'title', 'thumbnail', 'stream', 'duration', 'url']);
   }
 
   get durationString() { return format(this.duration); }

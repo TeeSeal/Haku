@@ -1,6 +1,11 @@
 const Song = require('./Song.js');
 
-const providers = { youtube: require('./YouTube.js') };
+// keep YouTube as the last element
+const providers = [
+  require('./SoundCloud.js'),
+  require('./YouTube.js')
+];
+
 
 class MusicHandler {
   constructor() {
@@ -8,8 +13,8 @@ class MusicHandler {
   }
 
   static async resolveSongs(query, options) {
-    const provider = Object.keys(providers).find(key => query.includes(key)) || 'youtube';
-    const songs = await providers[provider].resolveResource(query);
+    const provider = providers.find(p => p.REGEXP.test(query));
+    const songs = await provider.resolveResource(query);
 
     if (!songs || songs.length === 0) return null;
     return songs.map(song => new Song(song, options));

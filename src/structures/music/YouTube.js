@@ -1,38 +1,23 @@
 const axios = require('axios');
 const moment = require('moment');
 const ytdl = require('ytdl-core');
-const key = require('../../../config.json').googleAPI;
+const key = require('../../../config.json').googleAPIKey;
 
-const fields = {
-  video: 'items(id, snippet(title, thumbnails(high(url))), contentDetails(duration))',
-  playlist: 'items(id, snippet(title))'
-};
+class YouTube {
+  constructor() {
+    throw new Error('this class may not be instantiated.');
+  }
 
-const format = {
-  video(video) {
+  static formatSong(video) {
     const duration = moment.duration(video.contentDetails.duration, moment.ISO_8601).asSeconds();
     const url = `https://www.youtube.com/watch?v=${video.id}`;
     return {
       id: video.id,
       title: video.snippet.title,
       thumbnail: video.snippet.thumbnails.high.url,
-      stream: ytdl(url),
-      host: 'youtube',
       duration,
       url
     };
-  },
-  playlist(playlist) {
-    return {
-      id: playlist.id,
-      title: playlist.snippet.title
-    };
-  }
-};
-
-class YouTube {
-  constructor() {
-    throw new Error('this class may not be instantiated.');
   }
 
   static request(endpoint, params) {
@@ -40,20 +25,20 @@ class YouTube {
     return axios.get(`https://www.googleapis.com/youtube/v3/${endpoint}`, { params });
   }
 
-  static getByID(id, type = 'video') {
-    return YouTube.request(`${type}s`, {
+  static getByID(id) {
+    return YouTube.request(`videos`, {
       id,
-      fields: fields[type],
-      part: `snippet${type === 'video' ? ',contentDetails' : ''}`
+      fields: 'items(id, snippet(title, thumbnails(high(url))), contentDetails(duration))',
+      part: 'snippet,contentDetails'
     });
   }
 
-  static search(query, type = 'video') {
+  static search(query) {
     return YouTube.request('search', {
       q: query,
       maxResults: 1,
       part: 'id',
-      type: type
+      type: 'video'
     });
   }
 
@@ -67,8 +52,8 @@ class YouTube {
         .then(res => res.data.items[0].id.videoId);
     }
 
-    const video = await YouTube.getByID(query);
-    return [format.video(video.data.items[0])];
+    const video = await YouTube.getByID(query).then(result => result.data.items[0]);
+    return [await YouTube.attachStream(YouTube.formatSong(video))];
   }
 
   static async resolvePlaylist(query) {
@@ -81,14 +66,16 @@ class YouTube {
       maxResults: 50,
       fields: 'items(contentDetails(videoId))',
       part: 'contentDetails'
-    });
+    }).then(result => result.data.items);
 
-    if (!playlistItems.data.items) return [];
+    if (!playlistItems) return null;
 
-    const id = playlistItems.data.items.map(video => video.contentDetails.videoId).join();
-    const videos = await YouTube.getByID(id);
+    const id = playlistItems.map(video => video.contentDetails.videoId).join();
+    const videos = await YouTube.getByID(id).then(result => result.data.items);
 
-    return videos.data.items.map(video => format.video(video));
+    return Promise.all(videos.map(video => {
+      return YouTube.attachStream(YouTube.formatSong(video));
+    }));
   }
 
   static resolveResource(query) {
@@ -99,6 +86,22 @@ class YouTube {
     return YouTube.resolveVideo(query);
   }
 
+  static attachStream(song) {
+    return new Promise(resolve => {
+      const stream = ytdl(song.url);
+
+      stream.once('response', () => {
+        song.stream = stream;
+        resolve(song);
+      });
+
+      stream.once('error', () => {
+        song.stream = null;
+        resolve(song);
+      });
+    });
+  }
+
   static extractVideoID(url) {
     return url.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/)[2];
   }
@@ -106,6 +109,8 @@ class YouTube {
   static extractPlaylistID(url) {
     return url.match(/list=([\w\-_]+)/)[1];
   }
+
+  static get REGEXP() { return /./; }
 }
 
 module.exports = YouTube;
