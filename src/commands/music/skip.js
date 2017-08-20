@@ -12,20 +12,22 @@ async function exec(msg) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
+  const options = buildEmbed({
+    title: song.title,
+    fields: [
+      ['✅ Skipped.', '\u200b']
+    ],
+    url: song.url,
+    author: msg.member,
+    icon: 'skip',
+    color: 'cyan'
+  });
+
   const { song } = playlist;
   if (msg.member.permissions.has('MANAGE_GUILD')
     || song.member.id === msg.member.id
     || msg.member.voiceChannel.members.size === 2) {
-    return msg.util.send(buildEmbed({
-      title: song.title,
-      fields: [
-        ['✅ Skipped.', '\u200b']
-      ],
-      url: song.url,
-      author: msg.member,
-      icon: 'skip',
-      color: 'cyan'
-    })).then(() => playlist.skip());
+    return msg.util.send(options).then(() => playlist.skip());
   }
 
   if (voteSkips.has(msg.guild.id)) {
@@ -50,6 +52,13 @@ async function exec(msg) {
     icon: 'skip',
     color: 'cyan'
   });
+
+  options.embed.fields = [
+    {
+      name: 'VOTESKIP',
+      value: `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
+    }
+  ]
 
   const statusMsg = await msg.util.send(members.array().join(), options);
   const poll = new ReactionPoll(statusMsg, {
