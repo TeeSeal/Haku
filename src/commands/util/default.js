@@ -46,7 +46,7 @@ function getExpression(obj) {
   return `${arr.join(', ')} and ${last}`;
 }
 
-module.exports = new Command('default', exec, {
+module.exports = new Command('set', exec, {
   aliases: ['default', 'def', 'set'],
   channelRestriction: 'guild',
   userPermissions: ['MANAGE_GUILD'],
@@ -59,6 +59,7 @@ module.exports = new Command('default', exec, {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
         if (num < 1) return 1;
+        if (num > 120) return 120;
         return num;
       }
     },

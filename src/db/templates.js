@@ -62,10 +62,6 @@ module.exports = {
       songLimit: {
         type: Sequelize.INTEGER,
         defaultValue: 100
-      },
-      playlists: {
-        type: Sequelize.JSON,
-        defaultValue: {}
       }
     },
     channels: {

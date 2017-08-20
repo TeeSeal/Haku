@@ -3,7 +3,7 @@ const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util
 const { Playlist, Music } = require('../../structures/all.js');
 
 async function exec(msg, args) {
-  const { query, load, rand, volume } = args;
+  const { query, rand, volume } = args;
   const guild = this.client.db.guilds.get(msg.guild.id);
 
   if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.');
@@ -13,8 +13,8 @@ async function exec(msg, args) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  const songs = load ? guild.playlists[query] : await Music.resolveSongs(query, { member: msg.member, volume });
-  if (!songs) return msg.util.error('there is no such playlist.');
+  const songs = await Music.resolveSongs(query, { member: msg.member, volume });
+  if (!songs) return msg.util.error('couldn\'t find resource.');
   if (rand) shuffle(songs);
 
   const [added, removed] = playlist.add(songs);
@@ -27,7 +27,7 @@ async function exec(msg, args) {
       title: 'Failed to add:',
       content: stripIndents`
         ${rPaginated[0].map(obj => stripIndents`
-          - ${obj.song.linkString}
+          • ${obj.song.linkString}
           Reason: ${obj.reason}
         `).join('\n')}
         ${rPaginated[1] ? `and ${rLeftOver} more.` : ''}
@@ -46,7 +46,7 @@ async function exec(msg, args) {
   return msg.util.send(buildEmbed({
     title: 'Added to playlist:',
     content: stripIndents`
-      ${aPaginated[0].map(song => `- ${song.linkString}`).join('\n')}
+      ${aPaginated[0].map(song => `• ${song.linkString}`).join('\n')}
       ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
     `,
     image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
@@ -62,11 +62,6 @@ module.exports = new Command('play', exec, {
   editable: false,
   typing: true,
   args: [
-    {
-      id: 'load',
-      match: 'flag',
-      prefix: '-load'
-    },
     {
       id: 'rand',
       match: 'flag',
@@ -101,15 +96,11 @@ module.exports = new Command('play', exec, {
     \`volume\` - play the song(s) at the given volume rather than the default one.
 
     **Optional flags:**
-    \`-load\` - load a saved playlist.
     \`-shuffle\` - shuffle the playlist before playing.
 
     **Usage:**
     \`play something\` => searches youtube for 'something' and adds the first result to the queue.
     \`play one two vol=35\` => searches youtube for 'one two' and adds the first result to the queue with the volume at 35%.
-    \`play -load test\` => loads the saved playlist called 'test' and adds it to the queue.
-    \`play -load test -shuffle\` => shuffles the playlist before adding to queue.
-    Shuffle also works on youtube playlists.
 
     **The argument can be:**
     - Link to the YouTube/SoundCloud resource. (song or playlist)

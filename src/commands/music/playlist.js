@@ -4,62 +4,12 @@ const { Playlist } = require('../../structures/all.js');
 
 function exec(msg, args) {
   const playlist = Playlist.get(msg.guild.id);
-  const { save, del, all, name } = args;
   let { page } = args;
   const [song, queue] = playlist ? [playlist.song, playlist.queue] : [null, null];
 
-  if (save ^ del ^ all) {
-    const { playlists } = this.client.db.guilds.get(msg.guild.id);
-
-    if (all) {
-      if (Object.keys(playlists).length === 0) {
-        return msg.util.reply('there aren\'t any playlists yet, why don\'t you create one?');
-      }
-      const list = Object.keys(playlists).map(key => {
-        return `**${key}** | by ${msg.guild.members.get(playlists[key].author).displayName}`;
-      });
-
-      const paginated = paginate(list);
-      if (page < 1 || !page) page = 1;
-      if (page > paginated.length) page = paginated.length;
-
-      return msg.util.send(buildEmbed({
-        title: 'Available playlists:',
-        content: stripIndents`
-          ${paginated[page - 1].join('\n')}
-
-          **Page: ${page}/${paginated.length}**
-          Use: \`playlist -all page=<integer>\` to view another page.
-        `,
-        icon: 'list',
-        color: 'blue'
-      }));
-    }
-
-    if (!name) return msg.util.error('you need to give a name for the playlist.');
-
-    if (save) {
-      if (!playlist) return msg.util.error('nothing is currently playing.');
-      if (playlists[name]) return msg.util.error('a playlist with that name already exists.');
-      playlists[name] = {
-        author: msg.member.id,
-        list: [song.plain].concat(queue.map(s => s.toJSON()))
-      };
-    }
-
-    if (del) {
-      if (!playlists[name]) return msg.util.error('there is no such playlist.');
-      if (playlists[name].author !== msg.author.id) return msg.util.error('you can only delete your own playlists.');
-      playlists[name] = false;
-    }
-
-    this.client.db.guilds.set(msg.guild.id, { playlists });
-    return msg.util.success(`playlists updated.`);
-  }
-
   if (!playlist) { return msg.util.error('nothing is currently playing.'); }
 
-  const list = queue.map(s => `- ${s.linkString}`);
+  const list = queue.map(s => `• ${s.linkString}`);
   const paginated = paginate(list);
   if (page > paginated.length) page = paginated.length;
 
@@ -87,21 +37,6 @@ module.exports = new Command('playlist', exec, {
   channelRestriction: 'guild',
   args: [
     {
-      id: 'save',
-      match: 'flag',
-      prefix: '-save'
-    },
-    {
-      id: 'del',
-      match: 'flag',
-      prefix: '-delete'
-    },
-    {
-      id: 'all',
-      match: 'flag',
-      prefix: '-all'
-    },
-    {
       id: 'page',
       match: 'prefix',
       prefix: ['page=', 'p='],
@@ -118,16 +53,5 @@ module.exports = new Command('playlist', exec, {
       type: 'lowercase'
     }
   ],
-  description: stripIndents`
-    Shows the current playlist.
-    **Optional flags:**
-    \`-save\` - save the current playlist
-    \`-delete\` - delete a saved playlist
-    \`-all\` - view all available playlists
-
-    **Usage:**
-    \`playlist -save test\` => saves the current playlist under the name 'test'
-    \`playlist -delelte test\` => deletes the playlist called 'test'.
-    \`playlist -all\` => shows all available playlists.
-  `
+  description: 'Shows the current playlist.'
 });

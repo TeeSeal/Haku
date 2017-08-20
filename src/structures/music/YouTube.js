@@ -49,8 +49,9 @@ class YouTube {
 
     if (!/[a-zA-Z0-9-_]{11}$/.test(query)) {
       query = await YouTube.search(query)
-        .then(res => res.data.items[0].id.videoId);
+        .then(res => res.data.items[0] ? res.data.items[0].id.videoId : null);
     }
+    if (!query) return null;
 
     const video = await YouTube.getByID(query).then(result => result.data.items[0]);
     return [await YouTube.attachStream(YouTube.formatSong(video))];
