@@ -88,17 +88,17 @@ class YouTube {
 
   static attachStream(song) {
     return new Promise(resolve => {
-      const stream = ytdl(song.url);
-
-      stream.once('response', () => {
-        song.stream = stream;
-        resolve(song);
-      });
-
-      stream.once('error', () => {
-        song.stream = null;
-        resolve(song);
-      });
+      const stream = ytdl(song.url)
+        .once('response', () => {
+          song.stream = stream;
+          stream.removeAllListeners('error');
+          resolve(song);
+        })
+        .once('error', () => {
+          song.stream = null;
+          stream.removeAllListeners('response');
+          resolve(song);
+        });
     });
   }
 

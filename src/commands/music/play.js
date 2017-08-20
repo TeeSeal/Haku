@@ -13,9 +13,9 @@ async function exec(msg, args) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  let songs = load ? guild.playlists[query] : await Music.resolveSongs(query, { member: msg.member, volume });
+  const songs = load ? guild.playlists[query] : await Music.resolveSongs(query, { member: msg.member, volume });
   if (!songs) return msg.util.error('there is no such playlist.');
-  if (rand) songs = shuffle(songs);
+  if (rand) shuffle(songs);
 
   const [added, removed] = playlist.add(songs);
 
@@ -60,6 +60,7 @@ module.exports = new Command('play', exec, {
   aliases: ['play', 'yt'],
   channelRestriction: 'guild',
   editable: false,
+  typing: true,
   args: [
     {
       id: 'load',
