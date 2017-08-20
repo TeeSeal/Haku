@@ -39,26 +39,12 @@ async function exec(msg) {
     .filter(member => ![this.client.user.id, msg.author.id].includes(member.id));
   const votesNeeded = Math.ceil(members.size / 2);
 
-  const options = buildEmbed({
-    title: song.title,
-    fields: [
-      [
-        'VOTESKIP',
-        `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
-      ]
-    ],
-    url: song.url,
-    author: msg.member,
-    icon: 'skip',
-    color: 'cyan'
-  });
-
   options.embed.fields = [
     {
       name: 'VOTESKIP',
       value: `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
     }
-  ]
+  ];
 
   const statusMsg = await msg.util.send(members.array().join(), options);
   const poll = new ReactionPoll(statusMsg, {
