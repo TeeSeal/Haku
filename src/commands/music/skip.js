@@ -12,6 +12,7 @@ async function exec(msg) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
+  const { song } = playlist;
   const options = buildEmbed({
     title: song.title,
     fields: [
@@ -23,7 +24,6 @@ async function exec(msg) {
     color: 'cyan'
   });
 
-  const { song } = playlist;
   if (msg.member.permissions.has('MANAGE_GUILD')
     || song.member.id === msg.member.id
     || msg.member.voiceChannel.members.size === 2) {
