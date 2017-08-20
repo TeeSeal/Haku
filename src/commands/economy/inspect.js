@@ -2,11 +2,11 @@ const { Command } = require('discord-akairo');
 const { Items, Inventory } = require('../../structures/all.js');
 const { buildEmbed } = require('../../util/Util.js');
 
-function exec(msg, args) {
+async function exec(msg, args) {
   const { item } = args;
   if (!item) return msg.util.error('couldn\'t find that item.');
 
-  const inventory = new Inventory(msg.author);
+  const inventory = await Inventory.fetch(msg.author);
   if (!inventory.has(item.id) && !Items.SHOP.has(item.id)) {
     return msg.util.error('you can only inspect items in your inventory or in the shop.');
   }

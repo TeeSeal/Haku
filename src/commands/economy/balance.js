@@ -2,12 +2,12 @@ const { Command } = require('discord-akairo');
 const { buildEmbed, paginate, stripIndents } = require('../../util/Util.js');
 const { Items, Inventory } = require('../../structures/all.js');
 
-function exec(msg, args) {
+async function exec(msg, args) {
   const { user, item } = args;
   let { page } = args;
   const [pron, neg, pos] = user.id === msg.author.id ? ['you', 'don\'t', 'have'] : [user.username, 'doesn\'t', 'has'];
 
-  const inventory = new Inventory(user);
+  const inventory = await Inventory.fetch(user);
 
   if (item) {
     const itemGroup = inventory.get(item.id);

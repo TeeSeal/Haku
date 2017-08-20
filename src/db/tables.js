@@ -2,8 +2,8 @@ const Sequelize = require('sequelize');
 const { prefix } = require('../../config.json');
 
 module.exports = {
-  templates: {
-    client: {
+  client: {
+    schema: {
       id: {
         type: Sequelize.STRING,
         unique: true,
@@ -18,18 +18,11 @@ module.exports = {
         defaultValue: []
       }
     },
-    users: {
-      id: {
-        type: Sequelize.STRING,
-        unique: true,
-        primaryKey: true
-      },
-      inventory: {
-        type: Sequelize.JSON,
-        defaultValue: {}
-      }
-    },
-    guilds: {
+    cacheOnInit: true
+  },
+
+  guilds: {
+    schema: {
       id: {
         type: Sequelize.STRING,
         unique: true,
@@ -64,7 +57,11 @@ module.exports = {
         defaultValue: 100
       }
     },
-    channels: {
+    cacheOnInit: true
+  },
+
+  channels: {
+    schema: {
       id: {
         type: Sequelize.STRING,
         unique: true,
@@ -78,28 +75,22 @@ module.exports = {
         type: Sequelize.JSON,
         defaultValue: []
       }
-    }
+    },
+    cacheOnInit: true
   },
-  defaults: {
-    client: {
-      blacklist: [],
-      disabled: []
+
+  users: {
+    schema: {
+      id: {
+        type: Sequelize.STRING,
+        unique: true,
+        primaryKey: true
+      },
+      inventory: {
+        type: Sequelize.JSON,
+        defaultValue: {}
+      }
     },
-    users: { inventory: {} },
-    guilds: {
-      prefix,
-      blacklist: [],
-      disabled: [],
-      reps: {},
-      defaultVolume: 25,
-      maxVolume: 100,
-      maxSongDuration: 15,
-      songLimit: 100,
-      playlists: {}
-    },
-    channels: {
-      blacklist: [],
-      disabled: []
-    }
+    cacheTimeout: 1e4
   }
 };

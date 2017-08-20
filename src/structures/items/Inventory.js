@@ -2,15 +2,14 @@ const ItemCollection = require('./ItemCollection.js');
 const ItemHandler = require('./ItemHandler.js');
 
 class Inventory extends ItemCollection {
-  constructor(user) {
-    const { inventory } = user.client.db.users.get(user.id);
+  constructor(inventory, user) {
     super(Object.entries(inventory)
       .map(([id, amount]) => ItemHandler.resolveGroup(id, amount))
       .filter(item => item)
       .map(item => [item.id, item])
     );
 
-    for (const itemGroup of this.values()) itemGroup.bindTo(this);
+    for (const item of this.values()) item.bindTo(this);
     this.userID = user.id;
     this.db = user.client.db.users;
   }
@@ -56,7 +55,12 @@ class Inventory extends ItemCollection {
   }
 
   save() {
-    return this.db.set(this.userID, { inventory: this.toJSON() });
+    return this.db.set(this.userID, 'inventory', this.toJSON());
+  }
+
+  static async fetch(user) {
+    const inventory = await user.client.db.users.fetch(user.id, 'inventory');
+    return new Inventory(inventory, user);
   }
 }
 

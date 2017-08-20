@@ -8,8 +8,7 @@ function exec(msg) {
   for (const scope of scopes) {
     const [table, id] = getDBData(msg, scope);
 
-    if (this.client.db[table].get(id)
-      .blacklist.includes(msg.author.id)) return true;
+    if (this.client.db[table].get(id, 'blacklist').includes(msg.author.id)) return true;
   }
   return false;
 }

@@ -17,8 +17,8 @@ async function exec(msg, args) {
   }
   if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
 
-  const offInv = new Inventory(msg.author);
-  const demInv = new Inventory(member);
+  const offInv = await Inventory.fetch(msg.author);
+  const demInv = await Inventory.fetch(member);
 
   if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.');
   if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`);

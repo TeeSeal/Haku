@@ -6,7 +6,7 @@ async function exec(msg, args) {
   const { recipe } = args;
   if (!recipe) return msg.util.error('couldn\'t find recipe.');
 
-  const inventory = new Inventory(msg.author);
+  const inventory = await Inventory.fetch(msg.author);
   if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`);
   return inventory.get(recipe.id).craft()
     .then(() => {

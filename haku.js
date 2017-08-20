@@ -1,12 +1,12 @@
 const { AkairoClient } = require('discord-akairo');
 const logr = require('logr');
 const { token, ownerID } = require('./config.json');
-const SequelizeDatabase = require('./src/db/Sequelize.js');
+const SequelizeDatabase = require('./src/db/SequelizeDatabase.js');
 
 
 const client = new AkairoClient({
   prefix: msg => client.db.guilds
-    .get(msg.guild ? msg.guild.id : 'dm').prefix,
+      .get(msg.guild ? msg.guild.id : 'dm', 'prefix'),
   ownerID,
   allowMention: true,
   handleEdits: true,
@@ -15,7 +15,7 @@ const client = new AkairoClient({
   inhibitorDirectory: 'src/inhibitors/',
   listenerDirectory: 'src/listeners/'
 });
-client.db = new SequelizeDatabase();
+new SequelizeDatabase(client).init();
 
 client.on('ready', () => logr.success('Haku ready!'));
 

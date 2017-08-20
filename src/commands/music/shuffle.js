@@ -11,7 +11,7 @@ async function exec(msg) {
   }
 
   playlist.shuffle();
-  const list = playlist.queue.map(s => `- ${s.linkString}`);
+  const list = playlist.queue.map(s => `• ${s.linkString}`);
   const paginated = paginate(list);
   const leftOver = paginated[1]
     ? paginated.slice(1).reduce((a, b) => a + b.length, 0)
