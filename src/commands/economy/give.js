@@ -1,11 +1,11 @@
 const { Command } = require('discord-akairo');
-const { Items, Inventory } = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { user, items } = args;
   if (!items.every(i => i)) return msg.util.error('couldn\'t resolve items.');
 
-  const inventory = await Inventory.fetch(user);
+  const inventory = await this.client.inventories.fetch(user.id);
   inventory.add(items);
   return msg.util.success(`gave ${user}: ${items}`);
 }

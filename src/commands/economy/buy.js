@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Items, Inventory } = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   let { items } = args;
@@ -8,7 +8,7 @@ async function exec(msg, args) {
   items = items.filter(item => Items.SHOP.has(item.id));
   if (items.size === 0) return msg.util.error('no such item(s) in the shop.');
 
-  const inventory = await Inventory.fetch(msg.author);
+  const inventory = await this.client.inventories.fetch(msg.author.id);
   const balance = inventory.currencyValue();
   if (balance < items.totalValue()) return msg.util.error('you have insufficient funds to buy that.');
 

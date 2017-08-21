@@ -3,16 +3,14 @@ const SequelizeProvider = require('./SequelizeProvider.js');
 const tables = require('./tables.js');
 
 class SequelizeDatabase {
-  constructor(client, key) {
+  constructor(path) {
     this._db = new Sequelize('haku', 'user', 'password', {
       host: 'localhost',
       dialect: 'sqlite',
       logging: false,
-      storage: 'src/db/database.sqlite'
+      storage: path
     });
 
-    this.client = client;
-    client[key || 'db'] = this;
     this.init();
   }
 

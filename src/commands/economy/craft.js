@@ -1,12 +1,12 @@
 const { Command } = require('discord-akairo');
-const { Items, Inventory } = require('../../structures/all.js');
+const { Items } = require('../../structures/all.js');
 const { buildEmbed } = require('../../util/Util.js');
 
 async function exec(msg, args) {
   const { recipe } = args;
   if (!recipe) return msg.util.error('couldn\'t find recipe.');
 
-  const inventory = await Inventory.fetch(msg.author);
+  const inventory = await this.client.inventories.fetch(msg.author.id);
   if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`);
   return inventory.get(recipe.id).craft()
     .then(() => {

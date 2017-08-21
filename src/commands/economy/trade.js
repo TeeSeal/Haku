@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/Util.js');
-const { Items, Inventory, ReactionPoll } = require('../../structures/all.js');
+const { Items, ReactionPoll } = require('../../structures/all.js');
 
 const tradingUsers = new Set();
 
@@ -17,8 +17,8 @@ async function exec(msg, args) {
   }
   if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
 
-  const offInv = await Inventory.fetch(msg.author);
-  const demInv = await Inventory.fetch(member);
+  const offInv = await this.client.inventories.fetch(msg.author.id);
+  const demInv = await this.client.inventories.fetch(member.id);
 
   if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.');
   if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`);

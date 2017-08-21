@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util.js');
-const { Playlist, Music } = require('../../structures/all.js');
+const { Playlist } = require('../../structures/all.js');
 
 async function exec(msg, args) {
   const { query, rand, volume } = args;
@@ -13,7 +13,7 @@ async function exec(msg, args) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  const songs = await Music.resolveSongs(query, { member: msg.member, volume });
+  const songs = await this.client.music.resolveSongs(query, { member: msg.member, volume });
   if (!songs) return msg.util.error('couldn\'t find resource.');
   if (rand) shuffle(songs);
 

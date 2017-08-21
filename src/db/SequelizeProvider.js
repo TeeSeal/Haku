@@ -23,7 +23,7 @@ class SequelizeProvider {
 
   get(id, key, defaultValue) {
     if (key === undefined) {
-      return this.items.get(id);
+      return this.items.get(id) || this.defaultValues;
     }
 
     if (defaultValue === undefined) {

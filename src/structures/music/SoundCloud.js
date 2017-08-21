@@ -1,37 +1,34 @@
-const axios = require('axios');
-const clientID = require('../../../config.json').soundCloudClientID;
+const AxiosClient = require('../AxiosClient');
 
-class SoundCloud {
-  constructor() {
-    throw new Error('this class may not be instantiated');
+class SoundCloud extends AxiosClient {
+  constructor(clientID) {
+    super({
+      baseURL: 'https://api.soundcloud.com/',
+      defaultParams: { client_id: clientID } // eslint-disable-line
+    });
+    this.clientID = clientID;
+    this.REGEXP = /^https:\/\/soundcloud\.com\//;
   }
 
-  static formatSong(track) {
+  formatSong(track) {
     return {
       id: track.id,
       title: track.title,
       thumbnail: track.artwork_url,
-      stream: `${track.stream_url}?client_id=${clientID}`,
+      stream: `${track.stream_url}?client_id=${this.clientID}`,
       duration: Math.floor(track.duration / 1e3),
       url: track.permalink_url
     };
   }
 
-  static request(endpoint, params) {
-    params.client_id = clientID; // eslint-disable-line
-    return axios.get(`https://api.soundcloud.com/${endpoint}`, { params });
-  }
-
-  static async resolveResource(url) {
-    const resource = await SoundCloud.request('resolve.json', { url }).then(result => result.data);
+  async resolveResource(url) {
+    const resource = await this.get('resolve.json', { url }).then(result => result.data);
     if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
 
     return resource.kind === 'track'
-      ? [SoundCloud.formatSong(resource)]
-      : resource.tracks.map(track => SoundCloud.formatSong(track));
+      ? [this.formatSong(resource)]
+      : resource.tracks.map(track => this.formatSong(track));
   }
-
-  static get REGEXP() { return /^https:\/\/soundcloud\.com\//; }
 }
 
 
