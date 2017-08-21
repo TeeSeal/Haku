@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util.js');
-const { Playlist } = require('../../structures/all.js');
+const Playlist = require('../../structures/music/Playlist.js');
 
 async function exec(msg, args) {
   const { query, rand, volume } = args;

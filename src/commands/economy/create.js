@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Items } = require('../../structures/all.js');
+const Items = require('../../structures/items/ItemHandler.js');
 
 function exec(msg, args) {
   for (const prop of ['type', 'id', 'value']) {

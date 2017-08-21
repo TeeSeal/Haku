@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { Items } = require('../../structures/all.js');
+const Items = require('../../structures/items/ItemHandler.js');
 
 async function exec(msg, args) {
   const { user, items } = args;

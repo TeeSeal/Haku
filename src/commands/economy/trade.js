@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/Util.js');
-const { Items, ReactionPoll } = require('../../structures/all.js');
+const Items = require('../../structures/items/ItemHandler.js');
+const ReactionPoll = require('../../structures/ReactionPoll.js');
 
 const tradingUsers = new Set();
 

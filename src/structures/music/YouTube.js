@@ -91,7 +91,7 @@ class YouTube extends AxiosClient {
 
   static attachStream(song) {
     return new Promise(resolve => {
-      const stream = ytdl(song.url)
+      const stream = ytdl(song.url, { filter: 'audioonly' })
         .once('response', () => {
           song.stream = stream;
           stream.removeAllListeners('error');

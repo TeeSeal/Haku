@@ -1,4 +1,4 @@
-const { shuffle, buildEmbed, stripIndents } = require('../../util/Util.js');
+const { shuffle, buildEmbed } = require('../../util/Util.js');
 const playlists = new Map();
 
 class Playlist {
@@ -62,17 +62,6 @@ class Playlist {
       }));
       return this.destroy();
     }
-
-    // if (song.error) {
-    //   this.channel.send(stripIndents`
-    //     An error occured while trying to play **${song.title}**:
-    //     ${song.error}
-    //
-    //     Skipping song.
-    //   `);
-    //
-    //   return this.play(this.queue.shift());
-    // }
 
     this.song = song;
     this._volume = this.convert(song.volume) || this.defaultVolume;

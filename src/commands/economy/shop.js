@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js');
-const { Items } = require('../../structures/all.js');
+const Items = require('../../structures/items/ItemHandler.js');
 
 function exec(msg, args) {
   let { items, page } = args;

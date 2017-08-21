@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
-const { Playlist } = require('../../structures/all.js');
 const { buildEmbed } = require('../../util/Util.js');
+const Playlist = require('../../structures/music/Playlist.js');
 
 async function exec(msg) {
   const playlist = Playlist.get(msg.guild.id);

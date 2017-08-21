@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents } = require('../../util/Util.js');
-const { Playlist } = require('../../structures/all.js');
+const Playlist = require('../../structures/music/Playlist.js');
 
 function exec(msg, args) {
   const { newVolume } = args;
