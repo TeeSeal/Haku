@@ -6,15 +6,14 @@ class Anime {
     this.title = attr.titles.en_jp;
     this.japaneseTitle = attr.titles.ja_jp;
     this.rating = Math.floor(+attr.averageRating / 20);
-    this.ageRating = attr.ageRating;
+    this.ageRating = attr.ageRating || 'N/A';
+    this.episodeCount = attr.episodes || 'N/A';
+    this.genres = attr.genres || ['N/A'];
     this.type = attr.subtype;
     this.status = attr.status;
-    this.episodeCount = attr.episodes || '??';
-    this.nsfw = attr.nsfw;
     this.youtubeID = attr.youtubeVideoId;
     this.poster = attr.posterImage.original.split('?')[0];
     this.synopsis = attr.synopsis;
-    this.genres = attr.genres || [];
     this.url = `https://kitsu.io/anime/${attr.slug}`;
 
     this._startDate = attr.startDate;
@@ -23,7 +22,7 @@ class Anime {
 
   get trailer() {
     if (this.youtubeID) return `https://www.youtube.com/watch?v=${this.youtubeID}`;
-    return 'None';
+    return 'N/A';
   }
 
   get startDate() {

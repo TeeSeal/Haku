@@ -18,7 +18,7 @@ async function exec(msg, args) {
     url: anime.url,
     fields: [
       ['Type', capitalize(anime.type), true],
-      ['Rating', '⭐'.repeat(anime.rating), true],
+      ['Rating', '⭐'.repeat(anime.rating) || 'N/A', true],
       ['Genres', anime.genres.join(', ')],
       ['Episodes', anime.episodeCount, true],
       ['Age Rating', anime.ageRating, true],
