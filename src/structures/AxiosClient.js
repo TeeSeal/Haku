@@ -3,10 +3,15 @@ const { version } = require('../../package.json');
 
 class AxiosClient {
   constructor(options) {
+    const headers = Object.assign(
+      { 'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)` },
+      options.headers
+    );
+
     this.axios = axios.create({
       baseURL: options.baseURL,
-      timeout: 2e3,
-      headers: { 'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)` }
+      timeout: 5e3,
+      headers
     });
 
     this.defaultParams = options.defaultParams || {};

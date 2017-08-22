@@ -4,10 +4,10 @@ const Playlist = require('../../structures/music/Playlist.js');
 
 async function exec(msg, args) {
   const { query, rand, volume } = args;
-  const guild = this.client.db.guilds.get(msg.guild.id);
-
+  if (!query) return msg.util.error('give me something to look for, yo..');
   if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.');
 
+  const guild = this.client.db.guilds.get(msg.guild.id);
   const playlist = Playlist.get(msg.guild.id) || new Playlist(msg, guild);
   if (msg.guild.me.voiceChannel && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
