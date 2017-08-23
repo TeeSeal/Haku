@@ -1,8 +1,5 @@
 const HakuClient = require('./src/structures/HakuClient.js');
-const logr = require('logr');
 const { ownerID } = require('./config.json');
-const { token } = require('./keychain.json');
-
 
 const client = new HakuClient({
   prefix: msg => client.db.guilds
@@ -17,6 +14,4 @@ const client = new HakuClient({
   database: 'src/db/database.sqlite'
 });
 
-client.on('ready', () => logr.success('Haku ready!'));
-
-client.login(token);
+client.init();

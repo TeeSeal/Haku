@@ -1,4 +1,5 @@
 const { AkairoClient } = require('discord-akairo');
+const logr = require('logr');
 const keychain = require('../../keychain.json');
 
 const SequelizeDatabase = require('../db/SequelizeDatabase.js');
@@ -11,8 +12,28 @@ class HakuClient extends AkairoClient {
     super(options);
 
     this.db = new SequelizeDatabase(options.database);
-    this.inventories = new InventoryHandler(this.db.users);
-    this.music = new MusicHandler(keychain);
+    this.inventories = null;
+    this.music = null;
+  }
+
+  init() {
+    logr.info('Connecting to database...');
+    this.db.init()
+      .then(db => {
+        logr.success('OK');
+
+        logr.info('Setting up inventories...');
+        this.inventories = new InventoryHandler(db.users);
+        logr.success('OK');
+
+        logr.info('Setting up music...');
+        this.music = new MusicHandler(keychain);
+        logr.success('OK');
+
+        logr.info('Logging in...');
+        this.login(keychain.token);
+      })
+      .catch(err => { throw err; });
   }
 }
 

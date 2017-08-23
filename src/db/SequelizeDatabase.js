@@ -10,11 +10,9 @@ class SequelizeDatabase {
       logging: false,
       storage: path
     });
-
-    this.init();
   }
 
-  init() {
+  async init() {
     for (const [name, options] of Object.entries(tables)) {
       const table = this._db.define(name, options.schema);
 
@@ -24,7 +22,10 @@ class SequelizeDatabase {
       }
 
       this[name] = new SequelizeProvider(table, options);
+      await this[name].init();
     }
+
+    return this;
   }
 }
 

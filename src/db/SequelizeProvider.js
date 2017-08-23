@@ -8,8 +8,6 @@ class SequelizeProvider {
     this.cacheTimeout = this.cacheOnInit ? 0 : options.cacheTimeout || 0;
     this.defaultValues = new Proxy(options.defaultValues || {}, { set: () => null });
     this.items = new Collection();
-
-    this.init();
   }
 
   async init() {
@@ -19,6 +17,8 @@ class SequelizeProvider {
       const rows = await this.table.all();
       for (const row of rows) this.items.set(row[this.idColumn], row);
     }
+
+    return this;
   }
 
   get(id, key, defaultValue) {
