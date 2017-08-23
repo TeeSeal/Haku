@@ -6,8 +6,9 @@ class Anime {
     this.title = attr.titles.en_jp;
     this.japaneseTitle = attr.titles.ja_jp;
     this.rating = Math.floor(+attr.averageRating / 20);
-    this.ageRating = attr.ageRating || 'N/A';
-    this.episodeCount = attr.episodes || 'N/A';
+    this.ageRating = attr.ageRating;
+    this.ageRatingGuide = attr.ageRatingGuide;
+    this.episodeCount = attr.episodeCount || 'N/A';
     this.genres = attr.genres || ['N/A'];
     this.type = attr.subtype;
     this.status = attr.status;
@@ -23,6 +24,11 @@ class Anime {
   get trailer() {
     if (this.youtubeID) return `https://www.youtube.com/watch?v=${this.youtubeID}`;
     return 'N/A';
+  }
+
+  get ageRatingString() {
+    if (![this.ageRating, this.ageRatingGuide].some(prop => prop)) return 'N/A';
+    return `${this.ageRating}${this.ageRatingGuide ? ` | ${this.ageRatingGuide}` : ''}`;
   }
 
   get startDate() {

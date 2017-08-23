@@ -21,7 +21,7 @@ async function exec(msg, args) {
       ['Rating', '⭐'.repeat(anime.rating) || 'N/A', true],
       ['Genres', anime.genres.join(', ')],
       ['Episodes', anime.episodeCount, true],
-      ['Age Rating', anime.ageRating, true],
+      ['Age Rating', anime.ageRatingString, true],
       ['Start Date', anime.startDate, true],
       ['End Date', anime.endDate, true],
       ['Trailer', anime.trailer]

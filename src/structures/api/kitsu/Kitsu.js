@@ -30,8 +30,8 @@ class Kitsu extends AxiosClient {
       : await this.search(string);
 
     if (!result) return null;
-    const genres = await this.getGenres(result.id);
 
+    const genres = await this.getGenres(result.id);
     if (genres) {
       result.attributes.genres = genres.map(genre => {
         return genre.attributes.name;
