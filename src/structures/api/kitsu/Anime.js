@@ -5,7 +5,7 @@ class Anime {
     const attr = options.attributes;
     this.title = attr.titles.en_jp;
     this.japaneseTitle = attr.titles.ja_jp;
-    this.rating = Math.floor(+attr.averageRating / 20);
+    this.rating = Math.ceil(+attr.averageRating / 20);
     this.ageRating = attr.ageRating;
     this.ageRatingGuide = attr.ageRatingGuide;
     this.episodeCount = attr.episodeCount || 'N/A';
