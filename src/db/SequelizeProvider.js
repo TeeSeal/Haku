@@ -62,13 +62,9 @@ class SequelizeProvider {
       Object.assign(data, key);
     }
 
-
     this.items.set(id, data);
 
-    return this.table.upsert({
-      [this.idColumn]: id,
-      [key]: value
-    });
+    return this.table.upsert(data.dataValues || data);
   }
 
   delete(id, key) {

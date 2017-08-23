@@ -54,7 +54,7 @@ module.exports = new Command('set', exec, {
     {
       id: 'maxSongDuration',
       match: 'prefix',
-      prefix: ['duration=', 'length='],
+      prefix: ['duration=', 'length=', 'd='],
       type: word => {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
@@ -90,7 +90,7 @@ module.exports = new Command('set', exec, {
     {
       id: 'songLimit',
       match: 'prefix',
-      prefix: ['songLimit=', 'songs=', 'maxSongs='],
+      prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
       type: word => {
         if (!word || isNaN(word)) return null;
         const num = parseInt(word);
@@ -109,7 +109,7 @@ module.exports = new Command('set', exec, {
     \`songLimit\` - the maximum amount of songs one can have in a playlist.
 
     **Usage:**
-    \`default duration=20 volume=30 maxVolume=70\` => sets the values.
-    \`default duration=20 v=30 mv=70\` => shortcuts.
+    \`set duration=20 volume=30 maxVolume=70\` => sets the values.
+    \`set duration=20 v=30 mv=70\` => shortcuts.
   `
 });
