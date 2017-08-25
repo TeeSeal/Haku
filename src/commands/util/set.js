@@ -11,7 +11,7 @@ async function exec(msg, args) {
   const obj = {};
 
   if (maxSongDuration) {
-    if (playlist) playlist.maxSongDuration = maxSongDuration * 60;
+    if (playlist) playlist.maxSongDuration = maxSongDuration;
     obj.maxSongDuration = maxSongDuration;
   }
 
