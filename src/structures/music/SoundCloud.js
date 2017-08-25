@@ -21,13 +21,21 @@ class SoundCloud extends AxiosClient {
     };
   }
 
-  async resolveResource(url) {
-    const resource = await this.get('resolve.json', { url }).then(result => result.data);
-    if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
+  async resolveResource(query) {
+    if (this.REGEXP.test(query)) {
+      const resource = await this.get('resolve.json', { query }).then(result => result.data);
+      if (!resource) return null;
+      if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
 
-    return resource.kind === 'track'
-      ? [this.formatSong(resource)]
-      : resource.tracks.map(track => this.formatSong(track));
+      return resource.kind === 'track'
+        ? [this.formatSong(resource)]
+        : resource.tracks.map(track => this.formatSong(track));
+    }
+
+    const track = await this.get('tracks', { q: query }).then(result => result.data[0]);
+    if (!track) return null;
+
+    return [this.formatSong(track)];
   }
 }
 

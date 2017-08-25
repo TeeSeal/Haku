@@ -29,16 +29,16 @@ class MusicHandler {
       queries.map(async query => {
         const words = query.split(' ');
         const providerName = words.find(word => {
-          return word.startsWith('-') && this.provicers.has(word.slice(1));
+          return word.startsWith('~') && this.providers.has(word.toLowerCase().slice(1));
         });
 
-        if (providerName) query = words.splice(words.indexOf(providerName), 1);
+        if (providerName) words.splice(words.indexOf(providerName), 1);
 
         const provider = providerName
-          ? this.providers.get(providerName)
-          : this.providers.find(p => p.REGEXP.test(query));
+          ? this.providers.get(providerName.toLowerCase().slice(1))
+          : this.providers.find(p => p.REGEXP.test(words.join(' ')));
 
-        const songs = await provider.resolveResource(query);
+        const songs = await provider.resolveResource(words.join(' '));
 
         if (!songs || songs.length === 0) return [];
         return songs.map(song => new Song(song, options));
