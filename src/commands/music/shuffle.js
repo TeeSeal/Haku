@@ -1,9 +1,8 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js');
-const Playlist = require('../../structures/music/Playlist.js');
 
 async function exec(msg) {
-  const playlist = Playlist.get(msg.guild.id);
+  const playlist = this.client.music.playlists.get(msg.guild.id);
 
   if (!playlist) return msg.util.error('nothing is currently playing.');
   if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {

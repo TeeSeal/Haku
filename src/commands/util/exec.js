@@ -14,6 +14,7 @@ function run(msg, args) {
 
 module.exports = new Command('exec', run, {
   aliases: ['exec'],
+  ownerOnly: true,
   description: 'execute a command in the terminal.',
   args: [
     {

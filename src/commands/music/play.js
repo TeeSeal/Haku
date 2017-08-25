@@ -1,19 +1,18 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util.js');
-const Playlist = require('../../structures/music/Playlist.js');
 
 async function exec(msg, args) {
-  const { query, rand, volume } = args;
-  if (!query) return msg.util.error('give me something to look for, yo..');
+  const { queries, rand, volume } = args;
+  if (queries.length === 0) return msg.util.error('give me something to look for, yo..');
   if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.');
-
-  const guild = this.client.db.guilds.get(msg.guild.id);
-  const playlist = Playlist.get(msg.guild.id) || new Playlist(msg, guild);
   if (msg.guild.me.voiceChannel && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
     return msg.util.error('you have to be in the voice channel I\'m currently in.');
   }
 
-  const songs = await this.client.music.resolveSongs(query, { member: msg.member, volume });
+  const guildOptions = this.client.db.guilds.get(msg.guild.id);
+  const playlist = this.client.music.getPlaylist(msg, guildOptions);
+
+  const songs = await this.client.music.resolveSongs(queries, { member: msg.member, volume });
   if (!songs) return msg.util.error('couldn\'t find resource.');
   if (rand) shuffle(songs);
 
@@ -68,13 +67,10 @@ module.exports = new Command('play', exec, {
       prefix: '-shuffle'
     },
     {
-      id: 'query',
+      id: 'queries',
       match: 'rest',
-      type: line => {
-        const url = line.split(' ').find(word => /^(https?:\/\/)?(www\.)?youtu\.?be(\.com)?\/.+$/.test(word));
-        if (url) return url;
-        return line;
-      }
+      type: line => line.split(';').map(q => q.trim()),
+      default: []
     },
     {
       id: 'volume',

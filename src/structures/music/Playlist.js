@@ -1,20 +1,19 @@
 const { shuffle, buildEmbed } = require('../../util/Util.js');
-const playlists = new Map();
 
 class Playlist {
-  constructor(msg, guild) {
-    this.maxSongDuration = guild.maxSongDuration * 60;
-    this.songLimit = guild.songLimit;
+  constructor(msg, guildOptions, handler) {
+    this.handler = handler;
+    this.id = msg.guild.id;
+    this.maxSongDuration = guildOptions.maxSongDuration * 60;
+    this.songLimit = guildOptions.songLimit;
     this.queue = [];
     this.channel = msg.channel;
-    this.id = this.channel.guild.id;
     this.voiceChannel = msg.member.voiceChannel;
     this.song = null;
     this.connection = null;
-    this.defaultVolume = this.convert(guild.defaultVolume) || 0.50;
+    this.defaultVolume = this.convert(guildOptions.defaultVolume) || 0.50;
     this._volume = this.defaultVolume;
     this.paused = false;
-    playlists.set(this.id, this);
   }
 
   connectAndPlay() {
@@ -33,6 +32,7 @@ class Playlist {
       }
 
       if (song.member.id === song.member.client.ownerID) return true;
+
       if (song.duration > this.maxSongDuration) {
         removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });
         return false;
@@ -87,10 +87,12 @@ class Playlist {
   add(songs) {
     const [filtered, removed] = this.filter(songs);
     this.queue = this.queue.concat(filtered);
+
     if (!this.song) {
-      if (filtered.length !== 0) this.connectAndPlay();
-      else this.destroy();
+      if (filtered.length === 0) this.destroy();
+      else this.connectAndPlay();
     }
+
     return [filtered, removed];
   }
 
@@ -141,13 +143,11 @@ class Playlist {
 
   destroy() {
     this.voiceChannel.leave();
-    playlists.delete(this.id);
+    this.handler.playlists.delete(this.id);
   }
 
   convert(volume) { return volume / 50; }
   get volume() { return this._volume * 50; }
-  static get(id) { return playlists.get(id); }
-  static has(id) { return playlists.has(id); }
 }
 
 module.exports = Playlist;

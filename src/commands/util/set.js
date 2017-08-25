@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo');
-const Playlist = require('../../structures/music/Playlist.js');
 const { stripIndents } = require('../../util/Util.js');
 
 async function exec(msg, args) {
@@ -8,7 +7,7 @@ async function exec(msg, args) {
   const { guilds } = this.client.db;
   const dbDefaultVolume = guilds.get(msg.guild.id).defaultVolume;
   const dbMaxVolume = guilds.get(msg.guild.id).maxVolume;
-  const playlist = Playlist.get(msg.guild.id);
+  const playlist = this.client.music.playlists.get(msg.guild.id);
   const obj = {};
 
   if (maxSongDuration) {

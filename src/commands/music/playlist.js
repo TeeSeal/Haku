@@ -1,9 +1,8 @@
 const { Command } = require('discord-akairo');
 const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js');
-const Playlist = require('../../structures/music/Playlist.js');
 
 function exec(msg, args) {
-  const playlist = Playlist.get(msg.guild.id);
+  const playlist = this.client.music.playlists.get(msg.guild.id);
   let { page } = args;
   const [song, queue] = playlist ? [playlist.song, playlist.queue] : [null, null];
 

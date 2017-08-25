@@ -1,4 +1,6 @@
 const { filterObject } = require('../../util/Util.js');
+const moment = require('moment');
+require('moment-duration-format');
 
 class Song {
   constructor(song, options) {
@@ -19,27 +21,22 @@ class Song {
     return filterObject(this, ['id', 'title', 'thumbnail', 'stream', 'duration', 'url']);
   }
 
-  get durationString() { return format(this.duration); }
-  get linkString() { return `[${this.title}](${this.url}) (${format(this.duration)})`; }
+  get durationString() { return Song.format(this.duration); }
+  get linkString() { return `[${this.title}](${this.url}) (${this.durationString})`; }
 
   get time() {
-    const total = format(this.duration);
-    const current = format(this.dispatcher.time / 1000);
-    const left = format(this.duration - (this.dispatcher.time / 1000));
+    const total = Song.format(this.duration);
+    const current = Song.format(this.dispatcher.time);
+    const left = Song.format(this.duration - this.dispatcher.time + 1000);
 
     return `${current} / ${total}  |  ${left} left`;
   }
-}
 
-function format(sec) {
-  const hours = leftPad(~~(sec / 3600));
-  const minutes = leftPad(~~(sec % 3600 / 60));
-  const seconds = leftPad(~~(sec % 3600 % 60));
-  return hours === `00` ? `${minutes}:${seconds}` : `${hours}:${minutes}:${seconds}`;
-}
-
-function leftPad(num) {
-  return num > 9 ? num.toString() : `0${num}`;
+  static format(time) {
+    const duration = moment.duration(time);
+    if (duration.minutes() > 0) return duration.format('hh:mm:ss');
+    return `00:${duration.format('ss')}`;
+  }
 }
 
 module.exports = Song;

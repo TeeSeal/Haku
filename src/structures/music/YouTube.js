@@ -13,7 +13,7 @@ class YouTube extends AxiosClient {
   }
 
   formatSong(video) {
-    const duration = moment.duration(video.contentDetails.duration, moment.ISO_8601).asSeconds();
+    const duration = moment.duration(video.contentDetails.duration).asMilliseconds();
     const url = `https://www.youtube.com/watch?v=${video.id}`;
     return {
       id: video.id,

@@ -16,7 +16,7 @@ class SoundCloud extends AxiosClient {
       title: track.title,
       thumbnail: track.artwork_url,
       stream: `${track.stream_url}?client_id=${this.clientID}`,
-      duration: Math.floor(track.duration / 1e3),
+      duration: track.duration,
       url: track.permalink_url
     };
   }
