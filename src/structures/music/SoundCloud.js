@@ -6,7 +6,9 @@ class SoundCloud extends AxiosClient {
       baseURL: 'https://api.soundcloud.com/',
       defaultParams: { client_id: clientID } // eslint-disable-line
     });
+
     this.clientID = clientID;
+    this.aliases = ['soundcloud', 'sc'];
     this.REGEXP = /^https:\/\/soundcloud\.com\//;
   }
 
@@ -23,7 +25,7 @@ class SoundCloud extends AxiosClient {
 
   async resolveResource(query) {
     if (this.REGEXP.test(query)) {
-      const resource = await this.get('resolve.json', { query }).then(result => result.data);
+      const resource = await this.get('resolve.json', { url: query }).then(result => result.data);
       if (!resource) return null;
       if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
 

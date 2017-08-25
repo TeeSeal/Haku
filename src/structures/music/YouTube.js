@@ -9,6 +9,7 @@ class YouTube extends AxiosClient {
       defaultParams: { key }
     });
 
+    this.aliases = ['youtube', 'yt', 'tube'];
     this.REGEXP = /./;
   }
 

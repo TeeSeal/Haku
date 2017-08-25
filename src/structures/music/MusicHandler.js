@@ -27,18 +27,22 @@ class MusicHandler {
   resolveSongs(queries, options) {
     return Promise.all(
       queries.map(async query => {
-        const words = query.split(' ');
-        const providerName = words.find(word => {
-          return word.startsWith('~') && this.providers.has(word.toLowerCase().slice(1));
+        const provider = this.providers.find(prov => {
+          if (query.includes('~')) {
+            const alias = query.split(' ').find(word => word.startsWith('~'));
+
+            if (prov.aliases.includes(alias.slice(1))) {
+              const words = query.split(' ');
+              words.splice(words.indexOf(alias), 1);
+              query = words.join(' ');
+              return true;
+            }
+          }
+
+          return prov.REGEXP.test(query);
         });
 
-        if (providerName) words.splice(words.indexOf(providerName), 1);
-
-        const provider = providerName
-          ? this.providers.get(providerName.toLowerCase().slice(1))
-          : this.providers.find(p => p.REGEXP.test(words.join(' ')));
-
-        const songs = await provider.resolveResource(words.join(' '));
+        const songs = await provider.resolveResource(query);
 
         if (!songs || songs.length === 0) return [];
         return songs.map(song => new Song(song, options));
