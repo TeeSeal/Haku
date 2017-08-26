@@ -50,7 +50,7 @@ async function exec(msg, args) {
 }
 
 module.exports = new Command('tag', exec, {
-  aliases: ['t', 'tag', 'tags'],
+  aliases: ['tag', 't', 'tags'],
   split: 'sticky',
   channelRestriction: 'guild',
   args: [
