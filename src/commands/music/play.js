@@ -88,19 +88,29 @@ module.exports = new Command('play', exec, {
   ],
   description: stripIndents`
     Play some music.
+    **Mandatory arguments:**
+    \`query\` - something to use as a source.
+
     **Optional arguments:**
     \`volume\` - play the song(s) at the given volume rather than the default one.
 
     **Optional flags:**
-    \`-shuffle\` - shuffle the playlist before playing.
+    \`-shuffle\` - shuffle the songs before adding to playlist.
 
     **Usage:**
     \`play something\` => searches youtube for 'something' and adds the first result to the queue.
     \`play one two vol=35\` => searches youtube for 'one two' and adds the first result to the queue with the volume at 35%.
 
-    **The argument can be:**
+    **A query can be:**
     - Link to the YouTube/SoundCloud resource. (song or playlist)
-    - Name of saved playlist (with the -playlist flag)
-    - Simple query to search YouTube for
+    - Simple search query.
+
+    **NOTE:**
+    Search queries will default to YouTube.
+    To specify a provider to search on use \`~<PROVIDER_NAME>\` anywhere in your query.
+    Example: \`play otter pop ~soundcloud\` => will search for \`otter pop\` on soundcloud.
+
+    You may also input multiple queries in a single command by separating them with \`;\`.
+    Example: \`play <YOUTUBE_VIDEO>; <SOUNDCLOUD_PLAYLIST>; some search query; other search query ~soundcloud\`
   `
 });

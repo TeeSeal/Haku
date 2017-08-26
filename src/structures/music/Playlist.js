@@ -31,7 +31,7 @@ class Playlist {
         return false;
       }
 
-      // if (song.member.id === song.member.client.ownerID) return true;
+      if (song.member.id === song.member.client.ownerID) return true;
 
       if (song.duration > this.maxSongDuration * 6e4) {
         removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });

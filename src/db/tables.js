@@ -6,7 +6,6 @@ module.exports = {
     schema: {
       id: {
         type: Sequelize.STRING,
-        unique: true,
         primaryKey: true
       },
       blacklist: {
@@ -25,7 +24,6 @@ module.exports = {
     schema: {
       id: {
         type: Sequelize.STRING,
-        unique: true,
         primaryKey: true
       },
       prefix: {
@@ -64,7 +62,6 @@ module.exports = {
     schema: {
       id: {
         type: Sequelize.STRING,
-        unique: true,
         primaryKey: true
       },
       blacklist: {
@@ -83,12 +80,25 @@ module.exports = {
     schema: {
       id: {
         type: Sequelize.STRING,
-        unique: true,
         primaryKey: true
       },
       inventory: {
         type: Sequelize.JSON,
         defaultValue: {}
+      }
+    },
+    cacheTimeout: 6e5
+  },
+
+  tags: {
+    schema: {
+      id: {
+        type: Sequelize.STRING,
+        primaryKey: true
+      },
+      tags: {
+        type: Sequelize.JSON,
+        defaultValue: []
       }
     },
     cacheTimeout: 6e5
