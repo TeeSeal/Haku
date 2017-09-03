@@ -1,7 +1,7 @@
-const AxiosClient = require('../../AxiosClient.js');
+const HTTPClient = require('../../HTTPClient.js');
 const Anime = require('./Anime.js');
 
-class Kitsu extends AxiosClient {
+class Kitsu extends HTTPClient {
   constructor() {
     super({
       baseURL: 'https://kitsu.io/api/edge/',
@@ -13,15 +13,15 @@ class Kitsu extends AxiosClient {
   }
 
   search(query) {
-    return this.get('anime', { 'filter[text]': query }).then(res => res.data.data[0]);
+    return this.get('anime', { 'filter[text]': query }).then(res => res.data[0]);
   }
 
   getByID(id) {
-    return this.get(`anime/${id}`).then(res => res.data.data);
+    return this.get(`anime/${id}`).then(res => res.data);
   }
 
   getGenres(id) {
-    return this.get(`anime/${id}/genres`).then(res => res.data.data);
+    return this.get(`anime/${id}/genres`).then(res => res.data);
   }
 
   async resolve(string) {

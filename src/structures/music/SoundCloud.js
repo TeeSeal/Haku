@@ -1,6 +1,6 @@
-const AxiosClient = require('../AxiosClient');
+const HTTPClient = require('../HTTPClient');
 
-class SoundCloud extends AxiosClient {
+class SoundCloud extends HTTPClient {
   constructor(clientID) {
     super({
       baseURL: 'https://api.soundcloud.com/',
@@ -25,7 +25,7 @@ class SoundCloud extends AxiosClient {
 
   async resolveResource(query) {
     if (this.REGEXP.test(query)) {
-      const resource = await this.get('resolve.json', { url: query }).then(result => result.data);
+      const resource = await this.get('resolve.json', { url: query });
       if (!resource) return null;
       if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
 

@@ -1,8 +1,8 @@
-const AxiosClient = require('../AxiosClient.js');
+const HTTPClient = require('../HTTPClient.js');
 const moment = require('moment');
 const ytdl = require('ytdl-core');
 
-class YouTube extends AxiosClient {
+class YouTube extends HTTPClient {
   constructor(key) {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
@@ -58,11 +58,11 @@ class YouTube extends AxiosClient {
 
     if (!/[a-zA-Z0-9-_]{11}$/.test(query)) {
       query = await this.search(query)
-        .then(res => res.data.items[0] ? res.data.items[0].id.videoId : null);
+        .then(res => res.items[0] ? res.items[0].id.videoId : null);
     }
     if (!query) return null;
 
-    const video = await this.getByID(query).then(result => result.data.items[0]);
+    const video = await this.getByID(query).then(result => result.items[0]);
     return [await YouTube.attachStream(this.formatSong(video))];
   }
 
@@ -71,11 +71,11 @@ class YouTube extends AxiosClient {
       query = YouTube.extractPlaylistID(query);
     }
 
-    const playlistItems = await this.getPlaylistItems(query).then(res => res.data.items);
+    const playlistItems = await this.getPlaylistItems(query).then(res => res.items);
     if (!playlistItems) return null;
 
     const id = playlistItems.map(video => video.contentDetails.videoId).join();
-    const videos = await this.getByID(id).then(result => result.data.items);
+    const videos = await this.getByID(id).then(result => result.items);
 
     return Promise.all(videos.map(video => {
       return YouTube.attachStream(this.formatSong(video));
