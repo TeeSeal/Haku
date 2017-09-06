@@ -9,7 +9,7 @@ function exec(msg, args) {
     : [args.from, args.to];
 
   const number = Math.floor(Math.random() * (to - from)) + from;
-  return msg.util.reply(`you rolled **${number}**`);
+  return msg.util.info(`you rolled **${number}**`);
 }
 
 module.exports = new Command('roll', exec, {

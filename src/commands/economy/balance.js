@@ -12,12 +12,12 @@ async function exec(msg, args) {
   if (item) {
     const itemGroup = inventory.get(item.id);
     if (!itemGroup) return msg.util.error(`${pron} ${neg} have any of that.`);
-    return msg.util.reply(`${pron} currently ${pos} **${itemGroup}**.`);
+    return msg.util.info(`${pron} currently ${pos} **${itemGroup}**.`);
   }
 
   const lines = inventory.items().concat(inventory.recipes()).map(itemGroup => itemGroup.toString());
   if (inventory.currencyString()) lines.unshift(inventory.currencyString());
-  if (lines.length === 0) return msg.util.reply(`can't show what ${pron} ${neg} have.`);
+  if (lines.length === 0) return msg.util.info(`can't show what ${pron} ${neg} have.`);
 
   const paginated = paginate(lines);
   if (page < 1 || !page) page = 1;

@@ -16,7 +16,7 @@ async function exec(msg, args) {
   const tags = await this.client.db.tags.fetch(msg.guild.id, 'tags');
 
   if (!name) {
-    if (tags.length === 0) return msg.util.reply('there are currently no tags.');
+    if (tags.length === 0) return msg.util.info('there are currently no tags.');
 
     return msg.util.send(stripIndents`
       Available tags:

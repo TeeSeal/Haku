@@ -18,7 +18,7 @@ function exec(msg, args) {
     return `__**${cat.id}**__\n\n${list}`;
   }).filter(cat => cat).join(`\n\n\n`);
 
-  if (msg.channel.type !== 'dm') msg.util.reply('sent you a DM with info.');
+  if (msg.channel.type !== 'dm') msg.util.info('sent you a DM with info.');
   return channel.send(stripIndents`
     **Haku commands**:
     Use \`help <command>\` to view more detailed info on a command.

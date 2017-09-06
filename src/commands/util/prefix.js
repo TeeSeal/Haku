@@ -4,7 +4,7 @@ const { stripIndents } = require('../../util/Util.js');
 async function exec(msg, args) {
   const { prefix } = args;
   if (!prefix) {
-    return msg.util.reply(stripIndents`
+    return msg.util.info(stripIndents`
     current prefix in this guild is: **${this.client.db.guilds.get(msg.guild.id).prefix}**
   `);
   }
