@@ -9,7 +9,7 @@ class InventoryHandler {
   async fetch(id) {
     if (this.inventories.has(id)) return this.inventories.get(id);
 
-    const inventory = await this.db.fetch(id);
+    const inventory = await this.db.fetch(id, 'inventory');
     const instance = new Inventory(inventory, id, this);
 
     this.inventories.set(id, instance);
