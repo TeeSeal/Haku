@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js');
+const { buildEmbed } = require('../../util/Util.js');
 const Items = require('../../structures/items/ItemHandler.js');
 
 function exec(msg, args) {
@@ -21,17 +21,13 @@ function exec(msg, args) {
     return [item.name, Items.convertToCurrency(item.price).currencyString(), true];
   });
 
-  const paginated = paginate(fields, 10);
-  if (page < 1 || !page) page = 1;
-  if (page > paginated.length) page = paginated.length;
-
   return msg.util.send(buildEmbed({
     title: '**SHOP:**',
-    fields: paginated[page - 1],
-    content: stripIndents`
-      **Page: ${page}/${paginated.length}**
-      Use: \`${this.id} page=<integer>\` to view another page.
-    `,
+    paginate: {
+      items: fields,
+      commandName: this.id,
+      page
+    },
     icon: 'shop',
     color: 'gold'
   }));

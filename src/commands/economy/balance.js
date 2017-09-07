@@ -1,13 +1,13 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed, paginate, stripIndents } = require('../../util/Util.js');
+const { buildEmbed, stripIndents } = require('../../util/Util.js');
 const Items = require('../../structures/items/ItemHandler.js');
 
 async function exec(msg, args) {
-  const { user, item } = args;
-  let { page } = args;
+  const { user, item, page } = args;
   const [pron, neg, pos] = user.id === msg.author.id ? ['you', 'don\'t', 'have'] : [user.username, 'doesn\'t', 'has'];
 
   const inventory = await this.client.inventories.fetch(user.id);
+  if (inventory.size === 0) return msg.util.info(`can't show what ${pron} ${neg} have.`);
 
   if (item) {
     const itemGroup = inventory.get(item.id);
@@ -15,22 +15,16 @@ async function exec(msg, args) {
     return msg.util.info(`${pron} currently ${pos} **${itemGroup}**.`);
   }
 
-  const lines = inventory.items().concat(inventory.recipes()).map(itemGroup => itemGroup.toString());
-  if (inventory.currencyString()) lines.unshift(inventory.currencyString());
-  if (lines.length === 0) return msg.util.info(`can't show what ${pron} ${neg} have.`);
-
-  const paginated = paginate(lines);
-  if (page < 1 || !page) page = 1;
-  if (page > paginated.length) page = paginated.length;
+  const items = inventory.items().concat(inventory.recipes()).map(i => i.toString());
 
   return msg.util.send(buildEmbed({
     title: `${user.username}'s items:`,
-    content: stripIndents`
-      ${paginated[page - 1].join('\n')}
-
-      **Page: ${page}/${paginated.length}**
-      Use: \`${this.id} page=<integer>\` to view another page.
-    `,
+    content: inventory.currencyString(),
+    paginate: {
+      items,
+      commandName: this.id,
+      page
+    },
     icon: 'list',
     color: 'blue'
   }));

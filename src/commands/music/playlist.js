@@ -1,31 +1,23 @@
 const { Command } = require('discord-akairo');
-const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js');
+const { buildEmbed } = require('../../util/Util.js');
 
 function exec(msg, args) {
+  const { page } = args;
   const playlist = this.client.music.playlists.get(msg.guild.id);
-  let { page } = args;
   const [song, queue] = playlist ? [playlist.song, playlist.queue] : [null, null];
 
   if (!playlist) { return msg.util.error('nothing is currently playing.'); }
 
   const list = queue.map(s => `• ${s.linkString}`);
-  const paginated = paginate(list);
-  if (page > paginated.length) page = paginated.length;
 
   return msg.util.send(buildEmbed({
     title: 'Playlist:',
-    content: stripIndents`
-      **Now playing:** ${song.linkString}
-
-      ${paginated.length === 0
-        ? ''
-        : `
-            ${paginated[page - 1].join('\n')}
-
-            **Page: ${page}/${paginated.length}**
-            Use: \`playlist page=<integer>\` to view another page.
-          `
-      }`,
+    content: `**Now playing:** ${song.linkString}`,
+    paginate: {
+      items: list,
+      commandName: this.id,
+      page
+    },
     icon: 'list',
     color: 'blue'
   }));

@@ -15,7 +15,7 @@ class SequelizeProvider {
 
     if (this.cacheOnInit) {
       const rows = await this.table.all();
-      for (const row of rows) this.items.set(row[this.idColumn], row);
+      for (const row of rows) this.items.set(row[this.idColumn], sanitize(row.dataValues));
     }
 
     return this;
@@ -43,7 +43,7 @@ class SequelizeProvider {
       const row = await this.table.findCreateFind({ where: { [this.idColumn]: id } })
         .then(r => r[0]);
 
-      this.items.set(row[this.idColumn], row);
+      this.items.set(row[this.idColumn], sanitize(row.dataValues));
 
       if (this.cacheTimeout) {
         setTimeout(() => this.items.delete(id), this.cacheTimeout);
@@ -63,8 +63,7 @@ class SequelizeProvider {
     }
 
     this.items.set(id, data);
-
-    return this.table.upsert(data.dataValues || data);
+    return this.table.upsert(data);
   }
 
   delete(id, key) {
@@ -81,6 +80,12 @@ class SequelizeProvider {
     this.items.delete(id);
     return this.table.destroy({ where: { [this.idColumn]: id } });
   }
+}
+
+function sanitize(object) {
+  delete object.updatedAt;
+  delete object.createdAt;
+  return object;
 }
 
 module.exports = SequelizeProvider;

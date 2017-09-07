@@ -1,9 +1,9 @@
 const tags = require('common-tags');
 const path = require('path');
-const { pageItemCount } = require('../../config.json');
 
 const Color = require('./Color.js');
 const buildEmbed = require('./buildEmbed.js');
+const paginate = require('./paginate.js');
 
 class Util {
   constructor() {
@@ -13,15 +13,9 @@ class Util {
   static get rootDir() { return __dirname.split(path.sep).slice(0, -1).join(path.sep); }
   static get COLOR() { return Color; }
   static get buildEmbed() { return buildEmbed; }
-  static get stripIndents() { return tags.stripIndents; }
+  static get paginate() { return paginate; }
   static capitalize(string) { return string[0].toUpperCase() + string.slice(1); }
 
-  static paginate(arr, itemsCountOverride) {
-    const array = arr.slice(0);
-    const result = [];
-    while (array[0]) result.push(array.splice(0, itemsCountOverride || pageItemCount));
-    return result;
-  }
 
   static getDBData(msg, scope) {
     return scope === 'globally'

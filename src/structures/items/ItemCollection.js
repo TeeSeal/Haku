@@ -17,8 +17,8 @@ class ItemCollection extends Collection {
   currencyString() {
     if (this.currencies().size === 0) return '';
     return this.sortedCurrencies()
-      .map(curr => `**${curr.amount}** ${curr.name}`)
-      .join(' | ');
+      .map(curr => `**${curr.amount}**${curr.name}`)
+      .join('  ');
   }
 
   currencyValue() {
