@@ -6,7 +6,10 @@ class ReactionPoll extends EventEmitter {
     if (!options.emojis) throw new Error('you need to specify emojis to use.');
 
     super();
-    Object.assign(this, options);
+
+    this.emojis = options.emojis;
+    this.users = options.users || [];
+    this.time = options.time || 15e3;
     this.message = message;
     this.votes = new Collection(this.emojis.map(emoji => {
       return [emoji, []];
@@ -15,27 +18,22 @@ class ReactionPoll extends EventEmitter {
     this.react().then(() => this.collect());
   }
 
-  react() {
-    return new Promise(async resolve => {
-      for (const emoji of this.emojis) {
-        await this.message.react(emoji);
-      }
-      return resolve(this.message);
-    });
+  async react() {
+    for (const emoji of this.emojis) {
+      await this.message.react(emoji);
+    }
+    return this.message;
   }
 
   collect() {
     const { time, users, emojis } = this;
+
     const collector = this.message.createReactionCollector((reaction, user) => {
       const emojiFlag = [reaction.emoji.name, reaction.emoji.identifier]
         .some(id => emojis.includes(id));
 
-      const userFlag = users
-        ? users.includes(user.id)
-        : null;
-
-      if (!users) return emojiFlag;
-      return emojiFlag && userFlag;
+      if (users.length === 0) return emojiFlag;
+      return emojiFlag && users.includes(user.id);
     }, { time });
 
     this.collector = collector;
