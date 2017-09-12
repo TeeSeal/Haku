@@ -43,15 +43,16 @@ function buildEmbed(obj) { // eslint-disable-line
       if (Array.isArray(options.items[0])) {
         result.embed.fields = result.embed.fields.concat(parseFields(paginated[page - 1]));
       } else {
-        result.embed.description = result.embed.description.concat(`\n${paginated[page - 1].join('\n')}`);
+        result.embed.description += `\n${paginated[page - 1].join('\n')}`;
       }
     }
 
     if (paginated.length > 1) {
-      result.embed.description = result.embed.description.concat(stripIndents`\n
-      **Page: ${page}/${paginated.length}**ç
-      Use: \`${options.commandName} page=<integer>\` to view another page.
-    `);
+      result.embed.footer = {
+        text: `
+          Page: ${page}/${paginated.length} | Use: '${options.commandName} page=<integer>' to view another page.
+        `
+      };
     }
   }
 

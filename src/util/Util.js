@@ -24,7 +24,10 @@ class Util {
   }
 
   static filterObject(obj, keys, onlyTruthy) {
-    if (keys && !Array.isArray(keys)) onlyTruthy = keys;
+    if (keys && !Array.isArray(keys)) {
+      onlyTruthy = keys;
+      keys = Object.keys(obj);
+    }
 
     const result = {};
     for (const key of keys) {
