@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo');
-const { stripIndents } = require('../../util/Util.js');
+const { stripIndents, getDBData } = require('../../util/Util.js');
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
@@ -14,8 +14,7 @@ function exec(msg, args) {
     return msg.util.error('you do not have permission to unignore members in that scope.');
   }
 
-  const [table, id] = scope === 'client'
-    ? [`${scope}s`, msg[scope]] : [scope, 'haku'];
+  const [table, id] = getDBData(msg, scope);
   const db = this.client.db[table];
   const { blacklist } = db.get(id);
 
