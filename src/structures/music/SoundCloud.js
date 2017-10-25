@@ -25,7 +25,7 @@ class SoundCloud extends HTTPClient {
 
   async findResource(url) {
     const resolveResult = await this.get('resolve.json', { url });
-    if (!resolveResult.status.include('302')) return null;
+    if (!resolveResult.status.includes('302')) return null;
 
     return this.get(resolveResult.location);
   }
