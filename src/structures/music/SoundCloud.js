@@ -23,9 +23,17 @@ class SoundCloud extends HTTPClient {
     };
   }
 
+  async findResource(url) {
+    const resolveResult = await this.get('resolve.json', { url });
+    if (!resolveResult.status.include('302')) return null;
+
+    return this.get(resolveResult.location);
+  }
+
   async resolveResource(query) {
     if (this.REGEXP.test(query)) {
-      const resource = await this.get('resolve.json', { url: query });
+      const resource = await this.findResource(query);
+
       if (!resource) return null;
       if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null;
 
