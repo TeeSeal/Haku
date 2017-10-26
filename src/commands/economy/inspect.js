@@ -1,14 +1,14 @@
-const { Command } = require('discord-akairo');
-const Items = require('../../structures/items/ItemHandler.js');
-const { buildEmbed } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const Items = require('../../structures/items/ItemHandler.js')
+const { buildEmbed } = require('../../util/Util.js')
 
 async function exec(msg, args) {
-  const { item } = args;
-  if (!item) return msg.util.error('couldn\'t find that item.');
+  const { item } = args
+  if (!item) return msg.util.error('couldn\'t find that item.')
 
-  const inventory = await this.client.inventories.fetch(msg.author.id);
+  const inventory = await this.client.inventories.fetch(msg.author.id)
   if (!inventory.has(item.id) && !Items.SHOP.has(item.id)) {
-    return msg.util.error('you can only inspect items in your inventory or in the shop.');
+    return msg.util.error('you can only inspect items in your inventory or in the shop.')
   }
 
   if (item.type === 'recipe') {
@@ -27,10 +27,10 @@ async function exec(msg, args) {
       ],
       icon: 'craft',
       color: 'gold'
-    }));
+    }))
   }
 
-  return msg.util.send(item.examine(), { files: item.imagePath ? [item.imagePath] : [] });
+  return msg.util.send(item.examine(), { files: item.imagePath ? [item.imagePath] : [] })
 }
 
 module.exports = new Command('inspect', exec, {
@@ -44,4 +44,4 @@ module.exports = new Command('inspect', exec, {
       type: Items.resolveGroup
     }
   ]
-});
+})

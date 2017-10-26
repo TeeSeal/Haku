@@ -23,7 +23,7 @@
   "homepage": "https://github.com/TeeSeal/Haku#readme",
   "dependencies": {
     "common-tags": "^1.4.0",
-    "discord-akairo": "github:teeseal/discord-akairo",
+    "discord-akairo": "^7.5.0",
     "discord.js": "github:hydrabolt/discord.js",
     "eslint": "^4.6.1",
     "logr": "github:teeseal/logr",

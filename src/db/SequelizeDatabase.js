@@ -1,6 +1,6 @@
-const Sequelize = require('sequelize');
-const SequelizeProvider = require('./SequelizeProvider.js');
-const tables = require('./tables.js');
+const Sequelize = require('sequelize')
+const SequelizeProvider = require('./SequelizeProvider.js')
+const tables = require('./tables.js')
 
 class SequelizeDatabase {
   constructor(path) {
@@ -9,24 +9,24 @@ class SequelizeDatabase {
       dialect: 'sqlite',
       logging: false,
       storage: path
-    });
+    })
   }
 
   async init() {
     for (const [name, options] of Object.entries(tables)) {
-      const table = this._db.define(name, options.schema);
+      const table = this._db.define(name, options.schema)
 
-      options.defaultValues = {};
+      options.defaultValues = {}
       for (const [key, model] of Object.entries(options.schema)) {
-        if (model.defaultValue) options.defaultValues[key] = model.defaultValue;
+        if (model.defaultValue) options.defaultValues[key] = model.defaultValue
       }
 
-      this[name] = new SequelizeProvider(table, options);
-      await this[name].init();
+      this[name] = new SequelizeProvider(table, options)
+      await this[name].init()
     }
 
-    return this;
+    return this
   }
 }
 
-module.exports = SequelizeDatabase;
+module.exports = SequelizeDatabase

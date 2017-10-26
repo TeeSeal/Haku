@@ -1,13 +1,13 @@
-const { Command } = require('discord-akairo');
-const Items = require('../../structures/items/ItemHandler.js');
-const { buildEmbed } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const Items = require('../../structures/items/ItemHandler.js')
+const { buildEmbed } = require('../../util/Util.js')
 
 async function exec(msg, args) {
-  const { recipe } = args;
-  if (!recipe) return msg.util.error('couldn\'t find recipe.');
+  const { recipe } = args
+  if (!recipe) return msg.util.error('couldn\'t find recipe.')
 
-  const inventory = await this.client.inventories.fetch(msg.author.id);
-  if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`);
+  const inventory = await this.client.inventories.fetch(msg.author.id)
+  if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`)
   return inventory.get(recipe.id).craft()
     .then(() => {
       msg.channel.send(buildEmbed({
@@ -26,9 +26,9 @@ async function exec(msg, args) {
         author: msg.member,
         icon: 'craft',
         color: 'gold'
-      }));
+      }))
     })
-    .catch(err => msg.util.error(err));
+    .catch(err => msg.util.error(err))
 }
 
 module.exports = new Command('craft', exec, {
@@ -40,9 +40,9 @@ module.exports = new Command('craft', exec, {
       id: 'recipe',
       match: 'rest',
       type(string) {
-        if (!string.includes('recipe')) string = `recipe: ${string}`;
-        return Items.resolveGroup(string);
+        if (!string.includes('recipe')) string = `recipe: ${string}`
+        return Items.resolveGroup(string)
       }
     }
   ]
-});
+})

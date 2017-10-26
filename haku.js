@@ -1,5 +1,5 @@
-const HakuClient = require('./src/structures/HakuClient.js');
-const { ownerID } = require('./config.json');
+const HakuClient = require('./src/structures/HakuClient.js')
+const { ownerID } = require('./config.json')
 
 const client = new HakuClient({
   prefix: msg => client.db.guilds
@@ -12,6 +12,6 @@ const client = new HakuClient({
   inhibitorDirectory: 'src/inhibitors/',
   listenerDirectory: 'src/listeners/',
   database: 'src/db/database.sqlite'
-});
+})
 
-client.init();
+client.init()

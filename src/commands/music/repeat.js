@@ -1,21 +1,21 @@
-const { Command } = require('discord-akairo');
-const { stripIndents } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const { stripIndents } = require('../../util/Util.js')
 
 async function exec(msg, args) {
-  const { times, end } = args;
-  const playlist = this.client.music.playlists.get(msg.guild.id);
+  const { times, end } = args
+  const playlist = this.client.music.playlists.get(msg.guild.id)
 
-  if (!playlist) return msg.util.error('nothing is currently playing.');
+  if (!playlist) return msg.util.error('nothing is currently playing.')
   if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-    return msg.util.error('you have to be in the voice channel I\'m currently in.');
+    return msg.util.error('you have to be in the voice channel I\'m currently in.')
   }
 
-  const arr = Array(times).fill(playlist.song);
+  const arr = Array(times).fill(playlist.song)
   playlist.queue = end
     ? playlist.queue.concat(arr)
-    : arr.concat(playlist.queue);
+    : arr.concat(playlist.queue)
 
-  return msg.util.success(`The track will be replayed ${times ? `${times} times` : ''} ${end ? 'at the end of the queue' : 'after this one'}.`);
+  return msg.util.success(`The track will be replayed ${times ? `${times} times` : ''} ${end ? 'at the end of the queue' : 'after this one'}.`)
 }
 
 module.exports = new Command('repeat', exec, {
@@ -25,11 +25,11 @@ module.exports = new Command('repeat', exec, {
     {
       id: 'times',
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        if (num > 100) return 100;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        if (num > 100) return 100
+        return num
       }
     },
     {
@@ -50,4 +50,4 @@ module.exports = new Command('repeat', exec, {
     \`repeat 5\` => will repeat the currently playing track 5 times.
     \`repeat 5 -end\` => will add the currently playing track to the end of the queue 5 times.
   `
-});
+})

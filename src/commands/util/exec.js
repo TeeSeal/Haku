@@ -1,15 +1,15 @@
-const { Command } = require('discord-akairo');
-const execute = require('util').promisify(require('child_process').exec);
+const { Command } = require('discord-akairo')
+const execute = require('util').promisify(require('child_process').exec)
 
 function exec(msg, args) {
-  const { command } = args;
-  if (!command) return msg.util.error('give me something to run.');
+  const { command } = args
+  if (!command) return msg.util.error('give me something to run.')
 
   return execute(command).then(({ stdout, stderr }) => {
-    return msg.util.send(stderr || stdout, { code: true });
+    return msg.util.send(stderr || stdout, { code: true })
   }).catch(err => {
-    return msg.util.send(err, { code: true });
-  });
+    return msg.util.send(err, { code: true })
+  })
 }
 
 module.exports = new Command('exec', exec, {
@@ -22,4 +22,4 @@ module.exports = new Command('exec', exec, {
       match: 'rest'
     }
   ]
-});
+})

@@ -1,5 +1,5 @@
-const HTTPClient = require('../../HTTPClient.js');
-const Anime = require('./Anime.js');
+const HTTPClient = require('../../HTTPClient.js')
+const Anime = require('./Anime.js')
 
 class Kitsu extends HTTPClient {
   constructor() {
@@ -9,37 +9,37 @@ class Kitsu extends HTTPClient {
         Accept: 'application/vnd.api+json',
         'Content-Type': 'application/vnd.api+json'
       }
-    });
+    })
   }
 
   search(query) {
-    return this.get('anime', { 'filter[text]': query }).then(res => res.data[0]);
+    return this.get('anime', { 'filter[text]': query }).then(res => res.data[0])
   }
 
   getByID(id) {
-    return this.get(`anime/${id}`).then(res => res.data);
+    return this.get(`anime/${id}`).then(res => res.data)
   }
 
   getGenres(id) {
-    return this.get(`anime/${id}/genres`).then(res => res.data);
+    return this.get(`anime/${id}/genres`).then(res => res.data)
   }
 
   async resolve(string) {
     const result = /^\d+$/.test(string)
       ? await this.getByID(string)
-      : await this.search(string);
+      : await this.search(string)
 
-    if (!result) return null;
+    if (!result) return null
 
-    const genres = await this.getGenres(result.id);
+    const genres = await this.getGenres(result.id)
     if (genres) {
       result.attributes.genres = genres.map(genre => {
-        return genre.attributes.name;
-      });
+        return genre.attributes.name
+      })
     }
 
-    return new Anime(result);
+    return new Anime(result)
   }
 }
 
-module.exports = new Kitsu();
+module.exports = new Kitsu()

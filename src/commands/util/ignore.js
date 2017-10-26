@@ -1,28 +1,28 @@
-const { Command } = require('discord-akairo');
-const { stripIndents, getDBData } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const { stripIndents, getDBData } = require('../../util/Util.js')
 
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
   guild: (member) => member.permissions.has('MANAGE_GUILD'),
   channel: (member) => member.permissions.has('MANAGE_CHANNLES')
-};
+}
 
 function exec(msg, args) {
-  const { member, scope } = args;
-  if (!member) return msg.util.error('you need to specfy a member to ignore.');
+  const { member, scope } = args
+  if (!member) return msg.util.error('you need to specfy a member to ignore.')
   if (!permCheck[scope](msg.member)) {
-    return msg.util.error('you do not have permission to ignore members in that scope.');
+    return msg.util.error('you do not have permission to ignore members in that scope.')
   }
 
-  const [table, id] = getDBData(msg, scope);
-  const db = this.client.db[table];
-  const { blacklist } = db.get(id);
+  const [table, id] = getDBData(msg, scope)
+  const db = this.client.db[table]
+  const { blacklist } = db.get(id)
 
-  if (blacklist.includes(member.id)) return msg.util.error(`**${member.displayName}** is already ignored in this ${scope}.`);
+  if (blacklist.includes(member.id)) return msg.util.error(`**${member.displayName}** is already ignored in this ${scope}.`)
 
-  blacklist.push(member.id);
-  db.set(id, { blacklist });
-  return msg.util.success(`**${member.displayName}** has been ignored in this ${scope}.`);
+  blacklist.push(member.id)
+  db.set(id, { blacklist })
+  return msg.util.success(`**${member.displayName}** has been ignored in this ${scope}.`)
 }
 
 module.exports = new Command('ignore', exec, {
@@ -48,4 +48,4 @@ module.exports = new Command('ignore', exec, {
     \`ignore TeeSeal\` => ignores the user in the current guild.
     \`ignore TeeSeal channel\` => ignores the user in the current channel.
   `
-});
+})

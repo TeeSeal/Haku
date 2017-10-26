@@ -1,16 +1,16 @@
-const { Command } = require('discord-akairo');
-const Items = require('../../structures/items/ItemHandler.js');
+const { Command } = require('discord-akairo')
+const Items = require('../../structures/items/ItemHandler.js')
 
 function exec(msg, args) {
   for (const prop of ['type', 'id', 'value']) {
-    if (!args[prop]) return msg.util.error(`please specify **${prop}**`);
+    if (!args[prop]) return msg.util.error(`please specify **${prop}**`)
   }
 
-  if (args.url) args.url = args.url.toString();
+  if (args.url) args.url = args.url.toString()
 
   if (args.type === 'recipe') {
     if (!args.result || !args.ingredients) {
-      return msg.util.error('give the recipe both a result and some ingredients.');
+      return msg.util.error('give the recipe both a result and some ingredients.')
     }
 
     args.recipe = {
@@ -19,11 +19,11 @@ function exec(msg, args) {
         amount: args.result.amount
       },
       ingredients: args.ingredients.toJSON()
-    };
+    }
   }
 
-  Items.create(args);
-  return msg.util.success('item created.');
+  Items.create(args)
+  return msg.util.success('item created.')
 }
 
 module.exports = new Command('create', exec, {
@@ -47,10 +47,10 @@ module.exports = new Command('create', exec, {
       match: 'prefix',
       prefix: ['value=', 'v='],
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        return num
       }
     },
     {
@@ -96,4 +96,4 @@ module.exports = new Command('create', exec, {
       type: Items.resolveCollection
     }
   ]
-});
+})

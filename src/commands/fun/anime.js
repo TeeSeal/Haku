@@ -1,17 +1,17 @@
-const { Command } = require('discord-akairo');
-const { buildEmbed, capitalize } = require('../../util/Util.js');
-const Kitsu = require('../../structures/api/kitsu/Kitsu.js');
+const { Command } = require('discord-akairo')
+const { buildEmbed, capitalize } = require('../../util/Util.js')
+const Kitsu = require('../../structures/api/kitsu/Kitsu.js')
 
 async function exec(msg, args) {
-  const { query } = args;
-  if (!query) return msg.util.error('please specify a name.');
+  const { query } = args
+  if (!query) return msg.util.error('please specify a name.')
 
-  const anime = await Kitsu.resolve(query);
-  if (!anime) return msg.util.error('couldn\'t find anime.');
+  const anime = await Kitsu.resolve(query)
+  if (!anime) return msg.util.error('couldn\'t find anime.')
 
   const formattedSynopsis = anime.synopsis.length > 1550
     ? anime.synopsis.slice(0, 1500).concat('...')
-    : anime.synopsis;
+    : anime.synopsis
 
   return msg.util.send(buildEmbed({
     title: `${anime.title} (${anime.japaneseTitle})`,
@@ -29,7 +29,7 @@ async function exec(msg, args) {
     content: formattedSynopsis,
     thumbnail: anime.poster,
     color: 'orange'
-  }));
+  }))
 }
 
 module.exports = new Command('anime', exec, {
@@ -42,4 +42,4 @@ module.exports = new Command('anime', exec, {
     }
   ],
   description: 'Search kitsu.io for details on an anime.'
-});
+})

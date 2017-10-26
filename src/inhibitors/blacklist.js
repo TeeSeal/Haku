@@ -1,16 +1,16 @@
-const { Inhibitor } = require('discord-akairo');
-const { getDBData } = require('../util/Util.js');
+const { Inhibitor } = require('discord-akairo')
+const { getDBData } = require('../util/Util.js')
 
 function exec(msg) {
-  if (msg.author.id === this.client.user.id) return false;
-  const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally'];
+  if (msg.author.id === this.client.user.id) return false
+  const scopes = msg.guild ? ['globally', 'guild', 'channel'] : ['globally']
 
   for (const scope of scopes) {
-    const [table, id] = getDBData(msg, scope);
+    const [table, id] = getDBData(msg, scope)
 
-    if (this.client.db[table].get(id, 'blacklist').includes(msg.author.id)) return true;
+    if (this.client.db[table].get(id, 'blacklist').includes(msg.author.id)) return true
   }
-  return false;
+  return false
 }
 
-module.exports = new Inhibitor('blacklist', exec, { reason: 'blacklist' });
+module.exports = new Inhibitor('blacklist', exec, { reason: 'blacklist' })

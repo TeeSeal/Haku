@@ -1,17 +1,17 @@
-const { Command } = require('discord-akairo');
-const { buildEmbed } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const { buildEmbed } = require('../../util/Util.js')
 
 async function exec(msg) {
-  const playlist = this.client.music.playlists.get(msg.guild.id);
+  const playlist = this.client.music.playlists.get(msg.guild.id)
 
-  if (!playlist) return msg.util.error('nothing is currently playing.');
+  if (!playlist) return msg.util.error('nothing is currently playing.')
   if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-    return msg.util.error('you have to be in the voice channel I\'m currently in.');
+    return msg.util.error('you have to be in the voice channel I\'m currently in.')
   }
-  if (playlist.paused) return msg.util.error('playback is already paused.');
+  if (playlist.paused) return msg.util.error('playback is already paused.')
 
-  playlist.pause();
-  const { song } = playlist;
+  playlist.pause()
+  const { song } = playlist
 
   return msg.util.send(buildEmbed({
     title: song.title,
@@ -22,11 +22,11 @@ async function exec(msg) {
     author: msg.member,
     icon: 'pause',
     color: 'yellow'
-  }));
+  }))
 }
 
 module.exports = new Command('pause', exec, {
   aliases: ['pause'],
   channelRestriction: 'guild',
   description: 'Pause sound playback'
-});
+})

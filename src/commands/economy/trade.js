@@ -1,28 +1,28 @@
-const { Command } = require('discord-akairo');
-const { buildEmbed, stripIndents } = require('../../util/Util.js');
-const Items = require('../../structures/items/ItemHandler.js');
-const ReactionPoll = require('../../structures/ReactionPoll.js');
+const { Command } = require('discord-akairo')
+const { buildEmbed, stripIndents } = require('../../util/Util.js')
+const Items = require('../../structures/items/ItemHandler.js')
+const ReactionPoll = require('../../structures/ReactionPoll.js')
 
-const tradingUsers = new Set();
+const tradingUsers = new Set()
 
 async function exec(msg, args) {
-  const { member, tradeDetails: [offer, demand] } = args;
-  if (!member) return msg.util.error('you need to specify a user to trade with.');
+  const { member, tradeDetails: [offer, demand] } = args
+  if (!member) return msg.util.error('you need to specify a user to trade with.')
 
   if ([member.id, msg.author.id].some(id => tradingUsers.has(id))) {
-    return msg.util.error('please end your current trade before starting a new one.');
+    return msg.util.error('please end your current trade before starting a new one.')
   }
 
   if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
-    return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly');
+    return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly')
   }
-  if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`);
+  if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`)
 
-  const offInv = await this.client.inventories.fetch(msg.author.id);
-  const demInv = await this.client.inventories.fetch(member.id);
+  const offInv = await this.client.inventories.fetch(msg.author.id)
+  const demInv = await this.client.inventories.fetch(member.id)
 
-  if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.');
-  if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`);
+  if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.')
+  if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`)
 
   const options = buildEmbed({
     title: 'ITEM TRADE:',
@@ -42,50 +42,50 @@ async function exec(msg, args) {
     `,
     icon: 'trade',
     color: 'gold'
-  });
+  })
 
-  tradingUsers.add(msg.author.id);
-  tradingUsers.add(member.id);
+  tradingUsers.add(msg.author.id)
+  tradingUsers.add(member.id)
 
-  const statusMsg = await msg.util.send(`${msg.member} ${member}`, options);
+  const statusMsg = await msg.util.send(`${msg.member} ${member}`, options)
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅', '❌'],
     users: [msg.author.id, member.id],
     time: 6e4
-  });
+  })
 
   poll.on('vote', () => {
-    if (poll.votes.get('✅').length === 2 || poll.votes.get('❌').length > 0) poll.stop();
-  });
+    if (poll.votes.get('✅').length === 2 || poll.votes.get('❌').length > 0) poll.stop()
+  })
 
   poll.once('end', votes => {
-    const success = votes.get('✅').length === 2;
+    const success = votes.get('✅').length === 2
 
     if (success) {
-      offInv.consume(offer);
-      demInv.add(offer);
+      offInv.consume(offer)
+      demInv.add(offer)
 
       if (demand) {
-        demInv.consume(demand);
-        offInv.add(demand);
+        demInv.consume(demand)
+        offInv.add(demand)
       }
     }
 
-    tradingUsers.delete(msg.author.id);
-    tradingUsers.delete(member.id);
+    tradingUsers.delete(msg.author.id)
+    tradingUsers.delete(member.id)
 
-    options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`;
-    return statusMsg.edit(`${msg.member} ${member}`, options);
-  });
+    options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
+    return statusMsg.edit(`${msg.member} ${member}`, options)
+  })
 }
 
 function checkInventory(itemColl, inventory) {
   const hasItems = itemColl.exceptCurrencies()
-    .every(item => inventory.has(item.id) && inventory.get(item.id).amount >= item.amount);
-  const hasCurrency = inventory.currencyValue() >= itemColl.currencyValue();
+    .every(item => inventory.has(item.id) && inventory.get(item.id).amount >= item.amount)
+  const hasCurrency = inventory.currencyValue() >= itemColl.currencyValue()
 
-  if (hasItems && hasCurrency) return true;
-  return false;
+  if (hasItems && hasCurrency) return true
+  return false
 }
 
 module.exports = new Command('trade', exec, {
@@ -101,7 +101,7 @@ module.exports = new Command('trade', exec, {
       id: 'tradeDetails',
       match: 'rest',
       type(string) {
-        return string.split(' for ').map(str => Items.resolveCollection(str));
+        return string.split(' for ').map(str => Items.resolveCollection(str))
       }
     }
   ],
@@ -123,4 +123,4 @@ module.exports = new Command('trade', exec, {
     **NOTE:** to ask for items in return place them after the \`for\` keyword.
     Most item names used above are not actual items, they were used for demonstrational purposes.
   `
-});
+})

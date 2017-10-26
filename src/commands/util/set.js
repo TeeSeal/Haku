@@ -1,48 +1,48 @@
-const { Command } = require('discord-akairo');
-const { stripIndents } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const { stripIndents } = require('../../util/Util.js')
 
 async function exec(msg, args) {
-  const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args;
-  if (!Object.keys(args).some(key => args[key])) return msg.util.error('what are you trying to update?');
-  const { guilds } = this.client.db;
-  const dbDefaultVolume = guilds.get(msg.guild.id).defaultVolume;
-  const dbMaxVolume = guilds.get(msg.guild.id).maxVolume;
-  const playlist = this.client.music.playlists.get(msg.guild.id);
-  const obj = {};
+  const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args
+  if (!Object.keys(args).some(key => args[key])) return msg.util.error('what are you trying to update?')
+  const { guilds } = this.client.db
+  const dbDefaultVolume = guilds.get(msg.guild.id).defaultVolume
+  const dbMaxVolume = guilds.get(msg.guild.id).maxVolume
+  const playlist = this.client.music.playlists.get(msg.guild.id)
+  const obj = {}
 
   if (maxSongDuration) {
-    if (playlist) playlist.maxSongDuration = maxSongDuration;
-    obj.maxSongDuration = maxSongDuration;
+    if (playlist) playlist.maxSongDuration = maxSongDuration
+    obj.maxSongDuration = maxSongDuration
   }
 
   if (defaultVolume) {
-    if (maxVolume || dbMaxVolume < defaultVolume) return msg.util.error('default volume can\'t be bigger than the maximum one.');
-    if (playlist) playlist.defaultVolume = playlist.convert(defaultVolume);
-    obj.defaultVolume = defaultVolume;
+    if (maxVolume || dbMaxVolume < defaultVolume) return msg.util.error('default volume can\'t be bigger than the maximum one.')
+    if (playlist) playlist.defaultVolume = playlist.convert(defaultVolume)
+    obj.defaultVolume = defaultVolume
   }
 
   if (maxVolume) {
-    if (defaultVolume || dbDefaultVolume > maxVolume) return msg.util.error('maximum volume can\'t be smaller than the default one.');
-    if (defaultVolume && maxVolume < defaultVolume) { if (playlist && playlist.volume > maxVolume) playlist.setVolume(maxVolume); }
-    obj.maxVolume = maxVolume;
+    if (defaultVolume || dbDefaultVolume > maxVolume) return msg.util.error('maximum volume can\'t be smaller than the default one.')
+    if (defaultVolume && maxVolume < defaultVolume) { if (playlist && playlist.volume > maxVolume) playlist.setVolume(maxVolume) }
+    obj.maxVolume = maxVolume
   }
 
   if (songLimit) {
-    if (playlist) playlist.songLimit = songLimit;
-    obj.songLimit = songLimit;
+    if (playlist) playlist.songLimit = songLimit
+    obj.songLimit = songLimit
   }
 
-  const expression = getExpression(obj);
-  guilds.set(msg.guild.id, obj);
+  const expression = getExpression(obj)
+  guilds.set(msg.guild.id, obj)
 
-  return msg.util.success(`updated ${expression}.`);
+  return msg.util.success(`updated ${expression}.`)
 }
 
 function getExpression(obj) {
-  const arr = Object.keys(obj).map(key => `**${key}**(${obj[key]})`);
-  if (arr.length === 1) return arr[0];
-  const last = arr.pop();
-  return `${arr.join(', ')} and ${last}`;
+  const arr = Object.keys(obj).map(key => `**${key}**(${obj[key]})`)
+  if (arr.length === 1) return arr[0]
+  const last = arr.pop()
+  return `${arr.join(', ')} and ${last}`
 }
 
 module.exports = new Command('set', exec, {
@@ -55,11 +55,11 @@ module.exports = new Command('set', exec, {
       match: 'prefix',
       prefix: ['duration=', 'length=', 'd='],
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        if (num > 120) return 120;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        if (num > 120) return 120
+        return num
       }
     },
     {
@@ -67,11 +67,11 @@ module.exports = new Command('set', exec, {
       match: 'prefix',
       prefix: ['volume=', 'vol='],
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        if (num > 100) return 100;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        if (num > 100) return 100
+        return num
       }
     },
     {
@@ -79,11 +79,11 @@ module.exports = new Command('set', exec, {
       match: 'prefix',
       prefix: ['maxVolume=', 'maxVol=', 'mv='],
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        if (num > 100) return 100;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        if (num > 100) return 100
+        return num
       }
     },
     {
@@ -91,11 +91,11 @@ module.exports = new Command('set', exec, {
       match: 'prefix',
       prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
       type: word => {
-        if (!word || isNaN(word)) return null;
-        const num = parseInt(word);
-        if (num < 1) return 1;
-        if (num > 100) return 100;
-        return num;
+        if (!word || isNaN(word)) return null
+        const num = parseInt(word)
+        if (num < 1) return 1
+        if (num > 100) return 100
+        return num
       }
     }
   ],
@@ -111,4 +111,4 @@ module.exports = new Command('set', exec, {
     \`set duration=20 volume=30 maxVolume=70\` => sets the values.
     \`set duration=20 v=30 mv=70\` => shortcuts.
   `
-});
+})

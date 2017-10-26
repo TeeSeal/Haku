@@ -1,54 +1,54 @@
-const { shuffle, buildEmbed } = require('../../util/Util.js');
+const { shuffle, buildEmbed } = require('../../util/Util.js')
 
 class Playlist {
   constructor(msg, guildOptions, handler) {
-    this.handler = handler;
-    this.id = msg.guild.id;
-    this.maxSongDuration = guildOptions.maxSongDuration * 60;
-    this.songLimit = guildOptions.songLimit;
-    this.queue = [];
-    this.channel = msg.channel;
-    this.voiceChannel = msg.member.voiceChannel;
-    this.song = null;
-    this.connection = null;
-    this.defaultVolume = this.convert(guildOptions.defaultVolume) || 0.50;
-    this._volume = this.defaultVolume;
-    this.paused = false;
+    this.handler = handler
+    this.id = msg.guild.id
+    this.maxSongDuration = guildOptions.maxSongDuration * 60
+    this.songLimit = guildOptions.songLimit
+    this.queue = []
+    this.channel = msg.channel
+    this.voiceChannel = msg.member.voiceChannel
+    this.song = null
+    this.connection = null
+    this.defaultVolume = this.convert(guildOptions.defaultVolume) || 0.50
+    this._volume = this.defaultVolume
+    this.paused = false
   }
 
   connectAndPlay() {
     this.voiceChannel.join().then(connection => {
-      this.connection = connection;
-      this.play(this.queue.shift());
-    });
+      this.connection = connection
+      this.play(this.queue.shift())
+    })
   }
 
   filter(songs) {
-    const removed = [];
+    const removed = []
     const filtered = songs.filter(song => {
       if (!song.stream) {
-        removed.push({ song, reason: 'Resource unavailable.' });
-        return false;
+        removed.push({ song, reason: 'Resource unavailable.' })
+        return false
       }
 
-      if (song.member.id === song.member.client.ownerID) return true;
+      if (song.member.id === song.member.client.ownerID) return true
 
       if (song.duration > this.maxSongDuration * 6e4) {
-        removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` });
-        return false;
+        removed.push({ song, reason: `duration. (max. ${this.maxSongDuration / 60}min)` })
+        return false
       }
 
-      return true;
-    });
+      return true
+    })
 
-    const diff = this.queue.length + filtered.length - this.songLimit;
+    const diff = this.queue.length + filtered.length - this.songLimit
     if (diff > 0) {
       for (const song of filtered.splice(filtered.length - diff, diff)) {
-        removed.push({ song, reason: `playlist song limit reached. (max. ${this.songLimit} songs)` });
+        removed.push({ song, reason: `playlist song limit reached. (max. ${this.songLimit} songs)` })
       }
     }
 
-    return [filtered, removed];
+    return [filtered, removed]
   }
 
   play(song) {
@@ -59,12 +59,12 @@ class Playlist {
         ],
         icon: 'clear',
         color: 'red'
-      }));
-      return this.destroy();
+      }))
+      return this.destroy()
     }
 
-    this.song = song;
-    this._volume = this.convert(song.volume) || this.defaultVolume;
+    this.song = song
+    this._volume = this.convert(song.volume) || this.defaultVolume
 
     this.channel.send(buildEmbed({
       title: song.title,
@@ -75,79 +75,79 @@ class Playlist {
       author: song.member,
       icon: 'play',
       color: 'green'
-    }));
+    }))
 
     song.play(this.connection, { volume: this._volume })
       .on('end', reason => {
-        if (reason === 'stop') return this.destroy();
-        return setTimeout(() => this.play(this.queue.shift()), 10);
-      });
+        if (reason === 'stop') return this.destroy()
+        return setTimeout(() => this.play(this.queue.shift()), 10)
+      })
   }
 
   add(songs) {
-    const [filtered, removed] = this.filter(songs);
-    this.queue = this.queue.concat(filtered);
+    const [filtered, removed] = this.filter(songs)
+    this.queue = this.queue.concat(filtered)
 
     if (!this.song) {
-      if (filtered.length === 0) this.destroy();
-      else this.connectAndPlay();
+      if (filtered.length === 0) this.destroy()
+      else this.connectAndPlay()
     }
 
-    return [filtered, removed];
+    return [filtered, removed]
   }
 
-  shuffle() { shuffle(this.queue); }
+  shuffle() { shuffle(this.queue) }
 
   pause() {
-    this.song.dispatcher.pause();
-    this.paused = true;
+    this.song.dispatcher.pause()
+    this.paused = true
   }
 
   resume() {
-    this.song.dispatcher.resume();
-    this.paused = false;
+    this.song.dispatcher.resume()
+    this.paused = false
   }
 
   setVolume(volume) {
-    this._volume = this.convert(volume);
-    this.song.dispatcher.setVolume(this._volume);
+    this._volume = this.convert(volume)
+    this.song.dispatcher.setVolume(this._volume)
   }
 
   fadeVolume(volume) {
-    let current = this._volume;
-    this._volume = this.convert(volume);
-    const modifier = current < this._volume ? 0.05 : -0.05;
+    let current = this._volume
+    this._volume = this.convert(volume)
+    const modifier = current < this._volume ? 0.05 : -0.05
 
     return new Promise(resolve => {
       const interval = setInterval(() => {
-        current += modifier;
-        this.song.dispatcher.setVolume(current);
+        current += modifier
+        this.song.dispatcher.setVolume(current)
 
         if (current > (this._volume - 0.05) && current < (this._volume + 0.05)) {
-          this.song.dispatcher.setVolume(this._volume);
-          clearInterval(interval);
-          setTimeout(resolve, 800);
+          this.song.dispatcher.setVolume(this._volume)
+          clearInterval(interval)
+          setTimeout(resolve, 800)
         }
-      }, 35);
-    });
+      }, 35)
+    })
   }
 
   skip() {
-    this.fadeVolume(0).then(() => this.song.dispatcher.end('skip'));
+    this.fadeVolume(0).then(() => this.song.dispatcher.end('skip'))
   }
 
   stop() {
-    this.queue = [];
-    this.song.dispatcher.end('stop');
+    this.queue = []
+    this.song.dispatcher.end('stop')
   }
 
   destroy() {
-    this.voiceChannel.leave();
-    this.handler.playlists.delete(this.id);
+    this.voiceChannel.leave()
+    this.handler.playlists.delete(this.id)
   }
 
-  convert(volume) { return volume / 50; }
-  get volume() { return this._volume * 50; }
+  convert(volume) { return volume / 50 }
+  get volume() { return this._volume * 50 }
 }
 
-module.exports = Playlist;
+module.exports = Playlist

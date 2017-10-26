@@ -1,37 +1,37 @@
-const { Command } = require('discord-akairo');
-const { stripIndents, getDBData } = require('../../util/Util.js');
+const { Command } = require('discord-akairo')
+const { stripIndents, getDBData } = require('../../util/Util.js')
 
-const protected = ['enable'];
+const protected = ['enable']
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
   guilds: (member) => member.permissions.has('MANAGE_GUILD'),
   channels: (member) => member.permissions.has('MANAGE_CHANNELS')
-};
+}
 
 function exec(msg, args) {
-  const { toDisable, scope } = args;
-  if (!toDisable) return msg.util.error('you need to specfy a command/category to disable.');
-  if (toDisable instanceof Command && protected.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`);
+  const { toDisable, scope } = args
+  if (!toDisable) return msg.util.error('you need to specfy a command/category to disable.')
+  if (toDisable instanceof Command && protected.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`)
 
-  const [table, id, formattedScope] = getDBData(msg, scope);
+  const [table, id, formattedScope] = getDBData(msg, scope)
   if (!permCheck[table](msg.member)) {
-    return msg.util.error(`you do not have permission to enable commands ${formattedScope}.`);
+    return msg.util.error(`you do not have permission to enable commands ${formattedScope}.`)
   }
 
-  const db = this.client.db[table];
-  const { disabled } = db.get(id);
+  const db = this.client.db[table]
+  const { disabled } = db.get(id)
 
-  let filtered;
+  let filtered
   if (toDisable instanceof Command) {
-    if (disabled.includes(toDisable.id)) return msg.util.error(`**${toDisable.id}** is already disabled ${formattedScope}.`);
-    filtered = [toDisable.id];
+    if (disabled.includes(toDisable.id)) return msg.util.error(`**${toDisable.id}** is already disabled ${formattedScope}.`)
+    filtered = [toDisable.id]
   } else {
-    filtered = toDisable.filter(c => [disabled, protected].every(arr => !arr.includes(c.id))).map(c => c.id);
-    if (filtered.size === 0) return msg.util.error(`all commands in **${toDisable.id}** are already disabled.`);
+    filtered = toDisable.filter(c => [disabled, protected].every(arr => !arr.includes(c.id))).map(c => c.id)
+    if (filtered.size === 0) return msg.util.error(`all commands in **${toDisable.id}** are already disabled.`)
   }
 
-  db.set(id, { disabled: disabled.concat(filtered) });
-  return msg.util.success(`**${toDisable.id}** has been disabled ${formattedScope}.`);
+  db.set(id, { disabled: disabled.concat(filtered) })
+  return msg.util.success(`**${toDisable.id}** has been disabled ${formattedScope}.`)
 }
 
 module.exports = new Command('disable', exec, {
@@ -42,14 +42,14 @@ module.exports = new Command('disable', exec, {
       id: 'toDisable',
       type(word) {
         if (word.startsWith('!')) {
-          word = word.slice(1);
-          const result = this.handler.categories.get(word);
-          if (result) return result;
+          word = word.slice(1)
+          const result = this.handler.categories.get(word)
+          if (result) return result
         }
 
-        const result = this.handler.findCommand(word);
-        if (result) return result;
-        return this.handler.categories.get(word);
+        const result = this.handler.findCommand(word)
+        if (result) return result
+        return this.handler.categories.get(word)
       }
     },
     {
@@ -69,4 +69,4 @@ module.exports = new Command('disable', exec, {
     \`disable ping channel\` => disables the ping command in the channel.
     \`disable !music\` => disables all music commands in the guild.
   `
-});
+})

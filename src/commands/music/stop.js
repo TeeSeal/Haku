@@ -1,36 +1,36 @@
-const { Command } = require('discord-akairo');
-const { buildEmbed } = require('../../util/Util.js');
-const ReactionPoll = require('../../structures/ReactionPoll.js');
+const { Command } = require('discord-akairo')
+const { buildEmbed } = require('../../util/Util.js')
+const ReactionPoll = require('../../structures/ReactionPoll.js')
 
-const voteStops = new Set();
+const voteStops = new Set()
 
 async function exec(msg) {
-  const playlist = this.client.music.playlists.get(msg.guild.id);
+  const playlist = this.client.music.playlists.get(msg.guild.id)
 
-  if (!playlist) return msg.util.error('nothing is currently playing.');
+  if (!playlist) return msg.util.error('nothing is currently playing.')
 
   if (msg.member.permissions.has('MANAGE_GUILD')) {
-    return msg.util.success('alright, crashing the party.').then(() => playlist.stop());
+    return msg.util.success('alright, crashing the party.').then(() => playlist.stop())
   }
 
   if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-    return msg.util.error('you have to be in the voice channel I\'m currently in.');
+    return msg.util.error('you have to be in the voice channel I\'m currently in.')
   }
 
   if (msg.member.voiceChannel.members.size === 2) {
-    return msg.util.success('stopped playback.').then(() => playlist.stop());
+    return msg.util.success('stopped playback.').then(() => playlist.stop())
   }
 
   if (voteStops.has(msg.guild.id)) {
-    return msg.util.error('a voteskip is already in process.');
+    return msg.util.error('a voteskip is already in process.')
   }
-  voteStops.add(msg.guild.id);
+  voteStops.add(msg.guild.id)
 
   const members = msg.member.voiceChannel.members
-    .filter(member => ![this.client.user.id, msg.author.id].includes(member.id));
-  const votesNeeded = Math.ceil(members.size / 2);
+    .filter(member => ![this.client.user.id, msg.author.id].includes(member.id))
+  const votesNeeded = Math.ceil(members.size / 2)
 
-  const { song } = playlist;
+  const { song } = playlist
   const options = buildEmbed({
     title: song.title,
     fields: [
@@ -43,37 +43,37 @@ async function exec(msg) {
     author: msg.member,
     icon: 'clear',
     color: 'red'
-  });
+  })
 
-  const statusMsg = await msg.util.send(members.array().join(), options);
+  const statusMsg = await msg.util.send(members.array().join(), options)
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅'],
     users: members.map(m => m.id),
     time: 3e4
-  });
+  })
 
   poll.on('vote', () => {
-    if (poll.votes.get('✅').length >= votesNeeded) poll.stop();
-  });
+    if (poll.votes.get('✅').length >= votesNeeded) poll.stop()
+  })
 
   poll.once('end', votes => {
-    const success = votes.get('✅').length >= votesNeeded;
-    voteStops.delete(msg.guild.id);
+    const success = votes.get('✅').length >= votesNeeded
+    voteStops.delete(msg.guild.id)
 
     options.embed.fields = [
       {
         name: success ? '✅ Playback stopped.' : '❌ Votestop failed.',
         value: '\u200b'
       }
-    ];
+    ]
 
     return statusMsg.edit(members.array().join(), options)
-      .then(() => success ? playlist.stop() : null);
-  });
+      .then(() => success ? playlist.stop() : null)
+  })
 }
 
 module.exports = new Command('stop', exec, {
   aliases: ['stop', 'stfu'],
   channelRestriction: 'guild',
   description: 'Stop playback and disconnect.'
-});
+})

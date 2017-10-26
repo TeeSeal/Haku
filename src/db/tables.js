@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const { prefix } = require('../../config.json');
+const Sequelize = require('sequelize')
+const { prefix } = require('../../config.json')
 
 module.exports = {
   client: {
@@ -103,4 +103,4 @@ module.exports = {
     },
     cacheTimeout: 6e5
   }
-};
+}

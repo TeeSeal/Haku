@@ -7,6 +7,6 @@ const colors = {
   CYAN: 6750207,
   GOLD: 16758861,
   ORANGE: 16029762
-};
+}
 
-module.exports = colors;
+module.exports = colors

@@ -1,5 +1,5 @@
-const ItemCollection = require('./ItemCollection.js');
-const ItemHandler = require('./ItemHandler.js');
+const ItemCollection = require('./ItemCollection.js')
+const ItemHandler = require('./ItemHandler.js')
 
 class Inventory extends ItemCollection {
   constructor(inventory, id, handler) {
@@ -7,57 +7,57 @@ class Inventory extends ItemCollection {
       .map(([name, amount]) => ItemHandler.resolveGroup(name, amount))
       .filter(item => item)
       .map(item => [item.id, item])
-    );
+    )
 
-    this.id = id;
-    this.handler = handler;
+    this.id = id
+    this.handler = handler
 
-    for (const item of this.values()) item.bindTo(this);
+    for (const item of this.values()) item.bindTo(this)
   }
 
   add(items, amount) {
     if (items instanceof ItemCollection) {
-      for (const item of items.values()) this.addItemGroup(item);
-      return this;
+      for (const item of items.values()) this.addItemGroup(item)
+      return this
     } else if (!items.amount) {
-      items = ItemHandler.resolveGroup(items, amount);
+      items = ItemHandler.resolveGroup(items, amount)
     }
 
-    this.addItemGroup(items);
-    return this;
+    this.addItemGroup(items)
+    return this
   }
 
   addItemGroup(item) {
     if (!this.has(item.id)) {
-      this.set(item.id, item.groupOf(0).bindTo(this));
+      this.set(item.id, item.groupOf(0).bindTo(this))
     }
 
-    this.get(item.id).add(item.amount);
+    this.get(item.id).add(item.amount)
   }
 
   consume(items, amount) {
-    if (!(items instanceof ItemCollection)) return this.add(items, -amount || -1);
+    if (!(items instanceof ItemCollection)) return this.add(items, -amount || -1)
     for (const item of items.values()) {
-      if (this.has(item.id)) this.get(item.id).consume(item.amount);
+      if (this.has(item.id)) this.get(item.id).consume(item.amount)
     }
   }
 
   setBalance(amount) {
-    const currencies = ItemHandler.convertToCurrency(amount);
-    for (const key of this.currencies().keys()) this.delete(key);
+    const currencies = ItemHandler.convertToCurrency(amount)
+    for (const key of this.currencies().keys()) this.delete(key)
     for (const currency of currencies.values()) {
-      if (currency.amount > 0) this.set(currency.id, currency.bindTo(this));
+      if (currency.amount > 0) this.set(currency.id, currency.bindTo(this))
     }
-    this.save();
+    this.save()
   }
 
   convertCurrencies() {
-    this.setBalance(this.currencyValue());
+    this.setBalance(this.currencyValue())
   }
 
   save() {
-    return this.handler.save(this);
+    return this.handler.save(this)
   }
 }
 
-module.exports = Inventory;
+module.exports = Inventory
