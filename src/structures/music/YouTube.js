@@ -19,7 +19,7 @@ class YouTube extends HTTPClient {
     return {
       id: video.id,
       title: video.snippet.title,
-      thumbnail: video.snippet.thumbnails.high.url,
+      thumbnail: video.snippet.thumbnails.maxres.url,
       duration,
       url,
     }
@@ -28,7 +28,7 @@ class YouTube extends HTTPClient {
   getByID(id) {
     return this.get(`videos`, {
       id,
-      fields: 'items(id, snippet(title, thumbnails(high(url))), contentDetails(duration))',
+      fields: 'items(id, snippet(title, thumbnails(maxres(url))), contentDetails(duration))',
       part: 'snippet,contentDetails',
     })
   }

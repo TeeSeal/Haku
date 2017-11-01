@@ -32,7 +32,7 @@
     "opusscript": "0.0.3",
     "pluralize": "^5.1.0",
     "sequelize": "^4.8.2",
-    "sqlite3": "3.1.8",
+    "sqlite3": "^3.1.13",
     "tyx": "github:teeseal/tyx",
     "ytdl-core": "^0.14.4"
   }
