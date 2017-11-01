@@ -46,5 +46,5 @@ Object.assign(akairo.CommandUtil.prototype, {
   },
 
   success(content, options) { return this.info(`✅ ${content}`, options) },
-  error(content, options) { return this.info(`❌ ${content}`, options) }
+  error(content, options) { return this.info(`❌ ${content}`, options) },
 })

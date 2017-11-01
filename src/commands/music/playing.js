@@ -10,17 +10,17 @@ async function exec(msg) {
   return msg.util.send(buildEmbed({
     title: song.title,
     fields: [
-      [song.time, `Volume: ${playlist.volume}%`]
+      [song.time, `Volume: ${playlist.volume}%`],
     ],
     url: song.url,
     author: msg.member,
     icon: 'time',
-    color: 'purple'
+    color: 'purple',
   }))
 }
 
 module.exports = new Command('playing', exec, {
   aliases: ['playing', 'nowplaying', 'np', 'time'],
   channelRestriction: 'guild',
-  description: 'Show details on the currently palying song.'
+  description: 'Show details on the currently palying song.',
 })

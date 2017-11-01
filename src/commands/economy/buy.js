@@ -26,7 +26,7 @@ module.exports = new Command('buy', exec, {
     {
       id: 'items',
       match: 'rest',
-      type: Items.resolveCollection
-    }
-  ]
+      type: Items.resolveCollection,
+    },
+  ],
 })

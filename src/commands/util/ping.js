@@ -10,5 +10,5 @@ function exec(msg) {
 
 module.exports = new Command('ping', exec, {
   aliases: ['ping', 'hello'],
-  description: 'Pong!'
+  description: 'Pong!',
 })

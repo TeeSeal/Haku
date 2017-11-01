@@ -18,13 +18,13 @@ module.exports = new Command('roll', exec, {
     {
       id: 'from',
       type: 'integer',
-      default: 0
+      default: 0,
     },
     {
       id: 'to',
       type: 'integer',
-      default: 0
-    }
+      default: 0,
+    },
   ],
   description: stripIndents`
     Roll a random number.
@@ -36,5 +36,5 @@ module.exports = new Command('roll', exec, {
     \`roll\` => random number between 1 and 100.
     \`roll 30\` => random number between 1 and 30.
     \`roll 30 100\` => random number between 30 and 100.
-  `
+  `,
 })

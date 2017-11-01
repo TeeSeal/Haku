@@ -5,7 +5,7 @@ const ItemCollection = require('./ItemCollection.js')
 const itemTypes = {
   item: require('./Item.js'),
   recipe: require('./Recipe.js'),
-  currency: require('./Currency.js')
+  currency: require('./Currency.js'),
 }
 
 const items = new ItemCollection(require(`${rootDir}/assets/items.json`).map(item => {

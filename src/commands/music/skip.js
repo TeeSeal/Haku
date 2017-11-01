@@ -16,12 +16,12 @@ async function exec(msg) {
   const options = buildEmbed({
     title: song.title,
     fields: [
-      ['✅ Skipped.', '\u200b']
+      ['✅ Skipped.', '\u200b'],
     ],
     url: song.url,
     author: msg.member,
     icon: 'skip',
-    color: 'cyan'
+    color: 'cyan',
   })
 
   if (msg.member.permissions.has('MANAGE_GUILD')
@@ -42,15 +42,15 @@ async function exec(msg) {
   options.embed.fields = [
     {
       name: 'VOTESKIP',
-      value: `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
-    }
+      value: `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`,
+    },
   ]
 
   const statusMsg = await msg.util.send(members.array().join(), options)
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅'],
     users: members.map(m => m.id),
-    time: 3e4
+    time: 3e4,
   })
 
   poll.on('vote', () => {
@@ -64,8 +64,8 @@ async function exec(msg) {
     options.embed.fields = [
       {
         name: success ? '✅ Skipped.' : '❌ Voteskip failed.',
-        value: '\u200b'
-      }
+        value: '\u200b',
+      },
     ]
     return statusMsg.edit(members.array().join(), options)
       .then(() => success ? playlist.skip() : null)
@@ -75,5 +75,5 @@ async function exec(msg) {
 module.exports = new Command('skip', exec, {
   aliases: ['skip'],
   channelRestriction: 'guild',
-  description: 'Skip the currently palying song.'
+  description: 'Skip the currently palying song.',
 })

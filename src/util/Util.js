@@ -50,5 +50,5 @@ class Util {
 module.exports = new Proxy(Util, {
   get: (target, name) => {
     return name in target ? target[name] : tags[name]
-  }
+  },
 })

@@ -23,10 +23,10 @@ async function exec(msg, args) {
     paginate: {
       items,
       commandName: this.id,
-      page
+      page,
     },
     icon: 'list',
-    color: 'blue'
+    color: 'blue',
   }))
 }
 
@@ -50,12 +50,12 @@ module.exports = new Command('balance', exec, {
     {
       id: 'user',
       type: 'user',
-      default: msg => msg.author
+      default: msg => msg.author,
     },
     {
       id: 'item',
       match: 'rest',
-      type: Items.resolveGroup
+      type: Items.resolveGroup,
     },
     {
       id: 'page',
@@ -67,7 +67,7 @@ module.exports = new Command('balance', exec, {
         if (num < 1) return null
         return num
       },
-      default: 1
-    }
-  ]
+      default: 1,
+    },
+  ],
 })

@@ -72,7 +72,7 @@ class SequelizeProvider {
 
     return this.table.upsert({
       [this.idColumn]: id,
-      [key]: null
+      [key]: null,
     })
   }
 

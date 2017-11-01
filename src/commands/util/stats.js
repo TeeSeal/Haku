@@ -8,5 +8,5 @@ function exec(msg) {
 
 module.exports = new Command('stats', exec, {
   aliases: ['stats'],
-  description: 'Get some information about the bot.'
+  description: 'Get some information about the bot.',
 })

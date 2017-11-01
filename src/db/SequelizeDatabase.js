@@ -8,7 +8,7 @@ class SequelizeDatabase {
       host: 'localhost',
       dialect: 'sqlite',
       logging: false,
-      storage: path
+      storage: path,
     })
   }
 

@@ -16,17 +16,17 @@ async function exec(msg) {
   return msg.util.send(buildEmbed({
     title: song.title,
     fields: [
-      ['Playback paused.', '\u200b']
+      ['Playback paused.', '\u200b'],
     ],
     url: song.url,
     author: msg.member,
     icon: 'pause',
-    color: 'yellow'
+    color: 'yellow',
   }))
 }
 
 module.exports = new Command('pause', exec, {
   aliases: ['pause'],
   channelRestriction: 'guild',
-  description: 'Pause sound playback'
+  description: 'Pause sound playback',
 })

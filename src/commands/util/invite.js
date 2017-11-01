@@ -6,5 +6,5 @@ function exec(msg) {
 
 module.exports = new Command('invite', exec, {
   aliases: ['invite', 'inv'],
-  description: 'Get this bot\'s invite link.'
+  description: 'Get this bot\'s invite link.',
 })

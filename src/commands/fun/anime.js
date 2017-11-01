@@ -24,11 +24,11 @@ async function exec(msg, args) {
       ['Age Rating', anime.ageRatingString, true],
       ['Start Date', anime.startDate, true],
       ['End Date', anime.endDate, true],
-      ['Trailer', anime.trailer]
+      ['Trailer', anime.trailer],
     ],
     content: formattedSynopsis,
     thumbnail: anime.poster,
-    color: 'orange'
+    color: 'orange',
   }))
 }
 
@@ -38,8 +38,8 @@ module.exports = new Command('anime', exec, {
     {
       id: 'query',
       type: 'lowercase',
-      match: 'rest'
-    }
+      match: 'rest',
+    },
   ],
-  description: 'Search kitsu.io for details on an anime.'
+  description: 'Search kitsu.io for details on an anime.',
 })

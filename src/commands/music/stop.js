@@ -36,20 +36,20 @@ async function exec(msg) {
     fields: [
       [
         'VOTESTOP',
-        `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`
-      ]
+        `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`,
+      ],
     ],
     url: song.url,
     author: msg.member,
     icon: 'clear',
-    color: 'red'
+    color: 'red',
   })
 
   const statusMsg = await msg.util.send(members.array().join(), options)
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅'],
     users: members.map(m => m.id),
-    time: 3e4
+    time: 3e4,
   })
 
   poll.on('vote', () => {
@@ -63,8 +63,8 @@ async function exec(msg) {
     options.embed.fields = [
       {
         name: success ? '✅ Playback stopped.' : '❌ Votestop failed.',
-        value: '\u200b'
-      }
+        value: '\u200b',
+      },
     ]
 
     return statusMsg.edit(members.array().join(), options)
@@ -75,5 +75,5 @@ async function exec(msg) {
 module.exports = new Command('stop', exec, {
   aliases: ['stop', 'stfu'],
   channelRestriction: 'guild',
-  description: 'Stop playback and disconnect.'
+  description: 'Stop playback and disconnect.',
 })

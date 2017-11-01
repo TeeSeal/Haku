@@ -60,7 +60,7 @@ module.exports = new Command('set', exec, {
         if (num < 1) return 1
         if (num > 120) return 120
         return num
-      }
+      },
     },
     {
       id: 'defaultVolume',
@@ -72,7 +72,7 @@ module.exports = new Command('set', exec, {
         if (num < 1) return 1
         if (num > 100) return 100
         return num
-      }
+      },
     },
     {
       id: 'maxVolume',
@@ -84,7 +84,7 @@ module.exports = new Command('set', exec, {
         if (num < 1) return 1
         if (num > 100) return 100
         return num
-      }
+      },
     },
     {
       id: 'songLimit',
@@ -96,8 +96,8 @@ module.exports = new Command('set', exec, {
         if (num < 1) return 1
         if (num > 100) return 100
         return num
-      }
-    }
+      },
+    },
   ],
   description: stripIndents`
     Set some default values for the guild.
@@ -110,5 +110,5 @@ module.exports = new Command('set', exec, {
     **Usage:**
     \`set duration=20 volume=30 maxVolume=70\` => sets the values.
     \`set duration=20 v=30 mv=70\` => shortcuts.
-  `
+  `,
 })

@@ -16,12 +16,12 @@ function exec(msg, args) {
     return msg.util.send(buildEmbed({
       title: song.title,
       fields: [
-        [`Volume: ${volume}%`, '\u200b']
+        [`Volume: ${volume}%`, '\u200b'],
       ],
       url: song.url,
       author: msg.member,
       icon: 'volumeUp',
-      color: 'yellow'
+      color: 'yellow',
     }))
   }
 
@@ -31,12 +31,12 @@ function exec(msg, args) {
   return msg.util.send(buildEmbed({
     title: song.title,
     fields: [
-      [`Volume: ${newVolume}%`, '\u200b']
+      [`Volume: ${newVolume}%`, '\u200b'],
     ],
     url: song.url,
     author: msg.member,
     icon,
-    color: 'yellow'
+    color: 'yellow',
   }))
 }
 
@@ -54,8 +54,8 @@ module.exports = new Command('volume', exec, {
         if (num < 1) return 1
         if (num > maxVolume) return maxVolume
         return num
-      }
-    }
+      },
+    },
   ],
   description: stripIndents`
     Change playback volume.
@@ -63,5 +63,5 @@ module.exports = new Command('volume', exec, {
 
     **Usage:**
     \`volume 30\` => sets the volume to 30%.
-  `
+  `,
 })

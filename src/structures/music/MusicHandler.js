@@ -6,12 +6,12 @@ const Playlist = require('./Playlist.js')
 const providers = {
   soundcloud: {
     Provider: require('./SoundCloud.js'),
-    keychainKey: 'soundCloudClientID'
+    keychainKey: 'soundCloudClientID',
   },
   youtube: {
     Provider: require('./YouTube.js'),
-    keychainKey: 'googleAPIKey'
-  }
+    keychainKey: 'googleAPIKey',
+  },
 }
 
 class MusicHandler {

@@ -14,7 +14,7 @@ module.exports = new Command('reload', exec, {
   args: [
     {
       id: 'command',
-      type: 'command'
-    }
-  ]
+      type: 'command',
+    },
+  ],
 })

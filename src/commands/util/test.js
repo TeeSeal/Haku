@@ -20,17 +20,17 @@ module.exports = new Command('test', exec, {
   args: [
     {
       id: 'a',
-      type: 'commandCategory'
+      type: 'commandCategory',
     },
     {
       id: 'flag',
       match: 'flag',
-      prefix: '-flag'
+      prefix: '-flag',
     },
     {
       id: 'prefix',
       match: 'prefix',
-      prefix: 'prefix='
-    }
-  ]
+      prefix: 'prefix=',
+    },
+  ],
 })

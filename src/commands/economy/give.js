@@ -22,12 +22,12 @@ module.exports = new Command('give', exec, {
       type(word, msg) {
         if (word === 'me') return msg.author
         return this.client.util.resolveUser(word, msg.guild.members.map(m => m.user))
-      }
+      },
     },
     {
       id: 'items',
       match: 'rest',
-      type: Items.resolveCollection
-    }
-  ]
+      type: Items.resolveCollection,
+    },
+  ],
 })

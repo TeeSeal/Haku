@@ -16,10 +16,10 @@ function exec(msg, args) {
     paginate: {
       items: list,
       commandName: this.id,
-      page
+      page,
     },
     icon: 'list',
-    color: 'blue'
+    color: 'blue',
   }))
 }
 
@@ -37,12 +37,12 @@ module.exports = new Command('playlist', exec, {
         if (num < 1) return null
         return num
       },
-      default: 1
+      default: 1,
     },
     {
       id: 'name',
-      type: 'lowercase'
-    }
+      type: 'lowercase',
+    },
   ],
-  description: 'Shows the current playlist.'
+  description: 'Shows the current playlist.',
 })

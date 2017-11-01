@@ -6,7 +6,7 @@ class YouTube extends HTTPClient {
   constructor(key) {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
-      defaultParams: { key }
+      defaultParams: { key },
     })
 
     this.aliases = ['youtube', 'yt', 'tube']
@@ -21,7 +21,7 @@ class YouTube extends HTTPClient {
       title: video.snippet.title,
       thumbnail: video.snippet.thumbnails.high.url,
       duration,
-      url
+      url,
     }
   }
 
@@ -29,7 +29,7 @@ class YouTube extends HTTPClient {
     return this.get(`videos`, {
       id,
       fields: 'items(id, snippet(title, thumbnails(high(url))), contentDetails(duration))',
-      part: 'snippet,contentDetails'
+      part: 'snippet,contentDetails',
     })
   }
 
@@ -38,7 +38,7 @@ class YouTube extends HTTPClient {
       playlistId,
       maxResults: 50,
       fields: 'items(contentDetails(videoId))',
-      part: 'contentDetails'
+      part: 'contentDetails',
     })
   }
 
@@ -47,7 +47,7 @@ class YouTube extends HTTPClient {
       q: query,
       maxResults: 1,
       part: 'id',
-      type: 'video'
+      type: 'video',
     })
   }
 

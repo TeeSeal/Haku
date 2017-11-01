@@ -11,7 +11,7 @@ const client = new HakuClient({
   commandDirectory: 'src/commands/',
   inhibitorDirectory: 'src/inhibitors/',
   listenerDirectory: 'src/listeners/',
-  database: 'src/db/database.sqlite'
+  database: 'src/db/database.sqlite',
 })
 
 client.init()

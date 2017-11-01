@@ -16,16 +16,16 @@ async function exec(msg, args) {
           [
             'Ingredients',
             Object.keys(recipe.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
-              .join(' + ')
+              .join(' + '),
           ],
           [
             'Result',
-            Items.resolveGroup(recipe.result.id, recipe.result.amount).toString()
-          ]
+            Items.resolveGroup(recipe.result.id, recipe.result.amount).toString(),
+          ],
         ],
         author: msg.member,
         icon: 'craft',
-        color: 'gold'
+        color: 'gold',
       }))
     })
     .catch(err => msg.util.error(err))
@@ -42,7 +42,7 @@ module.exports = new Command('craft', exec, {
       type(string) {
         if (!string.includes('recipe')) string = `recipe: ${string}`
         return Items.resolveGroup(string)
-      }
-    }
-  ]
+      },
+    },
+  ],
 })

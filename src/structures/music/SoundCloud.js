@@ -19,7 +19,7 @@ class SoundCloud extends HTTPClient {
       thumbnail: track.artwork_url,
       stream: `${track.stream_url}?client_id=${this.clientID}`,
       duration: track.duration,
-      url: track.permalink_url
+      url: track.permalink_url,
     }
   }
 

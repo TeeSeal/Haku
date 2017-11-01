@@ -16,9 +16,9 @@ function exec(msg, args) {
     args.recipe = {
       result: {
         id: args.result.id,
-        amount: args.result.amount
+        amount: args.result.amount,
       },
-      ingredients: args.ingredients.toJSON()
+      ingredients: args.ingredients.toJSON(),
     }
   }
 
@@ -34,13 +34,13 @@ module.exports = new Command('create', exec, {
   args: [
     {
       id: 'type',
-      type: ['item', 'recipe', 'currency']
+      type: ['item', 'recipe', 'currency'],
     },
     {
       id: 'id',
       match: 'prefix',
       prefix: ['name=', 'n='],
-      type: 'lowercase'
+      type: 'lowercase',
     },
     {
       id: 'value',
@@ -51,49 +51,49 @@ module.exports = new Command('create', exec, {
         const num = parseInt(word)
         if (num < 1) return 1
         return num
-      }
+      },
     },
     {
       id: 'shop',
       match: 'flag',
       prefix: ['-inShop', '-shop', '-s'],
-      default: false
+      default: false,
     },
     {
       id: 'description',
       match: 'prefix',
       prefix: ['description=', 'desc=', 'd='],
-      default: 'This item has no description.'
+      default: 'This item has no description.',
     },
     {
       id: 'emoji',
       match: 'prefix',
-      prefix: ['emoji=', 'e=']
+      prefix: ['emoji=', 'e='],
     },
     {
       id: 'rarity',
       match: 'prefix',
       prefix: ['rarity=', 'r='],
       type: ['common', 'uncommon', 'rare', 'epic', 'legendary'],
-      default: 'common'
+      default: 'common',
     },
     {
       id: 'url',
       match: 'prefix',
       prefix: ['url=', 'link='],
-      type: 'url'
+      type: 'url',
     },
     {
       id: 'result',
       match: 'prefix',
       prefix: ['result=', 'r='],
-      type: Items.resolveGroup
+      type: Items.resolveGroup,
     },
     {
       id: 'ingredients',
       match: 'prefix',
       prefix: ['ingredients=', 'i='],
-      type: Items.resolveCollection
-    }
-  ]
+      type: Items.resolveCollection,
+    },
+  ],
 })

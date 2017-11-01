@@ -17,7 +17,7 @@ module.exports = new Command('destroy', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: Items.resolveGroup
-    }
-  ]
+      type: Items.resolveGroup,
+    },
+  ],
 })

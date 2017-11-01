@@ -19,7 +19,7 @@ module.exports = new Command('exec', exec, {
   args: [
     {
       id: 'command',
-      match: 'rest'
-    }
-  ]
+      match: 'rest',
+    },
+  ],
 })

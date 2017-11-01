@@ -26,20 +26,20 @@ module.exports = new Command('tag-add', exec, {
       id: 'name',
       match: 'prefix',
       prefix: ['n=', 'name='],
-      type: 'string'
+      type: 'string',
     },
     {
       id: 'type',
       match: 'prefix',
       prefix: ['t=', 'type='],
       type: ['text', 'file'],
-      default: 'text'
+      default: 'text',
     },
     {
       id: 'content',
       type: 'string',
-      match: 'rest'
-    }
+      match: 'rest',
+    },
   ],
   description: stripIndents`
     Create a new tag in the guild.
@@ -53,5 +53,5 @@ module.exports = new Command('tag-add', exec, {
     **Usage:**
     \`tag-add name=smh shaking my head\` => creates a new tag called \`smh\` with the content \`shaking my head\`.
     \`tag-add name=smh type=file <IMAGE_URL>\` => when used, this tag will send the image as a file instead of displaying the link.
-  `
+  `,
 })

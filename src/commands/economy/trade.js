@@ -29,19 +29,19 @@ async function exec(msg, args) {
     fields: [
       [
         msg.author.tag,
-        offer.map(item => `**${item.amount}** ${item.name}`).join('\n')
+        offer.map(item => `**${item.amount}** ${item.name}`).join('\n'),
       ],
       [
         member.user.tag,
-        demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---'
-      ]
+        demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---',
+      ],
     ],
     content: stripIndents`
       Both parties must click on the ✅ for the trade to be completed.
       Otherwise click on the ❌ or ignore this message.
     `,
     icon: 'trade',
-    color: 'gold'
+    color: 'gold',
   })
 
   tradingUsers.add(msg.author.id)
@@ -51,7 +51,7 @@ async function exec(msg, args) {
   const poll = new ReactionPoll(statusMsg, {
     emojis: ['✅', '❌'],
     users: [msg.author.id, member.id],
-    time: 6e4
+    time: 6e4,
   })
 
   poll.on('vote', () => {
@@ -95,15 +95,15 @@ module.exports = new Command('trade', exec, {
   args: [
     {
       id: 'member',
-      type: 'member'
+      type: 'member',
     },
     {
       id: 'tradeDetails',
       match: 'rest',
       type(string) {
         return string.split(' for ').map(str => Items.resolveCollection(str))
-      }
-    }
+      },
+    },
   ],
   description: stripIndents`
     Trade items with someone.
@@ -122,5 +122,5 @@ module.exports = new Command('trade', exec, {
 
     **NOTE:** to ask for items in return place them after the \`for\` keyword.
     Most item names used above are not actual items, they were used for demonstrational purposes.
-  `
+  `,
 })

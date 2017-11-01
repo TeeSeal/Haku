@@ -21,8 +21,8 @@ module.exports = new Command('prefix', exec, {
   args: [
     {
       id: 'prefix',
-      type: 'lowercase'
-    }
+      type: 'lowercase',
+    },
   ],
-  description: 'See or set the prefix in a guild.'
+  description: 'See or set the prefix in a guild.',
 })

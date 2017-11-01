@@ -26,10 +26,10 @@ function exec(msg, args) {
     paginate: {
       items: fields,
       commandName: this.id,
-      page
+      page,
     },
     icon: 'shop',
-    color: 'gold'
+    color: 'gold',
   }))
 }
 
@@ -41,7 +41,7 @@ module.exports = new Command('shop', exec, {
     {
       id: 'items',
       match: 'rest',
-      type: Items.resolveCollection
+      type: Items.resolveCollection,
     },
     {
       id: 'page',
@@ -53,7 +53,7 @@ module.exports = new Command('shop', exec, {
         if (num < 1) return null
         return num
       },
-      default: 1
-    }
-  ]
+      default: 1,
+    },
+  ],
 })

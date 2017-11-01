@@ -51,7 +51,7 @@ function buildEmbed(obj) { // eslint-disable-line
       result.embed.footer = {
         text: stripIndents`
           Page: ${page}/${paginated.length} | Use: '${options.commandName} page=<integer>' to view another page.
-        `
+        `,
       }
     }
   }
@@ -74,7 +74,7 @@ function parseFields(fields) {
     return {
       name: field[0],
       value: field[1],
-      inline: field[2]
+      inline: field[2],
     }
   })
 }

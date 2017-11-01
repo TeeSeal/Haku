@@ -6,101 +6,101 @@ module.exports = {
     schema: {
       id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
       },
       blacklist: {
         type: Sequelize.JSON,
-        defaultValue: []
+        defaultValue: [],
       },
       disabled: {
         type: Sequelize.JSON,
-        defaultValue: []
-      }
+        defaultValue: [],
+      },
     },
-    cacheOnInit: true
+    cacheOnInit: true,
   },
 
   guilds: {
     schema: {
       id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
       },
       prefix: {
         type: Sequelize.STRING,
-        defaultValue: prefix
+        defaultValue: prefix,
       },
       blacklist: {
         type: Sequelize.JSON,
-        defaultValue: []
+        defaultValue: [],
       },
       disabled: {
         type: Sequelize.JSON,
-        defaultValue: []
+        defaultValue: [],
       },
       defaultVolume: {
         type: Sequelize.INTEGER,
-        defaultValue: 25
+        defaultValue: 25,
       },
       maxVolume: {
         type: Sequelize.INTEGER,
-        defaultValue: 100
+        defaultValue: 100,
       },
       maxSongDuration: {
         type: Sequelize.INTEGER,
-        defaultValue: 15
+        defaultValue: 15,
       },
       songLimit: {
         type: Sequelize.INTEGER,
-        defaultValue: 100
-      }
+        defaultValue: 100,
+      },
     },
-    cacheOnInit: true
+    cacheOnInit: true,
   },
 
   channels: {
     schema: {
       id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
       },
       blacklist: {
         type: Sequelize.JSON,
-        defaultValue: []
+        defaultValue: [],
       },
       disabled: {
         type: Sequelize.JSON,
-        defaultValue: []
-      }
+        defaultValue: [],
+      },
     },
-    cacheOnInit: true
+    cacheOnInit: true,
   },
 
   users: {
     schema: {
       id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
       },
       inventory: {
         type: Sequelize.JSON,
-        defaultValue: {}
-      }
+        defaultValue: {},
+      },
     },
-    cacheTimeout: 6e5
+    cacheTimeout: 6e5,
   },
 
   tags: {
     schema: {
       id: {
         type: Sequelize.STRING,
-        primaryKey: true
+        primaryKey: true,
       },
       tags: {
         type: Sequelize.JSON,
-        defaultValue: []
-      }
+        defaultValue: [],
+      },
     },
-    cacheTimeout: 6e5
-  }
+    cacheTimeout: 6e5,
+  },
 }

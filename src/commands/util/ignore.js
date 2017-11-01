@@ -4,7 +4,7 @@ const { stripIndents, getDBData } = require('../../util/Util.js')
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
   guild: (member) => member.permissions.has('MANAGE_GUILD'),
-  channel: (member) => member.permissions.has('MANAGE_CHANNLES')
+  channel: (member) => member.permissions.has('MANAGE_CHANNLES'),
 }
 
 function exec(msg, args) {
@@ -31,13 +31,13 @@ module.exports = new Command('ignore', exec, {
   args: [
     {
       id: 'member',
-      type: 'member'
+      type: 'member',
     },
     {
       id: 'scope',
       type: ['client', 'guild', 'channel'],
-      default: 'guild'
-    }
+      default: 'guild',
+    },
   ],
   description: stripIndents`
     Prevent a user from using commands.
@@ -47,5 +47,5 @@ module.exports = new Command('ignore', exec, {
     **Usage:**
     \`ignore TeeSeal\` => ignores the user in the current guild.
     \`ignore TeeSeal channel\` => ignores the user in the current channel.
-  `
+  `,
 })

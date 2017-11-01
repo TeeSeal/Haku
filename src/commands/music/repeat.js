@@ -30,13 +30,13 @@ module.exports = new Command('repeat', exec, {
         if (num < 1) return 1
         if (num > 100) return 100
         return num
-      }
+      },
     },
     {
       id: 'end',
       match: 'flag',
-      prefix: '-end'
-    }
+      prefix: '-end',
+    },
   ],
   description: stripIndents`
     Replay the currently playing track.
@@ -49,5 +49,5 @@ module.exports = new Command('repeat', exec, {
     **Usage:**
     \`repeat 5\` => will repeat the currently playing track 5 times.
     \`repeat 5 -end\` => will add the currently playing track to the end of the queue 5 times.
-  `
+  `,
 })

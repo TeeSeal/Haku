@@ -26,12 +26,12 @@ async function exec(msg) {
     : `${paginated[0].join('\n')}${leftOver ? `\nand ${leftOver} more.` : ''}`
 }`,
     icon: 'list',
-    color: 'blue'
+    color: 'blue',
   }))
 }
 
 module.exports = new Command('shuffle', exec, {
   aliases: ['shuffle'],
   channelRestriction: 'guild',
-  description: 'Shuffle the current playlist.'
+  description: 'Shuffle the current playlist.',
 })

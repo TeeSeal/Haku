@@ -18,15 +18,15 @@ async function exec(msg, args) {
         [
           'Ingredients',
           Object.entries(item.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
-            .join(' + ')
+            .join(' + '),
         ],
         [
           'Result',
-          Items.resolveGroup(item.result.id, item.result.amount).toString()
-        ]
+          Items.resolveGroup(item.result.id, item.result.amount).toString(),
+        ],
       ],
       icon: 'craft',
-      color: 'gold'
+      color: 'gold',
     }))
   }
 
@@ -41,7 +41,7 @@ module.exports = new Command('inspect', exec, {
     {
       id: 'item',
       match: 'rest',
-      type: Items.resolveGroup
-    }
-  ]
+      type: Items.resolveGroup,
+    },
+  ],
 })

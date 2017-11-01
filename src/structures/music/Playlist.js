@@ -55,10 +55,10 @@ class Playlist {
     if (!song) {
       this.channel.send(buildEmbed({
         fields: [
-          ['We\'re out of songs.', 'Better queue up some more!']
+          ['We\'re out of songs.', 'Better queue up some more!'],
         ],
         icon: 'clear',
-        color: 'red'
+        color: 'red',
       }))
       return this.destroy()
     }
@@ -70,11 +70,11 @@ class Playlist {
       title: song.title,
       url: song.url,
       fields: [
-        ['Now playing.', `Duration: ${song.durationString} | Volume: ${this.volume}%`]
+        ['Now playing.', `Duration: ${song.durationString} | Volume: ${this.volume}%`],
       ],
       author: song.member,
       icon: 'play',
-      color: 'green'
+      color: 'green',
     }))
 
     song.play(this.connection, { volume: this._volume })

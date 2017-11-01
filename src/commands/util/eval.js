@@ -60,11 +60,11 @@ module.exports = new Command('eval', exec, {
     {
       id: 'noOutput',
       match: 'flag',
-      prefix: ['-no', '-noOutput']
+      prefix: ['-no', '-noOutput'],
     },
     {
       id: 'code',
-      match: 'rest'
-    }
-  ]
+      match: 'rest',
+    },
+  ],
 })

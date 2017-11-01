@@ -8,7 +8,7 @@ const typeHandlers = {
   file(tag, msg) {
     return msg.util.send({ files: [tag.content] })
       .catch(() => msg.util.error('this tag is broken, might want to recreate it.'))
-  }
+  },
 }
 
 async function exec(msg, args) {
@@ -57,18 +57,18 @@ module.exports = new Command('tag', exec, {
     {
       id: 'name',
       match: 'rest',
-      type: 'string'
+      type: 'string',
     },
     {
       id: 'rename',
       match: 'prefix',
-      prefix: ['name=', 'rename=', 'rn=']
+      prefix: ['name=', 'rename=', 'rn='],
     },
     {
       id: 'del',
       match: 'flag',
-      prefix: ['-d', '-del', '-delete']
-    }
+      prefix: ['-d', '-del', '-delete'],
+    },
   ],
   description: stripIndents`
     Show, rename or delete a tag.
@@ -84,5 +84,5 @@ module.exports = new Command('tag', exec, {
     \`tag smh -delete\` => deletes the \`smh\` tag.
 
     **NOTE:** If you do not supply a tag name, all available tag names will be displayed.
-  `
+  `,
 })

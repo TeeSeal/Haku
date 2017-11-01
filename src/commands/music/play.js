@@ -33,7 +33,7 @@ async function exec(msg, args) {
       `,
       author: msg.member,
       icon: 'clear',
-      color: 'red'
+      color: 'red',
     }))
   }
 
@@ -51,7 +51,7 @@ async function exec(msg, args) {
     image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
     author: msg.member,
     icon: 'playlistAdd',
-    color: 'blue'
+    color: 'blue',
   }))
 }
 
@@ -64,13 +64,13 @@ module.exports = new Command('play', exec, {
     {
       id: 'rand',
       match: 'flag',
-      prefix: '-shuffle'
+      prefix: '-shuffle',
     },
     {
       id: 'queries',
       match: 'rest',
       type: line => line.split(';').map(q => q.trim()),
-      default: []
+      default: [],
     },
     {
       id: 'volume',
@@ -83,8 +83,8 @@ module.exports = new Command('play', exec, {
         if (num < 1) return 1
         if (num > maxVolume) return maxVolume
         return num
-      }
-    }
+      },
+    },
   ],
   description: stripIndents`
     Play some music.
@@ -112,5 +112,5 @@ module.exports = new Command('play', exec, {
 
     You may also input multiple queries in a single command by separating them with \`;\`.
     Example: \`play <YOUTUBE_VIDEO>; <SOUNDCLOUD_PLAYLIST>; some search query; other search query ~soundcloud\`
-  `
+  `,
 })

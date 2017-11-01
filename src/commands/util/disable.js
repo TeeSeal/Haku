@@ -5,7 +5,7 @@ const protected = ['enable']
 const permCheck = {
   client: (member) => member.id === member.client.ownerID,
   guilds: (member) => member.permissions.has('MANAGE_GUILD'),
-  channels: (member) => member.permissions.has('MANAGE_CHANNELS')
+  channels: (member) => member.permissions.has('MANAGE_CHANNELS'),
 }
 
 function exec(msg, args) {
@@ -50,13 +50,13 @@ module.exports = new Command('disable', exec, {
         const result = this.handler.findCommand(word)
         if (result) return result
         return this.handler.categories.get(word)
-      }
+      },
     },
     {
       id: 'scope',
       type: ['globally', 'guild', 'channel'],
-      default: 'guild'
-    }
+      default: 'guild',
+    },
   ],
   description: stripIndents`
     Disable a command.
@@ -68,5 +68,5 @@ module.exports = new Command('disable', exec, {
     \`disable ping\` => disables the ping command in the guild.
     \`disable ping channel\` => disables the ping command in the channel.
     \`disable !music\` => disables all music commands in the guild.
-  `
+  `,
 })
