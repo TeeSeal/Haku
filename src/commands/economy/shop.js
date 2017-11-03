@@ -12,13 +12,13 @@ function exec(msg, args) {
     items = items.filter(item => shop.has(item.id))
     if (items.size > 0) {
       return msg.util.send(items.map(item => {
-        return `**${item.name}** | ${Items.convertToCurrency(item.price).currencyString()}`
+        return `**${item.name}** | ${Items.convertToCurrency(item.price).currencyString}`
       }).join('\n'))
     }
   }
 
   const fields = shop.map(item => {
-    return [item.name, Items.convertToCurrency(item.price).currencyString(), true]
+    return [item.name, Items.convertToCurrency(item.price).currencyString, true]
   })
 
   return msg.util.send(buildEmbed({

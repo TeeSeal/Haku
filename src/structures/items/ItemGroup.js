@@ -43,7 +43,7 @@ class ItemGroup {
   consume(amount) { this.add(-amount) }
 
   priceString() {
-    return this.currencyPrice().currencyString()
+    return this.currencyPrice().currencyString
   }
 
   examine() {

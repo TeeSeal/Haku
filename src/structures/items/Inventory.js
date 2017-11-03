@@ -15,6 +15,15 @@ class Inventory extends ItemCollection {
     for (const item of this.values()) item.bindTo(this)
   }
 
+  includes(items) {
+    const hasItems = items.exceptCurrencies()
+      .every(item => this.has(item.id) && this.get(item.id).amount >= item.amount)
+    const hasCurrency = this.currencyValue >= items.currencyValue
+
+    if (hasItems && hasCurrency) return true
+    return false
+  }
+
   add(items, amount) {
     if (items instanceof ItemCollection) {
       for (const item of items.values()) this.addItemGroup(item)
@@ -52,7 +61,7 @@ class Inventory extends ItemCollection {
   }
 
   convertCurrencies() {
-    this.setBalance(this.currencyValue())
+    this.setBalance(this.currencyValue)
   }
 
   save() {

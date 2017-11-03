@@ -19,7 +19,7 @@ async function exec(msg, args) {
 
   return msg.util.send(buildEmbed({
     title: `${user.username}'s items:`,
-    content: inventory.currencyString(),
+    content: inventory.currencyString,
     paginate: {
       items,
       commandName: this.id,

@@ -55,11 +55,20 @@ class ItemHandler {
 
   static resolveCollection(string) {
     if (!string) return null
-    return new ItemCollection(string.split(/[+,]|and/)
+    const coll = new ItemCollection(string.split(/[+,]|and/)
       .map(word => ItemHandler.resolveGroup(word.trim()))
       .filter(item => item)
       .map(item => [item.id, item])
     )
+
+    const currencies = ItemHandler.convertToCurrency(coll.currencyValue)
+
+    for (const key of coll.currencies().keys()) coll.delete(key)
+    for (const currency of currencies.values()) {
+      if (currency.amount > 0) coll.set(currency.id, currency)
+    }
+
+    return coll
   }
 
   static convertToCurrency(amount) {

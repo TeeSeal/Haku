@@ -13,19 +13,18 @@ class ItemCollection extends Collection {
     return Array.from(this.currencies().values()).sort((c1, c2) => c2.value - c1.value)
   }
 
-
-  currencyString() {
+  get currencyString() {
     if (this.currencies().size === 0) return ''
     return this.sortedCurrencies()
       .map(curr => `**${curr.amount}**${curr.name}`)
       .join('  ')
   }
 
-  currencyValue() {
+  get currencyValue() {
     return ItemCollection.getValue(this.currencies())
   }
 
-  totalValue() {
+  get totalValue() {
     return ItemCollection.getValue(this)
   }
 

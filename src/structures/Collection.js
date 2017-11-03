@@ -198,7 +198,7 @@ class Collection extends Map {
 
   toJSON() {
     const obj = {}
-    for (const item of this.values()) obj[item.id] = item
+    for (const [id, item] of this.entries()) obj[id] = item
     return obj
   }
 

@@ -21,8 +21,8 @@ async function exec(msg, args) {
   const offInv = await this.client.inventories.fetch(msg.author.id)
   const demInv = await this.client.inventories.fetch(member.id)
 
-  if (!checkInventory(offer, offInv)) return msg.util.error('you have insufficient funds.')
-  if (demand && !checkInventory(demand, demInv)) return msg.util.error(`**${member.displayName}** has insufficient funds.`)
+  if (!offInv.includes(offer)) return msg.util.error('you have insufficient funds.')
+  if (demand && !demInv.includes(demand)) return msg.util.error(`**${member.displayName}** has insufficient funds.`)
 
   const options = buildEmbed({
     title: 'ITEM TRADE:',
@@ -77,15 +77,6 @@ async function exec(msg, args) {
     options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
     return statusMsg.edit(`${msg.member} ${member}`, options)
   })
-}
-
-function checkInventory(itemColl, inventory) {
-  const hasItems = itemColl.exceptCurrencies()
-    .every(item => inventory.has(item.id) && inventory.get(item.id).amount >= item.amount)
-  const hasCurrency = inventory.currencyValue() >= itemColl.currencyValue()
-
-  if (hasItems && hasCurrency) return true
-  return false
 }
 
 module.exports = new Command('trade', exec, {

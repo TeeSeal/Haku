@@ -9,10 +9,10 @@ async function exec(msg, args) {
   if (items.size === 0) return msg.util.error('no such item(s) in the shop.')
 
   const inventory = await this.client.inventories.fetch(msg.author.id)
-  const balance = inventory.currencyValue()
-  if (balance < items.totalValue()) return msg.util.error('you have insufficient funds to buy that.')
+  const balance = inventory.currencyValue
+  if (balance < items.totalValue) return msg.util.error('you have insufficient funds to buy that.')
 
-  inventory.setBalance(balance - items.totalValue())
+  inventory.setBalance(balance - items.totalValue)
   inventory.add(items)
 
   return msg.util.success(`you have acquired ${items}`)
