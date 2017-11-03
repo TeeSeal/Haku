@@ -9,6 +9,7 @@ class SequelizeDatabase {
       dialect: 'sqlite',
       logging: false,
       storage: path,
+      operatorsAliases: Sequelize.Op,
     })
   }
 
