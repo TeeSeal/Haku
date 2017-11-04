@@ -1,8 +1,8 @@
-const HTTPClient = require('../HTTPClient.js')
+const MusicProvider = require('../MusicProvider.js')
 const moment = require('moment')
 const ytdl = require('ytdl-core')
 
-class YouTube extends HTTPClient {
+class YouTube extends MusicProvider {
   constructor(key) {
     super({
       baseURL: 'https://www.googleapis.com/youtube/v3/',
@@ -10,7 +10,7 @@ class YouTube extends HTTPClient {
     })
 
     this.aliases = ['youtube', 'yt', 'tube']
-    this.REGEXP = /./
+    this.REGEXP = /(https?:\/\/)?(www\.)?youtu(be\.com|\.be)\//
   }
 
   formatSong(video) {
@@ -115,6 +115,8 @@ class YouTube extends HTTPClient {
   static extractPlaylistID(url) {
     return url.match(/list=([\w\-_]+)/)[1]
   }
+
+  static get keychainKey() { return 'googleAPIKey' }
 }
 
 module.exports = YouTube

@@ -1,26 +1,10 @@
 const Song = require('./Song.js')
-const Collection = require('../Collection.js')
 const Playlist = require('./Playlist.js')
-
-// keep YouTube as the last element
-const providers = {
-  soundcloud: {
-    Provider: require('./SoundCloud.js'),
-    keychainKey: 'soundCloudClientID',
-  },
-  youtube: {
-    Provider: require('./YouTube.js'),
-    keychainKey: 'googleAPIKey',
-  },
-}
+const MusicProvider = require('./MusicProvider.js')
 
 class MusicHandler {
   constructor(keychain) {
-    this.providers = new Collection(
-      Object.entries(providers).map(([name, options]) => {
-        return [name, new options.Provider(keychain[options.keychainKey])]
-      })
-    )
+    this.providers = MusicProvider.loadAll(keychain)
     this.playlists = new Map()
   }
 
@@ -40,7 +24,7 @@ class MusicHandler {
           }
 
           return prov.REGEXP.test(query)
-        })
+        }) || this.providers.get('youtube')
 
         const songs = await provider.resolveResource(query)
 

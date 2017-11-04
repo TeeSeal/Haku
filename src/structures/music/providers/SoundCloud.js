@@ -1,6 +1,6 @@
-const HTTPClient = require('../HTTPClient')
+const MusicProvider = require('../MusicProvider')
 
-class SoundCloud extends HTTPClient {
+class SoundCloud extends MusicProvider {
   constructor(clientID) {
     super({
       baseURL: 'https://api.soundcloud.com/',
@@ -24,10 +24,7 @@ class SoundCloud extends HTTPClient {
   }
 
   async findResource(url) {
-    const resolveResult = await this.get('resolve.json', { url })
-    if (!resolveResult.status.includes('302')) return null
-
-    return this.get(resolveResult.location)
+    return this.get('resolve.json', { url })
   }
 
   async resolveResource(query) {
@@ -42,12 +39,13 @@ class SoundCloud extends HTTPClient {
         : resource.tracks.map(track => this.formatSong(track))
     }
 
-    const track = await this.get('tracks', { q: query }).then(result => result.data[0])
+    const track = await this.get('tracks', { q: query }).then(res => res[0])
     if (!track) return null
 
     return [this.formatSong(track)]
   }
-}
 
+  static get keychainKey() { return 'soundCloudClientID' }
+}
 
 module.exports = SoundCloud
