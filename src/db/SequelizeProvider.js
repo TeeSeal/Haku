@@ -1,4 +1,5 @@
 const Collection = require('../structures/Collection.js')
+const { deepFreeze } = require('../util/Util.js')
 
 class SequelizeProvider {
   constructor(table, options = {}) {
@@ -6,7 +7,7 @@ class SequelizeProvider {
     this.idColumn = options.idColumn || 'id'
     this.cacheOnInit = options.cacheOnInit || false
     this.cacheTimeout = this.cacheOnInit ? 0 : options.cacheTimeout || 0
-    this.defaultValues = new Proxy(options.defaultValues || {}, { set: () => null })
+    this.defaultValues = options.defaultValues ? deepFreeze(options.defaultValues) : {}
     this.items = new Collection()
   }
 
@@ -43,7 +44,7 @@ class SequelizeProvider {
       const row = await this.table.findCreateFind({ where: { [this.idColumn]: id } })
         .then(r => r[0])
 
-      this.items.set(row[this.idColumn], sanitize(row.dataValues))
+      this.items.set(id, sanitize(row.dataValues))
 
       if (this.cacheTimeout) {
         setTimeout(() => this.items.delete(id), this.cacheTimeout)
@@ -54,7 +55,7 @@ class SequelizeProvider {
   }
 
   async set(id, key, value) {
-    const data = this.items.get(id) || await this.fetch(id)
+    const data = await this.fetch(id)
 
     if (typeof key === 'string') {
       data[key] = value

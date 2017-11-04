@@ -45,6 +45,15 @@ class Util {
 
     return array
   }
+
+  static deepFreeze(obj) {
+    Object.values(obj)
+      .filter(value => value instanceof Object)
+      .forEach(value => Util.deepFreeze(value))
+    Object.freeze(obj)
+
+    return obj
+  }
 }
 
 module.exports = new Proxy(Util, {
