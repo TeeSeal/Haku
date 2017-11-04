@@ -1,5 +1,6 @@
 const HakuClient = require('./src/structures/HakuClient.js')
 const { ownerID } = require('./config.json')
+const logr = require('logr')
 
 const client = new HakuClient({
   prefix: msg => client.db.guilds
@@ -15,3 +16,12 @@ const client = new HakuClient({
 })
 
 client.init()
+
+process.on('unhandledRejection', err => {
+  logr.error(err)
+
+  const owner = client.users.get(client.akairoOptions.ownerID)
+  if (!owner) return
+
+  owner.send(`Got an unhandledRejection:\n\`\`\`${err.stack}\`\`\``)
+})
