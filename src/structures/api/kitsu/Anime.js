@@ -9,7 +9,7 @@ class Anime {
     this.ageRating = attr.ageRating
     this.ageRatingGuide = attr.ageRatingGuide
     this.episodeCount = attr.episodeCount || 'N/A'
-    this.genres = attr.genres || ['N/A']
+    this.genres = attr.genres.length > 0 ? attr.genres : ['N/A']
     this.type = attr.subtype
     this.status = attr.status
     this.youtubeID = attr.youtubeVideoId
