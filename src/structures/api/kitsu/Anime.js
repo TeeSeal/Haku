@@ -38,7 +38,20 @@ class Anime {
 
   get endDate() {
     if (this._endDate) return moment(this._endDate).format('LL')
-    return 'Not yet finished.'
+    return null
+  }
+
+  get airWeekDay() {
+    if (this._startDate) return moment(this._startDate).format('dddd')
+    return null
+  }
+
+  get optionalField() {
+    return this.endDate
+      ? ['End Date', this.endDate, true]
+      : this.airWeekDay
+        ? ['Airs on', this.airWeekDay, true]
+        : ['End Date', 'Not yet finished', true]
   }
 }
 

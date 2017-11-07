@@ -23,7 +23,7 @@ async function exec(msg, args) {
       ['Episodes', anime.episodeCount, true],
       ['Age Rating', anime.ageRatingString, true],
       ['Start Date', anime.startDate, true],
-      ['End Date', anime.endDate, true],
+      anime.optionalField,
       ['Trailer', anime.trailer],
     ],
     content: formattedSynopsis,
