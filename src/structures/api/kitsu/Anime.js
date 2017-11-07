@@ -42,7 +42,7 @@ class Anime {
   }
 
   get airWeekDay() {
-    if (this._startDate) return moment(this._startDate).format('dddd')
+    if (this._startDate) return `${moment(this._startDate).format('dddd')}s`
     return null
   }
 
@@ -50,7 +50,7 @@ class Anime {
     return this.endDate
       ? ['End Date', this.endDate, true]
       : this.airWeekDay
-        ? ['Airs on', this.airWeekDay, true]
+        ? ['Currently airing on', this.airWeekDay, true]
         : ['End Date', 'Not yet finished', true]
   }
 }
