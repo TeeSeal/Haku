@@ -1,5 +1,6 @@
 const fs = require('fs')
 const pluralize = require('pluralize')
+const Fuse = require('fuse.js')
 const { rootDir, capitalize } = require('../../util/Util.js')
 const ItemCollection = require('./ItemCollection.js')
 const itemTypes = {
@@ -11,6 +12,16 @@ const itemTypes = {
 const items = new ItemCollection(require(`${rootDir}/assets/items.json`).map(item => {
   return [item.id, new itemTypes[item.type](item)]
 }))
+
+const fuse = new Fuse(items.array(), {
+  shouldSort: true,
+  threshold: 0.3,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: ['id'],
+})
 
 const baseCurrency = findBaseCurrency()
 
@@ -43,9 +54,9 @@ class ItemHandler {
       recipe = true
     }
 
-    const formatted = pluralize(name, 1)
-    const regexp = new RegExp(`^${recipe ? `recipe: ${formatted}` : formatted}`, 'i')
-    const item = items.find(i => regexp.test(i.id))
+    const singular = pluralize(name, 1)
+    const formatted = recipe ? `recipe: ${singular}` : singular
+    const item = fuse.search(formatted)[0]
     if (!item) return null
 
     const obj = Object.assign({}, item)
