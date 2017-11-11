@@ -58,7 +58,7 @@ class YouTube extends MusicProvider {
       query = YouTube.extractVideoID(query)
     }
 
-    if (!/[a-zA-Z0-9-_]{11}$/.test(query)) {
+    if (!/^[a-zA-Z0-9-_]{11}$/.test(query)) {
       query = await this.search(query)
         .then(res => res.items[0] ? res.items[0].id.videoId : null)
     }
