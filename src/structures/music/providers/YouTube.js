@@ -73,7 +73,9 @@ class YouTube extends MusicProvider {
       query = YouTube.extractPlaylistID(query)
     }
 
-    const playlistItems = await this.getPlaylistItems(query).then(res => res.items)
+    const playlistItems = await this.getPlaylistItems(query)
+      .then(res => res.items)
+      .catch(() => null)
     if (!playlistItems) return null
 
     const id = playlistItems.map(video => video.contentDetails.videoId).join()
@@ -84,9 +86,10 @@ class YouTube extends MusicProvider {
     }))
   }
 
-  resolveResource(query) {
+  async resolveResource(query) {
     if (query.includes('/playlist?') || /^[a-zA-Z0-9-_]{12,}$/.test(query)) {
-      return this.resolvePlaylist(query)
+      const result = await this.resolvePlaylist(query)
+      if (result) return result
     }
 
     return this.resolveVideo(query)

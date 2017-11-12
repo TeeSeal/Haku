@@ -1,6 +1,7 @@
 const Song = require('./Song.js')
 const Playlist = require('./Playlist.js')
 const MusicProvider = require('./MusicProvider.js')
+const { defaultMusicProvider } = require('../../../config.json')
 
 class MusicHandler {
   constructor(keychain) {
@@ -24,7 +25,7 @@ class MusicHandler {
           }
 
           return prov.REGEXP.test(query)
-        }) || this.providers.get('youtube')
+        }) || this.providers.get(defaultMusicProvider)
 
         const songs = await provider.resolveResource(query)
 

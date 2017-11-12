@@ -18,22 +18,20 @@ class HakuClient extends akairo.AkairoClient {
 
   init() {
     logr.info('Connecting to database...')
-    this.db.init()
-      .then(db => {
-        logr.success('OK')
+    this.db.init().then(db => {
+      logr.success('OK')
 
-        logr.info('Setting up inventories...')
-        this.inventories = new InventoryHandler(db.users)
-        logr.success('OK')
+      logr.info('Setting up inventories...')
+      this.inventories = new InventoryHandler(db.users)
+      logr.success('OK')
 
-        logr.info('Setting up music...')
-        this.music = new MusicHandler(keychain)
-        logr.success('OK')
+      logr.info('Setting up music...')
+      this.music = new MusicHandler(keychain)
+      logr.success('OK')
 
-        logr.info('Logging in...')
-        this.login(keychain.token)
-      })
-      .catch(err => { throw err })
+      logr.info('Logging in...')
+      this.login(keychain.token)
+    }).catch(err => { throw err })
   }
 }
 
