@@ -1,26 +1,46 @@
 const { Command } = require('discord-akairo')
 const { randomFrom } = require('../../util/Util.js')
 
-const responses = [
-  ['Yes.', 'Absolutely.', 'Most likely.', 'Without a doubt.', 'It is certain.'],
-  ['Reply hazy, try again.', 'Better not tell you now.', 'Concentrate and ask again.'],
-  ['My sources say no.', 'Nuh-huh.', 'Very doubtful.', 'Nah.', 'My sources say no.'],
-]
-
 function exec(msg, args) {
-  const { question } = args
-  if (!question) return msg.util.error('gotta ask something.')
+  const { text, add, del } = args
+  const responses = this.client.db.guilds.get(msg.guild.id).eightBall.slice()
 
-  const section = randomFrom(responses)
-  return msg.util.info(randomFrom(section))
+  if (del) {
+    if (!text) return msg.util.error('what response are you trying to remove?')
+    if (!responses.includes(text)) return msg.util.error('couldn\'t find such a response.')
+    responses.splice(responses.indexOf(text), 1)
+    return this.client.db.guilds.set(msg.guild.id, 'eightBall', responses)
+      .then(() => msg.util.success('response deleted.'))
+  }
+
+  if (add) {
+    if (!text) return msg.util.error('what response are you trying to add?')
+    responses.push(text)
+    return this.client.db.guilds.set(msg.guild.id, 'eightBall', responses)
+      .then(() => msg.util.success('new response added.'))
+  }
+
+  if (!text) return msg.util.error('gotta ask something.')
+
+  return msg.util.info(randomFrom(responses))
 }
 
 module.exports = new Command('8ball', exec, {
   aliases: ['8ball', '8b'],
   args: [
     {
-      id: 'question',
+      id: 'text',
       match: 'rest',
+    },
+    {
+      id: 'add',
+      match: 'flag',
+      prefix: '-add',
+    },
+    {
+      id: 'del',
+      match: 'flag',
+      prefix: '-del',
     },
   ],
   description: 'Ask the Magic 8Ball a question.',
