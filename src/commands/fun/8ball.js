@@ -9,7 +9,7 @@ const responses = [
 
 function exec(msg, args) {
   const { question } = args
-  if (!question) msg.util.error('gotta ask something.')
+  if (!question) return msg.util.error('gotta ask something.')
 
   const section = randomFrom(responses)
   return msg.util.info(randomFrom(section))
