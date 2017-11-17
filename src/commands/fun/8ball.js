@@ -2,7 +2,7 @@ const { Command } = require('discord-akairo')
 const { randomFrom } = require('../../util/Util.js')
 
 const responses = [
-  ['Yes.', 'Absolutely.', 'Most likely.', 'Wihtout a doubt.', 'It is certain.'],
+  ['Yes.', 'Absolutely.', 'Most likely.', 'Without a doubt.', 'It is certain.'],
   ['Reply hazy, try again.', 'Better not tell you now.', 'Concentrate and ask again.'],
   ['My sources say no.', 'Nuh-huh.', 'Very doubtful.', 'Nah.', 'My sources say no.'],
 ]
