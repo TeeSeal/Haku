@@ -54,6 +54,10 @@ class Util {
 
     return obj
   }
+
+  static randomFrom(array) {
+    return array[Math.floor(Math.random() * array.length)]
+  }
 }
 
 module.exports = new Proxy(Util, {
