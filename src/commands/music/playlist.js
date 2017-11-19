@@ -12,7 +12,7 @@ function exec(msg, args) {
 
   return msg.util.send(buildEmbed({
     title: 'Playlist:',
-    content: `**Now playing:** ${song.linkString}`,
+    description: `**Now playing:** ${song.linkString}`,
     paginate: {
       items: list,
       commandName: this.id,

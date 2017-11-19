@@ -22,7 +22,7 @@ async function exec(msg, args) {
     title: card.name,
     url: card.url,
     fields,
-    content: `${card.shortDescription}\n\n${card.description}`,
+    description: `${card.shortDescription}\n\n${card.description}`,
     thumbnail: card.image,
     color: 'orange',
   }))

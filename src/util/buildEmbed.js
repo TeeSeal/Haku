@@ -3,33 +3,33 @@ const { stripIndents } = require('common-tags')
 const paginate = require('./paginate.js')
 
 function buildEmbed(obj) { // eslint-disable-line
-  const result = { embed: {} }
+  const embed = {}
   if (obj.icon) obj.thumbnail = `src/assets/icons/${obj.icon}.png`
 
-  result.files = [obj.thumbnail, obj.image]
+  const files = [obj.thumbnail, obj.image]
     .filter(image => image && !image.startsWith('http'))
     .map(image => { return { attachment: image } })
 
   for (const image of ['thumbnail', 'image']) {
     if (!obj[image]) continue
-    result.embed[image] = obj[image].startsWith('http')
+    embed[image] = obj[image].startsWith('http')
       ? { url: obj[image] }
       : { url: `attachment://${obj[image].split('/').slice(-1)[0]}` }
   }
 
   if (obj.author) {
-    result.embed.author = {
+    embed.author = {
       name: obj.author.displayName,
-      icon_url: obj.author.user.displayAvatarURL // eslint-disable-line
+      icon_url: obj.author.user.displayAvatarURL() // eslint-disable-line
     }
   }
 
   if (obj.color) {
-    result.embed.color = Color[obj.color.toUpperCase()]
+    embed.color = Color[obj.color.toUpperCase()]
   }
 
-  result.embed.fields = parseFields(obj.fields)
-  result.embed.description = obj.content || ''
+  embed.fields = parseFields(obj.fields)
+  embed.description = obj.description || ''
 
   if (obj.paginate) {
     const options = obj.paginate
@@ -41,14 +41,14 @@ function buildEmbed(obj) { // eslint-disable-line
 
     if (paginated.length !== 0) {
       if (Array.isArray(options.items[0])) {
-        result.embed.fields = result.embed.fields.concat(parseFields(paginated[page - 1]))
+        embed.fields = embed.fields.concat(parseFields(paginated[page - 1]))
       } else {
-        result.embed.description += `\n${paginated[page - 1].join('\n')}`
+        embed.description += `\n${paginated[page - 1].join('\n')}`
       }
     }
 
     if (paginated.length > 1) {
-      result.embed.footer = {
+      embed.footer = {
         text: stripIndents`
           Page: ${page}/${paginated.length} | Use: '${options.commandName} page=<integer>' to view another page.
         `,
@@ -57,15 +57,15 @@ function buildEmbed(obj) { // eslint-disable-line
   }
 
   if (obj.footer) {
-    if (typeof obj.footer === 'string') result.embed.footer = { text: obj.footer }
-    else result.embed.footer = obj.footer
+    if (typeof obj.footer === 'string') embed.footer = { text: obj.footer }
+    else embed.footer = obj.footer
   }
 
-  if (obj.title) result.embed.title = obj.title
-  if (obj.timestamp) result.embed.timestamp = obj.timestamp
-  if (obj.url) result.embed.url = obj.url
+  if (obj.title) embed.title = obj.title
+  if (obj.timestamp) embed.timestamp = obj.timestamp
+  if (obj.url) embed.url = obj.url
 
-  return result
+  return { embed, files }
 }
 
 function parseFields(fields) {

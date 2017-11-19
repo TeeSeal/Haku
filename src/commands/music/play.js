@@ -24,7 +24,7 @@ async function exec(msg, args) {
 
     await msg.util.send(buildEmbed({
       title: 'Failed to add:',
-      content: stripIndents`
+      description: stripIndents`
         ${rPaginated[0].map(obj => stripIndents`
           • ${obj.song.linkString}
           Reason: ${obj.reason}
@@ -44,7 +44,7 @@ async function exec(msg, args) {
 
   return msg.util.send(buildEmbed({
     title: 'Added to playlist:',
-    content: stripIndents`
+    description: stripIndents`
       ${aPaginated[0].map(song => `• ${song.linkString}`).join('\n')}
       ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
     `,

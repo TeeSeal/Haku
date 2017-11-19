@@ -18,7 +18,7 @@ async function exec(msg) {
 
   return msg.util.send(buildEmbed({
     title: 'SHUFFLED PLAYLIST:',
-    content: stripIndents`
+    description: stripIndents`
       **Now playing:** ${playlist.song.linkString}
 
       ${paginated.length === 0

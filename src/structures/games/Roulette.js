@@ -65,7 +65,7 @@ class Roulette {
 
     return buildEmbed({
       title: 'Roulette',
-      content: `Time Left: ${this.time} seconds`,
+      description: `Time Left: ${this.time} seconds`,
       fields,
       icon: 'game',
       color: 'scarlet',

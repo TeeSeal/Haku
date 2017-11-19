@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util.js')
 
-function exec(msg, args) {
+async function exec(msg, args) {
   const { a, flag, prefix } = args
   return msg.channel.send(stripIndents`
     \`\`\`json

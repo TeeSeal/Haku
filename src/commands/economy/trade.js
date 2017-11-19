@@ -36,7 +36,7 @@ async function exec(msg, args) {
         demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---',
       ],
     ],
-    content: stripIndents`
+    description: stripIndents`
       Both parties must click on the ✅ for the trade to be completed.
       Otherwise click on the ❌ or ignore this message.
     `,
@@ -74,8 +74,9 @@ async function exec(msg, args) {
     tradingUsers.delete(msg.author.id)
     tradingUsers.delete(member.id)
 
-    options.embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
-    return statusMsg.edit(`${msg.member} ${member}`, options)
+    const { embed } = options
+    embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
+    return statusMsg.edit(`${msg.member} ${member}`, { embed })
   })
 }
 

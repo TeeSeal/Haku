@@ -26,7 +26,7 @@ async function exec(msg, args) {
       anime.optionalField,
       ['Trailer', anime.trailer],
     ],
-    content: formattedSynopsis,
+    description: formattedSynopsis,
     thumbnail: anime.poster,
     color: 'orange',
   }))

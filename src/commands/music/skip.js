@@ -61,13 +61,14 @@ async function exec(msg) {
     const success = votes.get('✅').length >= votesNeeded
     voteSkips.delete(msg.guild.id)
 
-    options.embed.fields = [
+    const { embed } = options
+    embed.fields = [
       {
         name: success ? '✅ Skipped.' : '❌ Voteskip failed.',
         value: '\u200b',
       },
     ]
-    return statusMsg.edit(members.array().join(), options)
+    return statusMsg.edit(members.array().join(), { embed })
       .then(() => success ? playlist.skip() : null)
   })
 }
