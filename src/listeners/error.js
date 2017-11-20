@@ -23,5 +23,5 @@ function exec(err, msg, cmd) {
 
 module.exports = new Listener('error', exec, {
   emitter: 'commandHandler',
-  eventName: 'error',
+  event: 'error',
 })

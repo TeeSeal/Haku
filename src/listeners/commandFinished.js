@@ -9,5 +9,5 @@ function exec(msg, cmd) {
 
 module.exports = new Listener('commandFinished', exec, {
   emitter: 'commandHandler',
-  eventName: 'commandFinished',
+  event: 'commandFinished',
 })

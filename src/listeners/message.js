@@ -14,5 +14,5 @@ async function exec(msg) {
 
 module.exports = new Listener('message', exec, {
   emitter: 'client',
-  eventName: 'message',
+  event: 'message',
 })
