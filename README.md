@@ -9,7 +9,7 @@
 1. `git clone https://github.com/TeeSeal/Haku.git`
 2. `cd Haku`
 3. `mv keychain.example.json keychain.json`
-4. Replace the entries is `keychain.json` with your keys.
+4. Replace the entries in `keychain.json` with your keys.
 5. `npm i`
 6. Make desired modifications to the source code. (Optional)
 7. `npm start`
