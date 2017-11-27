@@ -37,7 +37,7 @@ class ItemCollection extends Collection {
     if (items.length === 0) return 'nothing'
     if (items.length === 1) return items[0].toString()
     const last = items.pop()
-    return `${items.map(item => item.toString()).join(', ')} and ${last}`
+    return `${items.join(', ')} and ${last}`
   }
 
   clone() {

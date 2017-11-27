@@ -1,0 +1,5 @@
+{
+  "token": "YOUR_DISCORD_BOT_TOKEN",
+  "googleAPIKey": "YOUR_GOOGLE_API_KEY",
+  "soundCloudClientID": "YOUR_SOUNDCLOUD_CLIENT_ID"
+}
