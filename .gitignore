@@ -39,4 +39,3 @@ jspm_packages
 keychain.json
 src/db/database.sqlite
 .DS_Store
-package-lock.json
