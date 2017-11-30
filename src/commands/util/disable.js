@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo')
 const { stripIndents, getDBData } = require('../../util/Util.js')
 
-const protected = ['enable']
+const reserved = ['enable']
 const permCheck = {
   client: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
@@ -51,7 +51,7 @@ class DisableCommand extends Command {
   exec(msg, args) {
     const { toDisable, scope } = args
     if (!toDisable) return msg.util.error('you need to specfy a command/category to disable.')
-    if (toDisable instanceof Command && protected.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`)
+    if (toDisable instanceof Command && reserved.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`)
 
     const [table, id, formattedScope] = getDBData(msg, scope)
     if (!permCheck[table](msg.member)) {
@@ -66,7 +66,7 @@ class DisableCommand extends Command {
       if (disabled.includes(toDisable.id)) return msg.util.error(`**${toDisable.id}** is already disabled ${formattedScope}.`)
       filtered = [toDisable.id]
     } else {
-      filtered = toDisable.filter(c => [disabled, protected].every(arr => !arr.includes(c.id))).map(c => c.id)
+      filtered = toDisable.filter(c => [disabled, reserved].every(arr => !arr.includes(c.id))).map(c => c.id)
       if (filtered.size === 0) return msg.util.error(`all commands in **${toDisable.id}** are already disabled.`)
     }
 
