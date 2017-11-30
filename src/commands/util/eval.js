@@ -2,33 +2,53 @@ const { Command } = require('discord-akairo')
 const { inspect } = require('util')
 const { stripIndents } = require('common-tags')
 
-async function exec(msg, args) {
-  const { code, noOutput } = args
-  let evaled
-  try {
-    evaled = eval(code)
-  } catch (err) {
-    evaled = `${err.name}: ${err.message}`
+class EvalCommand extends Command {
+  constructor() {
+    super('eval', {
+      aliases: ['eval'],
+      description: 'Evaluate some code.',
+      args: [
+        {
+          id: 'noOutput',
+          match: 'flag',
+          prefix: ['-no', '-noOutput'],
+        },
+        {
+          id: 'code',
+          match: 'rest',
+        },
+      ],
+    })
   }
 
-  evaled = evaled instanceof Promise ? await evaled : evaled
-  const lang = getLang(evaled)
-  let output = clean(evaled)
-  if (output.includes(this.client.token)) {
-    output = output.replace(new RegExp(escapeRegExp(this.client.token), 'g'), '--- token was here ---')
-  }
+  async exec(msg, args) {
+    const { code, noOutput } = args
+    let evaled
+    try {
+      evaled = eval(code)
+    } catch (err) {
+      evaled = `${err.name}: ${err.message}`
+    }
 
-  if (noOutput) return
-  return msg.util.send(stripIndents`
-    :inbox_tray: **INPUT:**
-    \`\`\`js
-    ${code}
-    \`\`\`
-    :outbox_tray: **OUTPUT:**
-    \`\`\`${lang}
-    ${output}
-    \`\`\`
-  `)
+    evaled = evaled instanceof Promise ? await evaled : evaled
+    const lang = getLang(evaled)
+    let output = clean(evaled)
+    if (output.includes(this.client.token)) {
+      output = output.replace(new RegExp(escapeRegExp(this.client.token), 'g'), '--- token was here ---')
+    }
+
+    if (noOutput) return
+    return msg.util.send(stripIndents`
+      :inbox_tray: **INPUT:**
+      \`\`\`js
+      ${code}
+      \`\`\`
+      :outbox_tray: **OUTPUT:**
+      \`\`\`${lang}
+      ${output}
+      \`\`\`
+    `)
+  }
 }
 
 function getLang(thing) {
@@ -53,18 +73,4 @@ function escapeRegExp(str) {
   return str.replace(/-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
 }
 
-module.exports = new Command('eval', exec, {
-  aliases: ['eval'],
-  description: 'Evaluate some code.',
-  args: [
-    {
-      id: 'noOutput',
-      match: 'flag',
-      prefix: ['-no', '-noOutput'],
-    },
-    {
-      id: 'code',
-      match: 'rest',
-    },
-  ],
-})
+module.exports = EvalCommand

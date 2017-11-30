@@ -1,26 +1,33 @@
 const { Command } = require('discord-akairo')
 const { buildEmbed } = require('../../util/Util.js')
 
-async function exec(msg) {
-  const playlist = this.client.music.playlists.get(msg.guild.id)
+class PlayingCommand extends Command {
+  constructor() {
+    super('playing', {
+      aliases: ['playing', 'nowplaying', 'np', 'time'],
+      channelRestriction: 'guild',
+      description: 'Show details on the currently palying song.',
+    })
+  }
 
-  if (!playlist) return msg.util.error('nothing is currently playing.')
-  const { song } = playlist
+  exec(msg) {
+    const playlist = this.client.music.playlists.get(msg.guild.id)
 
-  return msg.util.send(buildEmbed({
-    title: song.title,
-    fields: [
-      [song.time, `Volume: ${playlist.volume}%`],
-    ],
-    url: song.url,
-    author: msg.member,
-    icon: 'time',
-    color: 'purple',
-  }))
+    if (!playlist) return msg.util.error('nothing is currently playing.')
+    const { song } = playlist
+
+    return msg.util.send(buildEmbed({
+      title: song.title,
+      fields: [
+        [song.time, `Volume: ${playlist.volume}%`],
+      ],
+      url: song.url,
+      author: msg.member,
+      icon: 'time',
+      color: 'purple',
+    }))
+  }
 }
 
-module.exports = new Command('playing', exec, {
-  aliases: ['playing', 'nowplaying', 'np', 'time'],
-  channelRestriction: 'guild',
-  description: 'Show details on the currently palying song.',
-})
+
+module.exports = PlayingCommand
