@@ -6,6 +6,7 @@ class EvalCommand extends Command {
   constructor() {
     super('eval', {
       aliases: ['eval'],
+      ownerOnly: true,
       description: 'Evaluate some code.',
       args: [
         {
