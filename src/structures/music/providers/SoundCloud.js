@@ -4,7 +4,7 @@ class SoundCloud extends MusicProvider {
   constructor(clientID) {
     super({
       baseURL: 'https://api.soundcloud.com/',
-      defaultParams: { client_id: clientID } // eslint-disable-line
+      params: { client_id: clientID } // eslint-disable-line
     })
 
     this.clientID = clientID

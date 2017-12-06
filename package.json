@@ -30,6 +30,7 @@
     "logr": "github:teeseal/logr",
     "moment": "^2.19.3",
     "moment-duration-format": "^1.3.0",
+    "node-fetch": "^1.7.3",
     "opusscript": "^0.0.3",
     "pluralize": "^5.1.0",
     "sequelize": "^4.23.4",

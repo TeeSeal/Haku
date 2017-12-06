@@ -2,14 +2,14 @@ const EventEmitter = require('events')
 const Collection = require('./Collection.js')
 
 class ReactionPoll extends EventEmitter {
-  constructor(message, options) {
-    if (!options.emojis) throw new Error('you need to specify emojis to use.')
+  constructor(message, opts) {
+    if (!opts.emojis) throw new Error('you need to specify emojis to use.')
 
     super()
 
-    this.emojis = options.emojis
-    this.users = options.users || []
-    this.time = options.time || 15e3
+    this.emojis = opts.emojis
+    this.users = opts.users || []
+    this.time = opts.time || 15e3
     this.message = message
     this.votes = new Collection(this.emojis.map(emoji => {
       return [emoji, []]

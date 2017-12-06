@@ -22,7 +22,7 @@ class SkipCommand extends Command {
     }
 
     const { song } = playlist
-    const options = buildEmbed({
+    const opts = buildEmbed({
       title: song.title,
       fields: [
         ['✅ Skipped.', '\u200b'],
@@ -36,7 +36,7 @@ class SkipCommand extends Command {
     if (msg.member.permissions.has('MANAGE_GUILD')
       || song.member.id === msg.member.id
       || msg.member.voiceChannel.members.size === 2) {
-      return msg.util.send(options).then(() => playlist.skip())
+      return msg.util.send(opts).then(() => playlist.skip())
     }
 
     if (voteSkips.has(msg.guild.id)) {
@@ -48,14 +48,14 @@ class SkipCommand extends Command {
       .filter(member => ![this.client.user.id, msg.author.id].includes(member.id))
     const votesNeeded = Math.ceil(members.size / 2)
 
-    options.embed.fields = [
+    opts.embed.fields = [
       {
         name: 'VOTESKIP',
         value: `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`,
       },
     ]
 
-    const statusMsg = await msg.util.send(members.array().join(), options)
+    const statusMsg = await msg.util.send(members.array().join(), opts)
     const poll = new ReactionPoll(statusMsg, {
       emojis: ['✅'],
       users: members.map(m => m.id),
@@ -70,7 +70,7 @@ class SkipCommand extends Command {
       const success = votes.get('✅').length >= votesNeeded
       voteSkips.delete(msg.guild.id)
 
-      const { embed } = options
+      const { embed } = opts
       embed.fields = [
         {
           name: success ? '✅ Skipped.' : '❌ Voteskip failed.',

@@ -64,7 +64,7 @@ class TradeCommand extends Command {
     if (!offInv.includes(offer)) return msg.util.error('you have insufficient funds.')
     if (demand && !demInv.includes(demand)) return msg.util.error(`**${member.displayName}** has insufficient funds.`)
 
-    const options = buildEmbed({
+    const opts = buildEmbed({
       title: 'ITEM TRADE:',
       fields: [
         [
@@ -87,7 +87,7 @@ class TradeCommand extends Command {
     tradingUsers.add(msg.author.id)
     tradingUsers.add(member.id)
 
-    const statusMsg = await msg.util.send(`${msg.member} ${member}`, options)
+    const statusMsg = await msg.util.send(`${msg.member} ${member}`, opts)
     const poll = new ReactionPoll(statusMsg, {
       emojis: ['✅', '❌'],
       users: [msg.author.id, member.id],
@@ -114,7 +114,7 @@ class TradeCommand extends Command {
       tradingUsers.delete(msg.author.id)
       tradingUsers.delete(member.id)
 
-      const { embed } = options
+      const { embed } = opts
       embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
       return statusMsg.edit(`${msg.member} ${member}`, { embed })
     })

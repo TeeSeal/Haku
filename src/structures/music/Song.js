@@ -3,15 +3,15 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class Song {
-  constructor(song, options) {
+  constructor(song, opts) {
     Object.assign(this, song)
-    this.member = options.member
-    this.volume = options.volume
+    this.member = opts.member
+    this.volume = opts.volume
     this.dispatcher = null
   }
 
-  play(connection, options) {
-    this.dispatcher = connection.playStream(this.stream, options)
+  play(connection, opts) {
+    this.dispatcher = connection.playStream(this.stream, opts)
     return this.dispatcher
   }
 

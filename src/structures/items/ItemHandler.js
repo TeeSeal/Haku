@@ -108,20 +108,20 @@ class ItemHandler {
     return words.join(' ').toLowerCase()
   }
 
-  static create(options) {
-    if (options.type === 'recipe') {
-      options.id = `recipe: ${ItemHandler.formatRecipeName(options.id)}`
+  static create(opts) {
+    if (opts.type === 'recipe') {
+      opts.id = `recipe: ${ItemHandler.formatRecipeName(opts.id)}`
     }
 
-    if (items.has(options.id)) return
-    const item = new itemTypes[options.type](options)
+    if (items.has(opts.id)) return
+    const item = new itemTypes[opts.type](opts)
     items.set(item.id, item)
     return writeItems()
   }
 
-  static update(options) {
-    if (!items.has(options.id)) return ItemHandler.create(options)
-    const item = new itemTypes[options.type](options)
+  static update(opts) {
+    if (!items.has(opts.id)) return ItemHandler.create(opts)
+    const item = new itemTypes[opts.type](opts)
     items.set(item.id, item)
     return writeItems()
   }

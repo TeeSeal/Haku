@@ -1,8 +1,8 @@
 const moment = require('moment')
 
 class Anime {
-  constructor(options) {
-    const attr = options.attributes
+  constructor(opts) {
+    const attr = opts.attributes
     this.title = attr.titles.en_jp
     this.japaneseTitle = attr.titles.ja_jp
     this.rating = Math.ceil(+attr.averageRating / 20)

@@ -1,38 +1,38 @@
 class Card {
-  constructor(options) {
-    this.name = options.name
-    this.image = options.image_path
-    this.description = options.text
-    this.url = options.tcgplayer_link
+  constructor(opts) {
+    this.name = opts.name
+    this.image = opts.image_path
+    this.description = opts.text
+    this.url = opts.tcgplayer_link
 
-    this.cardType = this.getCardType(options)
+    this.cardType = this.getCardType(opts)
 
-    this.type = options.type
-    this.monsterTypes = options.monster_types
-    this.level = options.stars
+    this.type = opts.type
+    this.monsterTypes = opts.monster_types
+    this.level = opts.stars
 
-    this.linkMarkers = options.link_markers
-    this.linkNumber = options.link_number
+    this.linkMarkers = opts.link_markers
+    this.linkNumber = opts.link_number
 
-    this.species = options.species
-    this.attribute = options.attribute
+    this.species = opts.species
+    this.attribute = opts.attribute
 
-    this.materials = options.materials
+    this.materials = opts.materials
 
     this.legality = {
-      tcg: options.legality.TCG.Traditional || options.legality.TCG.Advanced,
-      ocg: options.legality.OCG.Advanced,
+      tcg: opts.legality.TCG.Traditional || opts.legality.TCG.Advanced,
+      ocg: opts.legality.OCG.Advanced,
     }
 
-    this.attack = options.attack
-    this.defense = options.defense
+    this.attack = opts.attack
+    this.defense = opts.defense
 
-    this.property = options.property
+    this.property = opts.property
   }
 
-  getCardType(options) {
+  getCardType(opts) {
     const type = ['Pendulum', 'Xyz', 'Synchro', 'Fusion', 'Link']
-      .find(t => options[`is_${t.toLowerCase()}`])
+      .find(t => opts[`is_${t.toLowerCase()}`])
 
     return type || 'Normal'
   }

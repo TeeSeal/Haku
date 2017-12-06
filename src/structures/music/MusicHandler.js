@@ -9,7 +9,7 @@ class MusicHandler {
     this.playlists = new Map()
   }
 
-  resolveSongs(queries, options) {
+  resolveSongs(queries, opts) {
     return Promise.all(
       queries.map(async query => {
         const provider = this.providers.find(prov => {
@@ -30,15 +30,15 @@ class MusicHandler {
         const songs = await provider.resolveResource(query)
 
         if (!songs || songs.length === 0) return []
-        return songs.map(song => new Song(song, options))
+        return songs.map(song => new Song(song, opts))
       })
     ).then(arr => arr.reduce((a1, a2) => a1.concat(a2), []))
   }
 
-  getPlaylist(msg, options) {
+  getPlaylist(msg, opts) {
     if (this.playlists.has(msg.guild.id)) return this.playlists.get(msg.guild.id)
 
-    const playlist = new Playlist(msg, options, this)
+    const playlist = new Playlist(msg, opts, this)
     this.playlists.set(msg.guild.id, playlist)
     return playlist
   }

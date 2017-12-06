@@ -3,11 +3,11 @@ const pluralize = require('pluralize')
 const { filterObject, capitalize } = require('../../util/Util.js')
 
 class Currency extends ItemGroup {
-  constructor(options) {
-    super(options)
+  constructor(opts) {
+    super(opts)
 
-    this.emoji = options.emoji
-    this.description = options.description
+    this.emoji = opts.emoji
+    this.description = opts.description
   }
 
   toJSON() {

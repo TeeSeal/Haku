@@ -40,7 +40,7 @@ class StopCommand extends Command {
     const votesNeeded = Math.ceil(members.size / 2)
 
     const { song } = playlist
-    const options = buildEmbed({
+    const opts = buildEmbed({
       title: song.title,
       fields: [
         [
@@ -54,7 +54,7 @@ class StopCommand extends Command {
       color: 'red',
     })
 
-    const statusMsg = await msg.util.send(members.array().join(), options)
+    const statusMsg = await msg.util.send(members.array().join(), opts)
     const poll = new ReactionPoll(statusMsg, {
       emojis: ['✅'],
       users: members.map(m => m.id),
@@ -69,7 +69,7 @@ class StopCommand extends Command {
       const success = votes.get('✅').length >= votesNeeded
       voteStops.delete(msg.guild.id)
 
-      const { embed } = options
+      const { embed } = opts
       embed.fields = [
         {
           name: success ? '✅ Playback stopped.' : '❌ Votestop failed.',

@@ -3,12 +3,12 @@ const fs = require('fs')
 const { capitalize, rootDir } = require('../../util/Util.js')
 
 class ItemGroup {
-  constructor(options) {
-    this.id = options.id
-    this.value = options.value
-    this.type = options.type
+  constructor(opts) {
+    this.id = opts.id
+    this.value = opts.value
+    this.type = opts.type
 
-    this.setAmount(typeof options.amount === 'number' ? options.amount : 1)
+    this.setAmount(typeof opts.amount === 'number' ? opts.amount : 1)
   }
 
   setAmount(amount) {

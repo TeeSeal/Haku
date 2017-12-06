@@ -4,13 +4,13 @@ const { filterObject, capitalize } = require('../../util/Util.js')
 
 
 class Recipe extends ItemGroup {
-  constructor(options) {
-    super(options)
+  constructor(opts) {
+    super(opts)
 
-    this.shop = options.shop
-    this.rarity = options.rarity
-    this.recipe = options.recipe
-    this.result = options.recipe.result
+    this.shop = opts.shop
+    this.rarity = opts.rarity
+    this.recipe = opts.recipe
+    this.result = opts.recipe.result
     this.ingredients = this.recipe.ingredients
   }
 
