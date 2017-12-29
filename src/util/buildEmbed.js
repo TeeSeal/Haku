@@ -1,6 +1,6 @@
-const Color = require('./Color.js')
+const Color = require('./Color')
 const { stripIndents } = require('common-tags')
-const paginate = require('./paginate.js')
+const paginate = require('./paginate')
 
 function buildEmbed(obj) { // eslint-disable-line
   const embed = {}

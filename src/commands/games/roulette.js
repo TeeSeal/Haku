@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, buildEmbed } = require('../../util/Util.js')
-const Roulette = require('../../structures/games/Roulette.js')
+const { stripIndents, buildEmbed } = require('../../util/Util')
+const Roulette = require('../../structures/games/Roulette')
 
 const time = 30
 

@@ -1,6 +1,6 @@
-const HTTPClient = require('../../HTTPClient.js')
+const HTTPClient = require('../../HTTPClient')
 const Fuse = require('fuse.js')
-const Card = require('./Card.js')
+const Card = require('./Card')
 
 class YuGiOh extends HTTPClient {
   constructor() {

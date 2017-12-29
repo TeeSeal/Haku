@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util.js')
-const Items = require('../../structures/items/ItemHandler.js')
+const { buildEmbed, stripIndents } = require('../../util/Util')
+const Items = require('../../structures/items/ItemHandler')
 
 class BalanceCommand extends Command {
   constructor() {

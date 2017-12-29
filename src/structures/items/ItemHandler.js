@@ -1,12 +1,12 @@
 const fs = require('fs')
 const pluralize = require('pluralize')
 const Fuse = require('fuse.js')
-const { rootDir, capitalize } = require('../../util/Util.js')
-const ItemCollection = require('./ItemCollection.js')
+const { rootDir, capitalize } = require('../../util/Util')
+const ItemCollection = require('./ItemCollection')
 const itemTypes = {
-  item: require('./Item.js'),
-  recipe: require('./Recipe.js'),
-  currency: require('./Currency.js'),
+  item: require('./Item'),
+  recipe: require('./Recipe'),
+  currency: require('./Currency'),
 }
 
 const items = new ItemCollection(
@@ -63,7 +63,7 @@ class ItemHandler {
     const item = fuse.search(formatted)[0]
     if (!item) return null
 
-    const obj = { item }
+    const obj = { ...item }
 
     return new itemTypes[obj.type](obj).groupOf(amount)
   }

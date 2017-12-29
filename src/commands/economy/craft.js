@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler.js')
-const { buildEmbed } = require('../../util/Util.js')
+const Items = require('../../structures/items/ItemHandler')
+const { buildEmbed } = require('../../util/Util')
 
 class CraftCommand extends Command {
   constructor() {

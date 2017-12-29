@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util.js')
+const { buildEmbed, stripIndents } = require('../../util/Util')
 
 class VolumeCommand extends Command {
   constructor() {

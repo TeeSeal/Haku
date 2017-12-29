@@ -1,5 +1,5 @@
 const EventEmitter = require('events')
-const Collection = require('./Collection.js')
+const Collection = require('./Collection')
 
 class ReactionPoll extends EventEmitter {
   constructor(message, opts) {

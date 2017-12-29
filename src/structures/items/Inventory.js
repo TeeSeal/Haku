@@ -1,5 +1,5 @@
-const ItemCollection = require('./ItemCollection.js')
-const ItemHandler = require('./ItemHandler.js')
+const ItemCollection = require('./ItemCollection')
+const ItemHandler = require('./ItemHandler')
 
 class Inventory extends ItemCollection {
   constructor(inventory, id, handler) {

@@ -1,10 +1,10 @@
 const akairo = require('discord-akairo')
 const logr = require('logr')
-const keychain = require('../../keychain.json')
+const keychain = require('../../keychain')
 
-const SequelizeDatabase = require('../db/SequelizeDatabase.js')
-const InventoryHandler = require('./items/InventoryHandler.js')
-const MusicHandler = require('./music/MusicHandler.js')
+const SequelizeDatabase = require('../db/SequelizeDatabase')
+const InventoryHandler = require('./items/InventoryHandler')
+const MusicHandler = require('./music/MusicHandler')
 
 class HakuClient extends akairo.AkairoClient {
   constructor(opts) {

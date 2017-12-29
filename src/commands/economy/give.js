@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler.js')
+const Items = require('../../structures/items/ItemHandler')
 
 class GiveCommand extends Command {
   constructor() {

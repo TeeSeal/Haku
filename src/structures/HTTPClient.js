@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
 const { URL } = require('url')
-const { version } = require('../../package.json')
+const { version } = require('../../package')
 
 class HTTPClient {
   constructor(opts) {

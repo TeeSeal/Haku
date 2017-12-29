@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util.js')
-const Items = require('../../structures/items/ItemHandler.js')
+const { buildEmbed } = require('../../util/Util')
+const Items = require('../../structures/items/ItemHandler')
 
 class ShopCommand extends Command {
   constructor() {

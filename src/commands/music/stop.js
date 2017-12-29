@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util.js')
-const ReactionPoll = require('../../structures/ReactionPoll.js')
+const { buildEmbed } = require('../../util/Util')
+const ReactionPoll = require('../../structures/ReactionPoll')
 
 const voteStops = new Set()
 

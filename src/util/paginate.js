@@ -1,4 +1,4 @@
-const { pageItemCount } = require('../../config.json')
+const { pageItemCount } = require('../../config')
 
 module.exports = function paginate(arr, countOverwrite) {
   const count = countOverwrite || pageItemCount

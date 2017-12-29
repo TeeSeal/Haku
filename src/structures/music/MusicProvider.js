@@ -1,5 +1,5 @@
-const Collection = require('../Collection.js')
-const HTTPClient = require('../HTTPClient.js')
+const Collection = require('../Collection')
+const HTTPClient = require('../HTTPClient')
 const fs = require('fs')
 const path = require('path')
 

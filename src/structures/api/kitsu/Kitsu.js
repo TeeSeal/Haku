@@ -1,5 +1,5 @@
-const HTTPClient = require('../../HTTPClient.js')
-const Anime = require('./Anime.js')
+const HTTPClient = require('../../HTTPClient')
+const Anime = require('./Anime')
 
 class Kitsu extends HTTPClient {
   constructor() {

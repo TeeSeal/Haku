@@ -1,7 +1,7 @@
-const Song = require('./Song.js')
-const Playlist = require('./Playlist.js')
-const MusicProvider = require('./MusicProvider.js')
-const { defaultMusicProvider } = require('../../../config.json')
+const Song = require('./Song')
+const Playlist = require('./Playlist')
+const MusicProvider = require('./MusicProvider')
+const { defaultMusicProvider } = require('../../../config')
 
 class MusicHandler {
   constructor(keychain) {

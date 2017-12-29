@@ -1,6 +1,6 @@
-const ItemGroup = require('./ItemGroup.js')
+const ItemGroup = require('./ItemGroup')
 const pluralize = require('pluralize')
-const { filterObject, capitalize } = require('../../util/Util.js')
+const { filterObject, capitalize } = require('../../util/Util')
 
 class Currency extends ItemGroup {
   constructor(opts) {

@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, capitalize } = require('../../util/Util.js')
-const Kitsu = require('../../structures/api/kitsu/Kitsu.js')
+const { buildEmbed, capitalize } = require('../../util/Util')
+const Kitsu = require('../../structures/api/kitsu/Kitsu')
 
 class AnimeCommand extends Command {
   constructor() {

@@ -1,5 +1,5 @@
-const ItemGroup = require('./ItemGroup.js')
-const { filterObject } = require('../../util/Util.js')
+const ItemGroup = require('./ItemGroup')
+const { filterObject } = require('../../util/Util')
 
 class Item extends ItemGroup {
   constructor(opts) {

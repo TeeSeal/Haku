@@ -1,5 +1,5 @@
 const { Listener } = require('discord-akairo')
-const Items = require('../structures/items/ItemHandler.js')
+const Items = require('../structures/items/ItemHandler')
 
 const cooldowns = new Set()
 

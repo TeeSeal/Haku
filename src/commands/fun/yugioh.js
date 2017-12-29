@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util.js')
-const YuGiOh = require('../../structures/api/yugioh/YuGiOh.js')
+const { buildEmbed } = require('../../util/Util')
+const YuGiOh = require('../../structures/api/yugioh/YuGiOh')
 
 class YuGiOhCommand extends Command {
   constructor() {

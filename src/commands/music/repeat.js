@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util/Util.js')
+const { stripIndents } = require('../../util/Util')
 
 class RepeatCommand extends Command {
   constructor() {

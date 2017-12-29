@@ -1,4 +1,4 @@
-const HakuClient = require('./src/structures/HakuClient.js')
+const HakuClient = require('./src/structures/HakuClient')
 const { ownerID } = require('./config.json')
 const logr = require('logr')
 

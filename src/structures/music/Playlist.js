@@ -1,4 +1,4 @@
-const { shuffle, buildEmbed } = require('../../util/Util.js')
+const { shuffle, buildEmbed } = require('../../util/Util')
 
 class Playlist {
   constructor(msg, guildOptions, handler) {

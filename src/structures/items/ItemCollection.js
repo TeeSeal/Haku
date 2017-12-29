@@ -1,4 +1,4 @@
-const Collection = require('../Collection.js')
+const Collection = require('../Collection')
 
 class ItemCollection extends Collection {
   items() { return this.getType('item') }

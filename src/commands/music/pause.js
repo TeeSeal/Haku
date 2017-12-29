@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util.js')
+const { buildEmbed } = require('../../util/Util')
 
 class PauseCommand extends Command {
   constructor() {

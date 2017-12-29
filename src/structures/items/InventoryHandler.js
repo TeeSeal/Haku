@@ -1,4 +1,4 @@
-const Inventory = require('./Inventory.js')
+const Inventory = require('./Inventory')
 
 class InventoryHandler {
   constructor(database) {

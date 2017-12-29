@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util.js')
-const { version } = require('../../../package.json')
+const { buildEmbed, stripIndents } = require('../../util/Util')
+const { version } = require('../../../package')
 const moment = require('moment')
 require('moment-duration-format')
 

@@ -1,6 +1,6 @@
-const Collection = require('../Collection.js')
-const Items = require('../items/ItemHandler.js')
-const { buildEmbed } = require('../../util/Util.js')
+const Collection = require('../Collection')
+const Items = require('../items/ItemHandler')
+const { buildEmbed } = require('../../util/Util')
 
 const ongoing = new Map()
 

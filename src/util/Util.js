@@ -1,9 +1,9 @@
 const tags = require('common-tags')
 const path = require('path')
 
-const Color = require('./Color.js')
-const buildEmbed = require('./buildEmbed.js')
-const paginate = require('./paginate.js')
+const Color = require('./Color')
+const buildEmbed = require('./buildEmbed')
+const paginate = require('./paginate')
 
 class Util {
   constructor() {

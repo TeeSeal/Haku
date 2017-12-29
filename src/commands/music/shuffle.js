@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents, paginate } = require('../../util/Util.js')
+const { buildEmbed, stripIndents, paginate } = require('../../util/Util')
 
 class ShuffleCommand extends Command {
   constructor() {

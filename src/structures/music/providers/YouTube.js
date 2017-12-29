@@ -1,4 +1,4 @@
-const MusicProvider = require('../MusicProvider.js')
+const MusicProvider = require('../MusicProvider')
 const moment = require('moment')
 const ytdl = require('ytdl-core')
 

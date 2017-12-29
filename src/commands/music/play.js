@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util.js')
+const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util')
 
 class PlayCommand extends Command {
   constructor() {

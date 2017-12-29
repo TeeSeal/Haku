@@ -1,5 +1,5 @@
 const Collection = require('../structures/Collection.js')
-const { deepFreeze } = require('../util/Util.js')
+const { deepFreeze } = require('../util/Util')
 
 class SequelizeProvider {
   constructor(table, opts = {}) {

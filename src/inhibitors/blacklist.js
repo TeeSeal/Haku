@@ -1,5 +1,5 @@
 const { Inhibitor } = require('discord-akairo')
-const { getDBData } = require('../util/Util.js')
+const { getDBData } = require('../util/Util')
 
 class BlacklistInhibitor extends Inhibitor {
   constructor() {
