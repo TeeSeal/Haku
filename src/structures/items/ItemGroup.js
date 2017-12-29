@@ -23,7 +23,7 @@ class ItemGroup {
   }
 
   groupOf(amount) {
-    return new this.constructor(Object.assign(this.toJSON(), { amount }))
+    return new this.constructor({ ...this.toJSON(), amount })
   }
 
   add(amount) {
@@ -40,7 +40,9 @@ class ItemGroup {
     return this.inventory.save()
   }
 
-  consume(amount) { this.add(-amount) }
+  consume(amount) {
+    this.add(-amount)
+  }
 
   priceString() {
     return this.currencyPrice().currencyString
@@ -52,17 +54,21 @@ class ItemGroup {
 
   get name() {
     const nameString = pluralize(this.id, Math.abs(this.amount) || 1)
-      .split(' ').map(word => capitalize(word)).join(' ')
+      .split(' ')
+      .map(word => capitalize(word))
+      .join(' ')
     return `${nameString}${this.emoji ? ` ${this.emoji}` : ''}`
   }
 
   get imagePath() {
     if (this.url) return this.url
-    if (fs.existsSync(`${rootDir}/assets/items/${this.id}.png`)) return `${rootDir}/assets/items/${this.id}.png`
+    if (fs.existsSync(`${rootDir}/assets/items/${this.id}.png`)) { return `${rootDir}/assets/items/${this.id}.png` }
     return null
   }
 
-  toString() { return `**${this.amount || 1} ${this.name}**` }
+  toString() {
+    return `**${this.amount || 1} ${this.name}**`
+  }
 }
 
 module.exports = ItemGroup

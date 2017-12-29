@@ -9,9 +9,11 @@ const itemTypes = {
   currency: require('./Currency.js'),
 }
 
-const items = new ItemCollection(require(`${rootDir}/assets/items.json`).map(item => {
-  return [item.id, new itemTypes[item.type](item)]
-}))
+const items = new ItemCollection(
+  require(`${rootDir}/assets/items.json`).map(item => {
+    return [item.id, new itemTypes[item.type](item)]
+  })
+)
 
 const fuse = new Fuse(items.array(), {
   shouldSort: true,
@@ -32,7 +34,9 @@ class ItemHandler {
 
   static findAmountAndName(string, overwriteAmount) {
     const words = string.split(' ')
-    let amount = [words[0], words[words.length - 1]].find(word => /(^-?\d+$)|(^an?$)/.test(word))
+    let amount = [words[0], words[words.length - 1]].find(word =>
+      /(^-?\d+$)|(^an?$)/.test(word)
+    )
     if (amount) words.splice(words.indexOf(amount), 1)
 
     if (typeof overwriteAmount === 'number') {
@@ -59,17 +63,19 @@ class ItemHandler {
     const item = fuse.search(formatted)[0]
     if (!item) return null
 
-    const obj = Object.assign({}, item)
+    const obj = { item }
 
     return new itemTypes[obj.type](obj).groupOf(amount)
   }
 
   static resolveCollection(string) {
     if (!string) return null
-    const coll = new ItemCollection(string.split(/[+,]|and/)
-      .map(word => ItemHandler.resolveGroup(word.trim()))
-      .filter(item => item)
-      .map(item => [item.id, item])
+    const coll = new ItemCollection(
+      string
+        .split(/[+,]|and/)
+        .map(word => ItemHandler.resolveGroup(word.trim()))
+        .filter(item => item)
+        .map(item => [item.id, item])
     )
 
     const currencies = ItemHandler.convertToCurrency(coll.currencyValue)
@@ -91,14 +97,16 @@ class ItemHandler {
       result.push(currency.groupOf(count))
     }
 
-    return new ItemCollection(result
-      .filter(curr => curr.amount)
-      .map(curr => [curr.id, curr])
+    return new ItemCollection(
+      result.filter(curr => curr.amount).map(curr => [curr.id, curr])
     )
   }
 
   static formatName(name, amount) {
-    return pluralize(name, amount).split(' ').map(word => capitalize(word)).join(' ')
+    return pluralize(name, amount)
+      .split(' ')
+      .map(word => capitalize(word))
+      .join(' ')
   }
 
   static formatRecipeName(name) {
@@ -132,19 +140,31 @@ class ItemHandler {
     return writeItems()
   }
 
-  static baseCurrency() { return new itemTypes[baseCurrency.type](baseCurrency) }
-  static all(filter) { return items.filter(filter) }
-  static get SHOP() { return items.filter(item => item.shop) }
+  static baseCurrency() {
+    return new itemTypes[baseCurrency.type](baseCurrency)
+  }
+  static all(filter) {
+    return items.filter(filter)
+  }
+  static get SHOP() {
+    return items.filter(item => item.shop)
+  }
 }
 
 function findBaseCurrency() {
-  const currencies = Array.from(items.filter(item => item.type === 'currency').values())
+  const currencies = Array.from(
+    items.filter(item => item.type === 'currency').values()
+  )
   const values = currencies.map(currency => currency.value)
   return currencies[values.indexOf(Math.min(...values))]
 }
 
 function writeItems() {
-  return fs.writeFileSync(`${rootDir}/assets/items.json`, JSON.stringify(items.array().map(i => i.toJSON()), null, 2), 'utf8')
+  return fs.writeFileSync(
+    `${rootDir}/assets/items.json`,
+    JSON.stringify(items.array().map(i => i.toJSON()), null, 2),
+    'utf8'
+  )
 }
 
 module.exports = ItemHandler

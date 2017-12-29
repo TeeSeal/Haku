@@ -6,10 +6,10 @@ class HTTPClient {
   constructor(opts) {
     this.baseURL = opts.baseURL
     this.params = opts.params || {}
-    this.headers = Object.assign(
-      { 'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)` },
-      opts.headers
-    )
+    this.headers = {
+      'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)`,
+      ...opts.headers,
+    }
   }
 
   get(url, type = 'json', params = {}) {
@@ -18,13 +18,14 @@ class HTTPClient {
       type = 'json'
     }
 
-    return fetch(this.buildURL(url, params), { headers: this.headers })
-      .then(res => type === 'stream' ? res.body : res[type]())
+    return fetch(this.buildURL(url, params), { headers: this.headers }).then(
+      res => type === 'stream' ? res.body : res[type]()
+    )
   }
 
   buildURL(url, params) {
     url = new URL(url, this.baseURL)
-    params = Object.assign({}, this.params, params)
+    params = { ...this.params, params }
 
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.append(key, value)
