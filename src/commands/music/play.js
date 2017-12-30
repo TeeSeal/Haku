@@ -111,7 +111,7 @@ class PlayCommand extends Command {
       await msg.util.send(
         buildEmbed({
           title: 'Failed to add:',
-          description: paginatedLines.join('\n'),
+          description: rPaginatedLines.join('\n'),
           author: msg.member,
           icon: 'clear',
           color: 'red',
