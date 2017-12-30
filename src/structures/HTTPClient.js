@@ -25,7 +25,7 @@ class HTTPClient {
 
   buildURL(url, params) {
     url = new URL(url, this.baseURL)
-    params = { ...this.params, params }
+    params = { ...this.params, ...params }
 
     for (const [key, value] of Object.entries(params)) {
       url.searchParams.append(key, value)
