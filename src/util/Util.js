@@ -10,12 +10,24 @@ class Util {
     throw new Error('this class may not be instantiated.')
   }
 
-  static get rootDir() { return __dirname.split(path.sep).slice(0, -1).join(path.sep) }
-  static get COLOR() { return Color }
-  static get buildEmbed() { return buildEmbed }
-  static get paginate() { return paginate }
-  static capitalize(string) { return string[0].toUpperCase() + string.slice(1) }
-
+  static get rootDir() {
+    return __dirname
+      .split(path.sep)
+      .slice(0, -1)
+      .join(path.sep)
+  }
+  static get COLOR() {
+    return Color
+  }
+  static get buildEmbed() {
+    return buildEmbed
+  }
+  static get paginate() {
+    return paginate
+  }
+  static capitalize(string) {
+    return string[0].toUpperCase() + string.slice(1)
+  }
 
   static getDBData(msg, scope) {
     return scope === 'globally'
@@ -39,8 +51,8 @@ class Util {
 
   static shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[array[i], array[j]] = [array[j], array[i]]
     }
 
     return array

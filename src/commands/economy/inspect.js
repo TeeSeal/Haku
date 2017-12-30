@@ -20,33 +20,40 @@ class InspectCommand extends Command {
 
   async exec(msg, args) {
     const { item } = args
-    if (!item) return msg.util.error('couldn\'t find that item.')
+    if (!item) return msg.util.error("couldn't find that item.")
 
     const inventory = await this.client.inventories.fetch(msg.author.id)
     if (!inventory.has(item.id) && !Items.SHOP.has(item.id)) {
-      return msg.util.error('you can only inspect items in your inventory or in the shop.')
+      return msg.util.error(
+        'you can only inspect items in your inventory or in the shop.'
+      )
     }
 
     if (item.type === 'recipe') {
-      return msg.util.send(buildEmbed({
-        title: item.name.toUpperCase(),
-        fields: [
-          [
-            'Ingredients',
-            Object.entries(item.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
-              .join(' + '),
+      return msg.util.send(
+        buildEmbed({
+          title: item.name.toUpperCase(),
+          fields: [
+            [
+              'Ingredients',
+              Object.entries(item.ingredients)
+                .map(([id, amount]) => Items.resolveGroup(id, amount))
+                .join(' + '),
+            ],
+            [
+              'Result',
+              Items.resolveGroup(item.result.id, item.result.amount).toString(),
+            ],
           ],
-          [
-            'Result',
-            Items.resolveGroup(item.result.id, item.result.amount).toString(),
-          ],
-        ],
-        icon: 'craft',
-        color: 'gold',
-      }))
+          icon: 'craft',
+          color: 'gold',
+        })
+      )
     }
 
-    return msg.util.send(item.examine(), { files: item.imagePath ? [item.imagePath] : [] })
+    return msg.util.send(item.examine(), {
+      files: item.imagePath ? [item.imagePath] : [],
+    })
   }
 }
 

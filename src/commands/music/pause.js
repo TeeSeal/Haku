@@ -15,23 +15,25 @@ class PauseCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
     if (playlist.paused) return msg.util.error('playback is already paused.')
 
     playlist.pause()
     const { song } = playlist
 
-    return msg.util.send(buildEmbed({
-      title: song.title,
-      fields: [
-        ['Playback paused.', '\u200b'],
-      ],
-      url: song.url,
-      author: msg.member,
-      icon: 'pause',
-      color: 'yellow',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: song.title,
+        fields: [['Playback paused.', '\u200b']],
+        url: song.url,
+        author: msg.member,
+        icon: 'pause',
+        color: 'yellow',
+      })
+    )
   }
 }
 

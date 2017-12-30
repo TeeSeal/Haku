@@ -22,13 +22,17 @@ class Anime {
   }
 
   get trailer() {
-    if (this.youtubeID) return `https://www.youtube.com/watch?v=${this.youtubeID}`
+    if (this.youtubeID) {
+      return `https://www.youtube.com/watch?v=${this.youtubeID}`
+    }
     return 'N/A'
   }
 
   get ageRatingString() {
     if (![this.ageRating, this.ageRatingGuide].some(prop => prop)) return 'N/A'
-    return `${this.ageRating}${this.ageRatingGuide ? ` | ${this.ageRatingGuide}` : ''}`
+    return `${this.ageRating}${
+      this.ageRatingGuide ? ` | ${this.ageRatingGuide}` : ''
+    }`
   }
 
   get startDate() {

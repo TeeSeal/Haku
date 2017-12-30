@@ -20,7 +20,9 @@ class TradeCommand extends Command {
           id: 'tradeDetails',
           match: 'rest',
           type(string) {
-            return string.split(' for ').map(str => Items.resolveCollection(str))
+            return string
+              .split(' for ')
+              .map(str => Items.resolveCollection(str))
           },
         },
       ],
@@ -47,22 +49,38 @@ class TradeCommand extends Command {
 
   async exec(msg, args) {
     const { member, tradeDetails: [offer, demand] } = args
-    if (!member) return msg.util.error('you need to specify a user to trade with.')
+    if (!member) {
+      return msg.util.error('you need to specify a user to trade with.')
+    }
 
     if ([member.id, msg.author.id].some(id => tradingUsers.has(id))) {
-      return msg.util.error('please end your current trade before starting a new one.')
+      return msg.util.error(
+        'please end your current trade before starting a new one.'
+      )
     }
 
-    if (!offer || !offer.every(item => item) || (demand && !demand.every(item => item))) {
-      return msg.util.error('couldn\'t understand your offer/demand. Use `help trade` to see how to use this correctly')
+    if (
+      !offer
+      || !offer.every(item => item)
+      || (demand && !demand.every(item => item))
+    ) {
+      return msg.util.error(
+        "couldn't understand your offer/demand. Use `help trade` to see how to use this correctly"
+      )
     }
-    if (offer.size > 5 || (demand && (demand.size > 5))) return msg.util.error(`can't trade more than 5 items at once.`)
+    if (offer.size > 5 || (demand && demand.size > 5)) {
+      return msg.util.error(`can't trade more than 5 items at once.`)
+    }
 
     const offInv = await this.client.inventories.fetch(msg.author.id)
     const demInv = await this.client.inventories.fetch(member.id)
 
-    if (!offInv.includes(offer)) return msg.util.error('you have insufficient funds.')
-    if (demand && !demInv.includes(demand)) return msg.util.error(`**${member.displayName}** has insufficient funds.`)
+    if (!offInv.includes(offer)) {
+      return msg.util.error('you have insufficient funds.')
+    }
+    if (demand && !demInv.includes(demand)) {
+      return msg.util.error(`**${member.displayName}** has insufficient funds.`)
+    }
 
     const opts = buildEmbed({
       title: 'ITEM TRADE:',
@@ -73,7 +91,9 @@ class TradeCommand extends Command {
         ],
         [
           member.user.tag,
-          demand ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n') : '---',
+          demand
+            ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n')
+            : '---',
         ],
       ],
       description: stripIndents`
@@ -95,7 +115,12 @@ class TradeCommand extends Command {
     })
 
     poll.on('vote', () => {
-      if (poll.votes.get('✅').length === 2 || poll.votes.get('❌').length > 0) poll.stop()
+      if (
+        poll.votes.get('✅').length === 2
+        || poll.votes.get('❌').length > 0
+      ) {
+        poll.stop()
+      }
     })
 
     poll.once('end', votes => {
@@ -120,6 +145,5 @@ class TradeCommand extends Command {
     })
   }
 }
-
 
 module.exports = TradeCommand

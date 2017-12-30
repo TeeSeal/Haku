@@ -17,7 +17,7 @@ class ReloadCommand extends Command {
 
   exec(msg, args) {
     const { command } = args
-    if (!command) return msg.util.error('couldn\'t find command.')
+    if (!command) return msg.util.error("couldn't find command.")
     command.reload()
     return msg.util.success(`reoladed **${command.id}**.`)
   }

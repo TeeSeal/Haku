@@ -1,16 +1,24 @@
 const Collection = require('../Collection')
 
 class ItemCollection extends Collection {
-  items() { return this.getType('item') }
-  recipes() { return this.getType('recipe') }
-  currencies() { return this.getType('currency') }
+  items() {
+    return this.getType('item')
+  }
+  recipes() {
+    return this.getType('recipe')
+  }
+  currencies() {
+    return this.getType('currency')
+  }
 
   exceptCurrencies() {
     return this.clone().filter(item => item.type !== 'currency')
   }
 
   sortedCurrencies() {
-    return Array.from(this.currencies().values()).sort((c1, c2) => c2.value - c1.value)
+    return Array.from(this.currencies().values()).sort(
+      (c1, c2) => c2.value - c1.value
+    )
   }
 
   get currencyString() {

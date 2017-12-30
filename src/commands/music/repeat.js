@@ -44,7 +44,9 @@ class RepeatCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
 
     const arr = Array(times).fill(playlist.song)
@@ -52,7 +54,11 @@ class RepeatCommand extends Command {
       ? playlist.queue.concat(arr)
       : arr.concat(playlist.queue)
 
-    return msg.util.success(`The track will be replayed ${times ? `${times} times` : ''} ${end ? 'at the end of the queue' : 'after this one'}.`)
+    return msg.util.success(
+      `The track will be replayed ${times ? `${times} times` : ''} ${
+        end ? 'at the end of the queue' : 'after this one'
+      }.`
+    )
   }
 }
 

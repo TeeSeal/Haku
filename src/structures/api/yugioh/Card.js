@@ -31,8 +31,9 @@ class Card {
   }
 
   getCardType(opts) {
-    const type = ['Pendulum', 'Xyz', 'Synchro', 'Fusion', 'Link']
-      .find(t => opts[`is_${t.toLowerCase()}`])
+    const type = ['Pendulum', 'Xyz', 'Synchro', 'Fusion', 'Link'].find(
+      t => opts[`is_${t.toLowerCase()}`]
+    )
 
     return type || 'Normal'
   }
@@ -46,7 +47,9 @@ class Card {
   get shortDescription() {
     if (this.type === 'Spell') return `${this.property} Spell Card`
     if (this.type === 'Trap') return `${this.property} Trap Card`
-    return `${this.monsterRank} ${this.attribute} ${this.species} ${this.monsterTypes.join(' ')} Monster`
+    return `${this.monsterRank} ${this.attribute} ${
+      this.species
+    } ${this.monsterTypes.join(' ')} Monster`
   }
 }
 

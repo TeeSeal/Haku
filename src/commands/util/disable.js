@@ -50,12 +50,18 @@ class DisableCommand extends Command {
 
   exec(msg, args) {
     const { toDisable, scope } = args
-    if (!toDisable) return msg.util.error('you need to specfy a command/category to disable.')
-    if (toDisable instanceof Command && reserved.includes(toDisable.id)) return msg.util.error(`you can't disable **${toDisable.id}**.`)
+    if (!toDisable) {
+      return msg.util.error('you need to specfy a command/category to disable.')
+    }
+    if (toDisable instanceof Command && reserved.includes(toDisable.id)) {
+      return msg.util.error(`you can't disable **${toDisable.id}**.`)
+    }
 
     const [table, id, formattedScope] = getDBData(msg, scope)
     if (!permCheck[table](msg.member)) {
-      return msg.util.error(`you do not have permission to enable commands ${formattedScope}.`)
+      return msg.util.error(
+        `you do not have permission to enable commands ${formattedScope}.`
+      )
     }
 
     const db = this.client.db[table]
@@ -63,15 +69,27 @@ class DisableCommand extends Command {
 
     let filtered
     if (toDisable instanceof Command) {
-      if (disabled.includes(toDisable.id)) return msg.util.error(`**${toDisable.id}** is already disabled ${formattedScope}.`)
+      if (disabled.includes(toDisable.id)) {
+        return msg.util.error(
+          `**${toDisable.id}** is already disabled ${formattedScope}.`
+        )
+      }
       filtered = [toDisable.id]
     } else {
-      filtered = toDisable.filter(c => [disabled, reserved].every(arr => !arr.includes(c.id))).map(c => c.id)
-      if (filtered.size === 0) return msg.util.error(`all commands in **${toDisable.id}** are already disabled.`)
+      filtered = toDisable
+        .filter(c => [disabled, reserved].every(arr => !arr.includes(c.id)))
+        .map(c => c.id)
+      if (filtered.size === 0) {
+        return msg.util.error(
+          `all commands in **${toDisable.id}** are already disabled.`
+        )
+      }
     }
 
     db.set(id, { disabled: disabled.concat(filtered) })
-    return msg.util.success(`**${toDisable.id}** has been disabled ${formattedScope}.`)
+    return msg.util.success(
+      `**${toDisable.id}** has been disabled ${formattedScope}.`
+    )
   }
 }
 

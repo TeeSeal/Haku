@@ -12,20 +12,21 @@ class MusicHandler {
   resolveSongs(queries, opts) {
     return Promise.all(
       queries.map(async query => {
-        const provider = this.providers.find(prov => {
-          if (query.includes('~')) {
-            const alias = query.split(' ').find(word => word.startsWith('~'))
+        const provider
+          = this.providers.find(prov => {
+            if (query.includes('~')) {
+              const alias = query.split(' ').find(word => word.startsWith('~'))
 
-            if (prov.aliases.includes(alias.slice(1))) {
-              const words = query.split(' ')
-              words.splice(words.indexOf(alias), 1)
-              query = words.join(' ')
-              return true
+              if (prov.aliases.includes(alias.slice(1))) {
+                const words = query.split(' ')
+                words.splice(words.indexOf(alias), 1)
+                query = words.join(' ')
+                return true
+              }
             }
-          }
 
-          return prov.REGEXP.test(query)
-        }) || this.providers.get(defaultMusicProvider)
+            return prov.REGEXP.test(query)
+          }) || this.providers.get(defaultMusicProvider)
 
         const songs = await provider.resolveResource(query)
 
@@ -36,7 +37,9 @@ class MusicHandler {
   }
 
   getPlaylist(msg, opts) {
-    if (this.playlists.has(msg.guild.id)) return this.playlists.get(msg.guild.id)
+    if (this.playlists.has(msg.guild.id)) {
+      return this.playlists.get(msg.guild.id)
+    }
 
     const playlist = new Playlist(msg, opts, this)
     this.playlists.set(msg.guild.id, playlist)

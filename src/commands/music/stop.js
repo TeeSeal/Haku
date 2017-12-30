@@ -19,11 +19,15 @@ class StopCommand extends Command {
     if (!playlist) return msg.util.error('nothing is currently playing.')
 
     if (msg.member.permissions.has('MANAGE_GUILD')) {
-      return msg.util.success('alright, crashing the party.').then(() => playlist.stop())
+      return msg.util
+        .success('alright, crashing the party.')
+        .then(() => playlist.stop())
     }
 
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
 
     if (msg.member.voiceChannel.members.size === 2) {
@@ -35,8 +39,9 @@ class StopCommand extends Command {
     }
     voteStops.add(msg.guild.id)
 
-    const members = msg.member.voiceChannel.members
-      .filter(member => ![this.client.user.id, msg.author.id].includes(member.id))
+    const members = msg.member.voiceChannel.members.filter(
+      member => ![this.client.user.id, msg.author.id].includes(member.id)
+    )
     const votesNeeded = Math.ceil(members.size / 2)
 
     const { song } = playlist
@@ -45,7 +50,8 @@ class StopCommand extends Command {
       fields: [
         [
           'VOTESTOP',
-          `Click the ✅ to vote.\n${votesNeeded + 1} votes needed.\nVote will end in 30 seconds.`,
+          `Click the ✅ to vote.\n${votesNeeded
+            + 1} votes needed.\nVote will end in 30 seconds.`,
         ],
       ],
       url: song.url,
@@ -77,7 +83,8 @@ class StopCommand extends Command {
         },
       ]
 
-      return statusMsg.edit(members.array().join(), { embed })
+      return statusMsg
+        .edit(members.array().join(), { embed })
         .then(() => success ? playlist.stop() : null)
     })
   }

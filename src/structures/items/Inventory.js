@@ -3,10 +3,11 @@ const ItemHandler = require('./ItemHandler')
 
 class Inventory extends ItemCollection {
   constructor(inventory, id, handler) {
-    super(Object.entries(inventory)
-      .map(([name, amount]) => ItemHandler.resolveGroup(name, amount))
-      .filter(item => item)
-      .map(item => [item.id, item])
+    super(
+      Object.entries(inventory)
+        .map(([name, amount]) => ItemHandler.resolveGroup(name, amount))
+        .filter(item => item)
+        .map(item => [item.id, item])
     )
 
     this.id = id
@@ -16,8 +17,11 @@ class Inventory extends ItemCollection {
   }
 
   includes(items) {
-    const hasItems = items.exceptCurrencies()
-      .every(item => this.has(item.id) && this.get(item.id).amount >= item.amount)
+    const hasItems = items
+      .exceptCurrencies()
+      .every(
+        item => this.has(item.id) && this.get(item.id).amount >= item.amount
+      )
     const hasCurrency = this.currencyValue >= items.currencyValue
 
     if (hasItems && hasCurrency) return true
@@ -45,7 +49,9 @@ class Inventory extends ItemCollection {
   }
 
   consume(items, amount) {
-    if (!(items instanceof ItemCollection)) return this.add(items, -amount || -1)
+    if (!(items instanceof ItemCollection)) {
+      return this.add(items, -amount || -1)
+    }
     for (const item of items.values()) {
       if (this.has(item.id)) this.get(item.id).consume(item.amount)
     }

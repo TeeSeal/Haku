@@ -34,31 +34,45 @@ class ShopCommand extends Command {
     let { items, page } = args
 
     const shop = Items.SHOP
-    if (shop.size === 0) return msg.util.error('sorry, there\'s nothing in the shop yet.')
+    if (shop.size === 0) {
+      return msg.util.error("sorry, there's nothing in the shop yet.")
+    }
 
     if (items) {
       items = items.filter(item => shop.has(item.id))
       if (items.size > 0) {
-        return msg.util.send(items.map(item => {
-          return `**${item.name}** | ${Items.convertToCurrency(item.price).currencyString}`
-        }).join('\n'))
+        return msg.util.send(
+          items
+            .map(item => {
+              return `**${item.name}** | ${
+                Items.convertToCurrency(item.price).currencyString
+              }`
+            })
+            .join('\n')
+        )
       }
     }
 
     const fields = shop.map(item => {
-      return [item.name, Items.convertToCurrency(item.price).currencyString, true]
+      return [
+        item.name,
+        Items.convertToCurrency(item.price).currencyString,
+        true,
+      ]
     })
 
-    return msg.util.send(buildEmbed({
-      title: '**SHOP:**',
-      paginate: {
-        items: fields,
-        commandName: this.id,
-        page,
-      },
-      icon: 'shop',
-      color: 'gold',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: '**SHOP:**',
+        paginate: {
+          items: fields,
+          commandName: this.id,
+          page,
+        },
+        icon: 'shop',
+        color: 'gold',
+      })
+    )
   }
 }
 

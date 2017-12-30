@@ -57,8 +57,16 @@ module.exports = {
       eightBall: {
         type: Sequelize.JSON,
         defaultValue: [
-          'Yes.', 'Absolutely.', 'Most likely.', 'Without a doubt.', 'It is certain.',
-          'My sources say no.', 'Nuh-huh.', 'Very doubtful.', 'Nah.', 'My sources say no.',
+          'Yes.',
+          'Absolutely.',
+          'Most likely.',
+          'Without a doubt.',
+          'It is certain.',
+          'My sources say no.',
+          'Nuh-huh.',
+          'Very doubtful.',
+          'Nah.',
+          'My sources say no.',
         ],
       },
     },

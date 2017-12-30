@@ -10,7 +10,16 @@ const roulette = {
 }
 
 const spaces = new Collection([
-  ['numbers', { values: roulette.red.concat(roulette.black).concat([0]).map(item => item.toString()), multiplier: 36 }],
+  [
+    'numbers',
+    {
+      values: roulette.red
+        .concat(roulette.black)
+        .concat([0])
+        .map(item => item.toString()),
+      multiplier: 36,
+    },
+  ],
   ['dozens', { values: ['1-12', '13-24', '25-36'], multiplier: 3 }],
   ['columns', { values: ['1st', '2nd', '3rd'], multiplier: 3 }],
   ['halves', { values: ['1-18', '19-36'], multiplier: 2 }],
@@ -18,7 +27,9 @@ const spaces = new Collection([
   ['colors', { values: ['red', 'black'], multiplier: 2 }],
 ])
 
-const spaceLiterals = spaces.array().reduce((spcs, cat) => spcs.concat(cat.values), [])
+const spaceLiterals = spaces
+  .array()
+  .reduce((spcs, cat) => spcs.concat(cat.values), [])
 const maxBet = Items.resolveGroup('gold', 10)
 
 class Roulette {
@@ -45,7 +56,9 @@ class Roulette {
     // Add player to wins if the space is a winning space
     if (!this.winningSpaces.includes(space)) return
     const win = this.wins.get(player.id) || {}
-    win[space] = Items.convertToCurrency(bet.currencyValue * Roulette.getMultiplier(space))
+    win[space] = Items.convertToCurrency(
+      bet.currencyValue * Roulette.getMultiplier(space)
+    )
     this.wins.set(player.id, win)
   }
 
@@ -55,13 +68,17 @@ class Roulette {
   }
 
   get statusEmbed() {
-    const fields = Object.entries(this.bets.toJSON()).map(([space, spaceBets]) => {
-      const betString = Object.entries(spaceBets)
-        .map(([id, amount]) => `${this.players.get(id).displayName}: ${amount}`)
-        .join('\n')
+    const fields = Object.entries(this.bets.toJSON()).map(
+      ([space, spaceBets]) => {
+        const betString = Object.entries(spaceBets)
+          .map(
+            ([id, amount]) => `${this.players.get(id).displayName}: ${amount}`
+          )
+          .join('\n')
 
-      return [space, betString, true]
-    })
+        return [space, betString, true]
+      }
+    )
 
     return buildEmbed({
       title: 'Roulette',
@@ -104,7 +121,9 @@ class Roulette {
     }
   }
 
-  get winnerFields() { return this.toFields(this.wins) }
+  get winnerFields() {
+    return this.toFields(this.wins)
+  }
 
   toFields(coll) {
     return Object.entries(coll.toJSON()).map(([id, wins]) => {
@@ -118,7 +137,10 @@ class Roulette {
   }
 
   static getTotal(wins) {
-    const totalValue = Object.values(wins).reduce((total, item) => total + item.currencyValue, 0)
+    const totalValue = Object.values(wins).reduce(
+      (total, item) => total + item.currencyValue,
+      0
+    )
     return Items.convertToCurrency(totalValue)
   }
 
@@ -148,9 +170,15 @@ class Roulette {
     ]
   }
 
-  static getColor(number) { return roulette.red.includes(number) ? 'red' : 'black' }
-  static getColumn(number) { return spaces.get('columns').values[(number - 1) % 3] }
-  static getParity(number) { return spaces.get('parity').values[number % 2] }
+  static getColor(number) {
+    return roulette.red.includes(number) ? 'red' : 'black'
+  }
+  static getColumn(number) {
+    return spaces.get('columns').values[(number - 1) % 3]
+  }
+  static getParity(number) {
+    return spaces.get('parity').values[number % 2]
+  }
   static getRange(number, size) {
     return spaces.get(size).values.find(value => {
       const min = parseInt(value.split('-')[0])
@@ -174,8 +202,12 @@ class Roulette {
     }
   }
 
-  static get SPACES() { return spaceLiterals }
-  static get MAXBET() { return maxBet }
+  static get SPACES() {
+    return spaceLiterals
+  }
+  static get MAXBET() {
+    return maxBet
+  }
 }
 
 module.exports = Roulette

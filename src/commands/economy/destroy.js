@@ -20,7 +20,7 @@ class DestroyCommand extends Command {
 
   exec(msg, args) {
     const { item } = args
-    if (!item) return msg.util.error('couldn\'t find that item.')
+    if (!item) return msg.util.error("couldn't find that item.")
     Items.destroy(item.id)
     return msg.util.success(`destroyed **${item.name}**.`)
   }

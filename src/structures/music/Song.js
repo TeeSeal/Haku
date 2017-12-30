@@ -15,14 +15,27 @@ class Song {
     return this.dispatcher
   }
 
-  toString() { return this.title }
-
-  toJSON() {
-    return filterObject(this, ['id', 'title', 'thumbnail', 'stream', 'duration', 'url'])
+  toString() {
+    return this.title
   }
 
-  get durationString() { return Song.format(this.duration) }
-  get linkString() { return `[${this.title}](${this.url}) (${this.durationString})` }
+  toJSON() {
+    return filterObject(this, [
+      'id',
+      'title',
+      'thumbnail',
+      'stream',
+      'duration',
+      'url',
+    ])
+  }
+
+  get durationString() {
+    return Song.format(this.duration)
+  }
+  get linkString() {
+    return `[${this.title}](${this.url}) (${this.durationString})`
+  }
 
   get time() {
     const total = Song.format(this.duration)

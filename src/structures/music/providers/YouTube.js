@@ -14,7 +14,9 @@ class YouTube extends MusicProvider {
   }
 
   formatSong(video) {
-    const duration = moment.duration(video.contentDetails.duration).asMilliseconds()
+    const duration = moment
+      .duration(video.contentDetails.duration)
+      .asMilliseconds()
     const url = `https://www.youtube.com/watch?v=${video.id}`
     return {
       id: video.id,
@@ -30,7 +32,8 @@ class YouTube extends MusicProvider {
   getByID(id) {
     return this.get(`videos`, {
       id,
-      fields: 'items(id, snippet(title, thumbnails(maxres(url), high(url))), contentDetails(duration))',
+      fields:
+        'items(id, snippet(title, thumbnails(maxres(url), high(url))), contentDetails(duration))',
       part: 'snippet,contentDetails',
     })
   }
@@ -59,8 +62,9 @@ class YouTube extends MusicProvider {
     }
 
     if (!/^[a-zA-Z0-9-_]{11}$/.test(query)) {
-      query = await this.search(query)
-        .then(res => res.items[0] ? res.items[0].id.videoId : null)
+      query = await this.search(query).then(
+        res => res.items[0] ? res.items[0].id.videoId : null
+      )
     }
     if (!query) return null
 
@@ -81,9 +85,11 @@ class YouTube extends MusicProvider {
     const id = playlistItems.map(video => video.contentDetails.videoId).join()
     const videos = await this.getByID(id).then(result => result.items)
 
-    return Promise.all(videos.map(video => {
-      return YouTube.attachStream(this.formatSong(video))
-    }))
+    return Promise.all(
+      videos.map(video => {
+        return YouTube.attachStream(this.formatSong(video))
+      })
+    )
   }
 
   async resolveResource(query) {
@@ -112,14 +118,18 @@ class YouTube extends MusicProvider {
   }
 
   static extractVideoID(url) {
-    return url.match(/^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/)[2]
+    return url.match(
+      /^.*(youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#&?]*).*/
+    )[2]
   }
 
   static extractPlaylistID(url) {
     return url.match(/list=([\w\-_]+)/)[1]
   }
 
-  static get keychainKey() { return 'googleAPIKey' }
+  static get keychainKey() {
+    return 'googleAPIKey'
+  }
 }
 
 module.exports = YouTube

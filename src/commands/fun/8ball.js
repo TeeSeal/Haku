@@ -30,17 +30,23 @@ class EightBallCommand extends Command {
     const responses = this.client.db.guilds.get(msg.guild.id).eightBall.slice()
 
     if (del) {
-      if (!text) return msg.util.error('what response are you trying to remove?')
-      if (!responses.includes(text)) return msg.util.error('couldn\'t find such a response.')
+      if (!text) {
+        return msg.util.error('what response are you trying to remove?')
+      }
+      if (!responses.includes(text)) {
+        return msg.util.error("couldn't find such a response.")
+      }
       responses.splice(responses.indexOf(text), 1)
-      return this.client.db.guilds.set(msg.guild.id, 'eightBall', responses)
+      return this.client.db.guilds
+        .set(msg.guild.id, 'eightBall', responses)
         .then(() => msg.util.success('response deleted.'))
     }
 
     if (add) {
       if (!text) return msg.util.error('what response are you trying to add?')
       responses.push(text)
-      return this.client.db.guilds.set(msg.guild.id, 'eightBall', responses)
+      return this.client.db.guilds
+        .set(msg.guild.id, 'eightBall', responses)
         .then(() => msg.util.success('new response added.'))
     }
 

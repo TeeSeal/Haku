@@ -16,18 +16,17 @@ class PlayingCommand extends Command {
     if (!playlist) return msg.util.error('nothing is currently playing.')
     const { song } = playlist
 
-    return msg.util.send(buildEmbed({
-      title: song.title,
-      fields: [
-        [song.time, `Volume: ${playlist.volume}%`],
-      ],
-      url: song.url,
-      author: msg.member,
-      icon: 'time',
-      color: 'purple',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: song.title,
+        fields: [[song.time, `Volume: ${playlist.volume}%`]],
+        url: song.url,
+        author: msg.member,
+        icon: 'time',
+        color: 'purple',
+      })
+    )
   }
 }
-
 
 module.exports = PlayingCommand

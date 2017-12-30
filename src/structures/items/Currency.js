@@ -11,12 +11,21 @@ class Currency extends ItemGroup {
   }
 
   toJSON() {
-    return filterObject(this, ['id', 'value', 'description', 'emoji', 'type'], true)
+    return filterObject(
+      this,
+      ['id', 'value', 'description', 'emoji', 'type'],
+      true
+    )
   }
 
   get name() {
-    return this.emoji || pluralize(this.id, Math.abs(this.amount) || 1)
-      .split(' ').map(word => capitalize(word)).join(' ')
+    return (
+      this.emoji
+      || pluralize(this.id, Math.abs(this.amount) || 1)
+        .split(' ')
+        .map(word => capitalize(word))
+        .join(' ')
+    )
   }
 }
 

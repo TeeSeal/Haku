@@ -2,7 +2,6 @@ const ItemGroup = require('./ItemGroup')
 const pluralize = require('pluralize')
 const { filterObject, capitalize } = require('../../util/Util')
 
-
 class Recipe extends ItemGroup {
   constructor(opts) {
     super(opts)
@@ -15,27 +14,42 @@ class Recipe extends ItemGroup {
   }
 
   toJSON() {
-    return filterObject(this, ['id', 'value', 'shop', 'type', 'rarity', 'recipe'], true)
+    return filterObject(
+      this,
+      ['id', 'value', 'shop', 'type', 'rarity', 'recipe'],
+      true
+    )
   }
 
   get name() {
-    const name = this.id.split(' ').slice(1).concat('recipe')
-      .map(word => capitalize(word)).join(' ')
+    const name = this.id
+      .split(' ')
+      .slice(1)
+      .concat('recipe')
+      .map(word => capitalize(word))
+      .join(' ')
     return `${pluralize(name, this.amount || 1)} 📃`
   }
 
   examine() {
     return Object.entries(this.ingredients)
-      .map(([id, amount]) => `**${amount} ${id}**`).join(' | ')
+      .map(([id, amount]) => `**${amount} ${id}**`)
+      .join(' | ')
       .concat(` => **${this.result.amount} ${this.result.id}**`)
   }
 
   craft() {
     return new Promise((resolve, reject) => {
-      const hasItems = Object.entries(this.ingredients)
-        .every(([id, amount]) => this.inventory.has(id) && this.inventory.get(id).amount >= amount)
+      const hasItems = Object.entries(this.ingredients).every(
+        ([id, amount]) =>
+          this.inventory.has(id) && this.inventory.get(id).amount >= amount
+      )
 
-      if (!hasItems) return reject('you have insufficient funds. Inspect this recipe to see what ingredients are needed.')
+      if (!hasItems) {
+        return reject(
+          'you have insufficient funds. Inspect this recipe to see what ingredients are needed.'
+        )
+      }
 
       for (const [id, amount] of Object.entries(this.ingredients)) {
         this.inventory.get(id).consume(amount)

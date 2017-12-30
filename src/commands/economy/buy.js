@@ -19,14 +19,16 @@ class BuyCommand extends Command {
 
   async exec(msg, args) {
     let { items } = args
-    if (!items) return msg.util.error('dunno what you\'re trying to buy.')
+    if (!items) return msg.util.error("dunno what you're trying to buy.")
 
     items = items.filter(item => Items.SHOP.has(item.id))
     if (items.size === 0) return msg.util.error('no such item(s) in the shop.')
 
     const inventory = await this.client.inventories.fetch(msg.author.id)
     const balance = inventory.currencyValue
-    if (balance < items.totalValue) return msg.util.error('you have insufficient funds to buy that.')
+    if (balance < items.totalValue) {
+      return msg.util.error('you have insufficient funds to buy that.')
+    }
 
     inventory.setBalance(balance - items.totalValue)
     inventory.add(items)

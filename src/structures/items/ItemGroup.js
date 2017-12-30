@@ -62,7 +62,9 @@ class ItemGroup {
 
   get imagePath() {
     if (this.url) return this.url
-    if (fs.existsSync(`${rootDir}/assets/items/${this.id}.png`)) { return `${rootDir}/assets/items/${this.id}.png` }
+    if (fs.existsSync(`${rootDir}/assets/items/${this.id}.png`)) {
+      return `${rootDir}/assets/items/${this.id}.png`
+    }
     return null
   }
 

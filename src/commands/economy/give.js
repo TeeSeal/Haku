@@ -14,7 +14,10 @@ class GiveCommand extends Command {
           id: 'user',
           type(word, msg) {
             if (word === 'me') return msg.author
-            return this.client.util.resolveUser(word, msg.guild.members.map(m => m.user))
+            return this.client.util.resolveUser(
+              word,
+              msg.guild.members.map(m => m.user)
+            )
           },
         },
         {
@@ -28,7 +31,7 @@ class GiveCommand extends Command {
 
   async exec(msg, args) {
     const { user, items } = args
-    if (!items.every(i => i)) return msg.util.error('couldn\'t resolve items.')
+    if (!items.every(i => i)) return msg.util.error("couldn't resolve items.")
 
     const inventory = await this.client.inventories.fetch(user.id)
     inventory.add(items)

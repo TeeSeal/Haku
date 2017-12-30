@@ -4,7 +4,7 @@ class SoundCloud extends MusicProvider {
   constructor(clientID) {
     super({
       baseURL: 'https://api.soundcloud.com/',
-      params: { client_id: clientID } // eslint-disable-line
+      params: { client_id: clientID }, // eslint-disable-line
     })
 
     this.clientID = clientID
@@ -32,7 +32,9 @@ class SoundCloud extends MusicProvider {
       const resource = await this.findResource(query)
 
       if (!resource) return null
-      if (!['track', 'playlist'].some(kind => resource.kind === kind)) return null
+      if (!['track', 'playlist'].some(kind => resource.kind === kind)) {
+        return null
+      }
 
       return resource.kind === 'track'
         ? [this.formatSong(resource)]
@@ -45,7 +47,9 @@ class SoundCloud extends MusicProvider {
     return [this.formatSong(track)]
   }
 
-  static get keychainKey() { return 'soundCloudClientID' }
+  static get keychainKey() {
+    return 'soundCloudClientID'
+  }
 }
 
 module.exports = SoundCloud

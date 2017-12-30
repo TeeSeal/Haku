@@ -49,10 +49,15 @@ class BalanceCommand extends Command {
 
   async exec(msg, args) {
     const { user, item, page } = args
-    const [pron, neg, pos] = user.id === msg.author.id ? ['you', 'don\'t', 'have'] : [user.username, 'doesn\'t', 'has']
+    const [pron, neg, pos]
+      = user.id === msg.author.id
+        ? ['you', "don't", 'have']
+        : [user.username, "doesn't", 'has']
 
     const inventory = await this.client.inventories.fetch(user.id)
-    if (inventory.size === 0) return msg.util.info(`can't show what ${pron} ${neg} have.`)
+    if (inventory.size === 0) {
+      return msg.util.info(`can't show what ${pron} ${neg} have.`)
+    }
 
     if (item) {
       const itemGroup = inventory.get(item.id)
@@ -60,19 +65,24 @@ class BalanceCommand extends Command {
       return msg.util.info(`${pron} currently ${pos} **${itemGroup}**.`)
     }
 
-    const items = inventory.items().concat(inventory.recipes()).map(i => i.toString())
+    const items = inventory
+      .items()
+      .concat(inventory.recipes())
+      .map(i => i.toString())
 
-    return msg.util.send(buildEmbed({
-      title: `${user.username}'s items:`,
-      description: inventory.currencyString,
-      paginate: {
-        items,
-        commandName: this.id,
-        page,
-      },
-      icon: 'list',
-      color: 'blue',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: `${user.username}'s items:`,
+        description: inventory.currencyString,
+        paginate: {
+          items,
+          commandName: this.id,
+          page,
+        },
+        icon: 'list',
+        color: 'blue',
+      })
+    )
   }
 }
 

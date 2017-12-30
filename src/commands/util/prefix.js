@@ -20,10 +20,16 @@ class PrefixCommand extends Command {
     const { prefix } = args
     if (!prefix) {
       return msg.util.info(stripIndents`
-      current prefix in this guild is: **${this.client.db.guilds.get(msg.guild.id).prefix}**
+      current prefix in this guild is: **${
+  this.client.db.guilds.get(msg.guild.id).prefix
+}**
     `)
     }
-    if (!msg.member.permissions.has('MANAGE_GUILD')) return msg.util.error('you do not have permission to change the prefix in this guild.')
+    if (!msg.member.permissions.has('MANAGE_GUILD')) {
+      return msg.util.error(
+        'you do not have permission to change the prefix in this guild.'
+      )
+    }
 
     this.client.db.guilds.set(msg.guild.id, { prefix })
 

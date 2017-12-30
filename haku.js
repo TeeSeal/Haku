@@ -3,8 +3,8 @@ const { ownerID } = require('./config.json')
 const logr = require('logr')
 
 const client = new HakuClient({
-  prefix: msg => client.db.guilds
-    .get(msg.guild ? msg.guild.id : 'dm', 'prefix'),
+  prefix: msg =>
+    client.db.guilds.get(msg.guild ? msg.guild.id : 'dm', 'prefix'),
   ownerID,
   allowMention: true,
   handleEdits: true,

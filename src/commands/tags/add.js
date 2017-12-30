@@ -49,14 +49,17 @@ class TagAddCommand extends Command {
     if (!content) return msg.util.error('gotta give the tag some content.')
 
     const tags = await this.client.db.tags.fetch(msg.guild.id, 'tags')
-    if (tags.find(tag => tag.name === name)) return msg.util.error('a tag with that name already exists.')
+    if (tags.find(tag => tag.name === name)) {
+      return msg.util.error('a tag with that name already exists.')
+    }
 
     args.author = msg.author.id
     tags.push(args)
 
-    return this.client.db.tags.set(msg.guild.id, 'tags', tags)
+    return this.client.db.tags
+      .set(msg.guild.id, 'tags', tags)
       .then(() => msg.util.success(`successfully added tag: **${name}**`))
-      .catch((err) => msg.util.error(err))
+      .catch(err => msg.util.error(err))
   }
 }
 

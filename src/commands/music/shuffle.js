@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents, paginate } = require('../../util/Util')
+const { buildEmbed, paginate } = require('../../util/Util')
 
 class ShuffleCommand extends Command {
   constructor() {
@@ -15,7 +15,9 @@ class ShuffleCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
 
     playlist.shuffle()
@@ -25,15 +27,19 @@ class ShuffleCommand extends Command {
       ? paginated.slice(1).reduce((a, b) => a + b.length, 0)
       : null
 
-    return msg.util.send(buildEmbed({
-      title: 'SHUFFLED PLAYLIST:',
-      description: stripIndents`
-        **Now playing:** ${playlist.song.linkString}
+    const lines = [`**Now playing:** ${playlist.song.linkString}`, ''].concat(
+      paginated[0].join('\n')
+    )
+    if (leftOver) lines.push(`and ${leftOver} more.`)
 
-        ${paginated.length === 0 ? '' : `${paginated[0].join('\n')}${leftOver ? `\nand ${leftOver} more.` : ''}`}`,
-      icon: 'list',
-      color: 'blue',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: 'SHUFFLED PLAYLIST:',
+        description: lines.join('\n'),
+        icon: 'list',
+        color: 'blue',
+      })
+    )
   }
 }
 

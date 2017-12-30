@@ -1,5 +1,10 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents, paginate, shuffle } = require('../../util/Util')
+const {
+  buildEmbed,
+  stripIndents,
+  paginate,
+  shuffle,
+} = require('../../util/Util')
 
 class PlayCommand extends Command {
   constructor() {
@@ -66,17 +71,29 @@ class PlayCommand extends Command {
 
   async exec(msg, args) {
     const { queries, rand, volume } = args
-    if (queries.length === 0) return msg.util.error('give me something to look for, yo..')
-    if (!msg.member.voiceChannel) return msg.util.error('you need to be in a voice channel.')
-    if (msg.guild.me.voiceChannel && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+    if (queries.length === 0) {
+      return msg.util.error('give me something to look for, yo..')
+    }
+    if (!msg.member.voiceChannel) {
+      return msg.util.error('you need to be in a voice channel.')
+    }
+    if (
+      msg.guild.me.voiceChannel
+      && msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id
+    ) {
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
 
     const guildOptions = this.client.db.guilds.get(msg.guild.id)
     const playlist = this.client.music.getPlaylist(msg, guildOptions)
 
-    const songs = await this.client.music.resolveSongs(queries, { member: msg.member, volume })
-    if (!songs) return msg.util.error('couldn\'t find resource.')
+    const songs = await this.client.music.resolveSongs(queries, {
+      member: msg.member,
+      volume,
+    })
+    if (!songs) return msg.util.error("couldn't find resource.")
     if (rand) shuffle(songs)
 
     const [added, removed] = playlist.add(songs)
@@ -85,37 +102,43 @@ class PlayCommand extends Command {
       const rPaginated = paginate(removed)
       const rLeftOver = rPaginated.slice(1).reduce((a, b) => a + b.length, 0)
 
-      await msg.util.send(buildEmbed({
-        title: 'Failed to add:',
-        description: stripIndents`
-          ${rPaginated[0].map(obj => stripIndents`
-            • ${obj.song.linkString}
-            Reason: ${obj.reason}
-          `).join('\n')}
-          ${rPaginated[1] ? `and ${rLeftOver} more.` : ''}
-        `,
-        author: msg.member,
-        icon: 'clear',
-        color: 'red',
-      }))
+      const rPaginatedLines = rPaginated[0].map(
+        obj => `• ${obj.song.linkString}\nReason: ${obj.reason}`
+      )
+
+      if (rPaginated[1]) rPaginatedLines.push(`and ${rLeftOver} more.`)
+
+      await msg.util.send(
+        buildEmbed({
+          title: 'Failed to add:',
+          description: paginatedLines.join('\n'),
+          author: msg.member,
+          icon: 'clear',
+          color: 'red',
+        })
+      )
     }
 
-    if (added.length === 0) return msg.util.error('nothing was added to the playlist.')
+    if (added.length === 0) {
+      return msg.util.error('nothing was added to the playlist.')
+    }
 
     const aPaginated = paginate(added)
     const aLeftOver = aPaginated.slice(1).reduce((a, b) => a + b.length, 0)
 
-    return msg.util.send(buildEmbed({
-      title: 'Added to playlist:',
-      description: stripIndents`
-        ${aPaginated[0].map(song => `• ${song.linkString}`).join('\n')}
-        ${aPaginated[1] ? `and ${aLeftOver} more.` : ''}
-      `,
-      image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
-      author: msg.member,
-      icon: 'playlistAdd',
-      color: 'blue',
-    }))
+    const aPaginatedLines = aPaginated[0].map(song => `• ${song.linkString}`)
+    if (aPaginated[1]) aPaginatedLines.push(`and ${aLeftOver} more.`)
+
+    return msg.util.send(
+      buildEmbed({
+        title: 'Added to playlist:',
+        description: aPaginatedLines.join('\n'),
+        image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
+        author: msg.member,
+        icon: 'playlistAdd',
+        color: 'blue',
+      })
+    )
   }
 }
 

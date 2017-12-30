@@ -12,8 +12,12 @@ class DisabledInhibitor extends Inhibitor {
     for (const scope of scopes) {
       const [table, id, formattedScope] = getDBData(msg, scope)
 
-      if (this.client.db[table].get(id, 'disabled').includes(msg.util.command.id)) {
-        msg.util.error(`**${msg.util.command.id}** is disabled ${formattedScope}.`)
+      if (
+        this.client.db[table].get(id, 'disabled').includes(msg.util.command.id)
+      ) {
+        msg.util.error(
+          `**${msg.util.command.id}** is disabled ${formattedScope}.`
+        )
         return true
       }
     }

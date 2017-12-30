@@ -35,37 +35,39 @@ class VolumeCommand extends Command {
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
-      return msg.util.error('you have to be in the voice channel I\'m currently in.')
+      return msg.util.error(
+        "you have to be in the voice channel I'm currently in."
+      )
     }
 
     const { volume, song } = playlist
 
     if (!newVolume) {
-      return msg.util.send(buildEmbed({
-        title: song.title,
-        fields: [
-          [`Volume: ${volume}%`, '\u200b'],
-        ],
-        url: song.url,
-        author: msg.member,
-        icon: 'volumeUp',
-        color: 'yellow',
-      }))
+      return msg.util.send(
+        buildEmbed({
+          title: song.title,
+          fields: [[`Volume: ${volume}%`, '\u200b']],
+          url: song.url,
+          author: msg.member,
+          icon: 'volumeUp',
+          color: 'yellow',
+        })
+      )
     }
 
     const icon = newVolume < volume ? 'volumeDown' : 'volumeUp'
 
     playlist.fadeVolume(newVolume)
-    return msg.util.send(buildEmbed({
-      title: song.title,
-      fields: [
-        [`Volume: ${newVolume}%`, '\u200b'],
-      ],
-      url: song.url,
-      author: msg.member,
-      icon,
-      color: 'yellow',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: song.title,
+        fields: [[`Volume: ${newVolume}%`, '\u200b']],
+        url: song.url,
+        author: msg.member,
+        icon,
+        color: 'yellow',
+      })
+    )
   }
 }
 

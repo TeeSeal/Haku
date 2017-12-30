@@ -74,7 +74,9 @@ class SetCommand extends Command {
 
   exec(msg, args) {
     const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args
-    if (!Object.keys(args).some(key => args[key])) return msg.util.error('what are you trying to update?')
+    if (!Object.keys(args).some(key => args[key])) {
+      return msg.util.error('what are you trying to update?')
+    }
     const { guilds } = this.client.db
     const dbDefaultVolume = guilds.get(msg.guild.id).defaultVolume
     const dbMaxVolume = guilds.get(msg.guild.id).maxVolume
@@ -87,14 +89,26 @@ class SetCommand extends Command {
     }
 
     if (defaultVolume) {
-      if (maxVolume || dbMaxVolume < defaultVolume) return msg.util.error('default volume can\'t be bigger than the maximum one.')
+      if (maxVolume || dbMaxVolume < defaultVolume) {
+        return msg.util.error(
+          "default volume can't be bigger than the maximum one."
+        )
+      }
       if (playlist) playlist.defaultVolume = playlist.convert(defaultVolume)
       obj.defaultVolume = defaultVolume
     }
 
     if (maxVolume) {
-      if (defaultVolume || dbDefaultVolume > maxVolume) return msg.util.error('maximum volume can\'t be smaller than the default one.')
-      if (defaultVolume && maxVolume < defaultVolume) { if (playlist && playlist.volume > maxVolume) playlist.setVolume(maxVolume) }
+      if (defaultVolume || dbDefaultVolume > maxVolume) {
+        return msg.util.error(
+          "maximum volume can't be smaller than the default one."
+        )
+      }
+      if (defaultVolume && maxVolume < defaultVolume) {
+        if (playlist && playlist.volume > maxVolume) {
+          playlist.setVolume(maxVolume)
+        }
+      }
       obj.maxVolume = maxVolume
     }
 

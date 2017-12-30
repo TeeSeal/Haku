@@ -32,11 +32,10 @@ class RollCommand extends Command {
   }
 
   exec(msg, args) {
-    const [from, to] = args.to === 0
-      ? args.from === 0
-        ? [0, 100]
-        : [0, args.from]
-      : [args.from, args.to]
+    const [from, to]
+      = args.to === 0
+        ? args.from === 0 ? [0, 100] : [0, args.from]
+        : [args.from, args.to]
 
     const number = Math.floor(Math.random() * (to - from)) + from
     return msg.util.info(`you rolled **${number}**`)

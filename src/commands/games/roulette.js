@@ -34,14 +34,24 @@ class RouletteCommand extends Command {
   async exec(msg, args) {
     const { space, bet } = args.bet
 
-    if (!space) return msg.util.error('invalid usage. Please refer to `help roulette`.')
-    if (!bet) return msg.util.error('couldn\'t resolve your bet.')
-    if (bet.currencyValue === 0) return msg.util.error('you have to bet some money.')
-    if (bet.currencyValue > Roulette.MAXBET.price) return msg.util.error(`can't bet more than ${Roulette.MAXBET}.`)
-    if (!Roulette.SPACES.includes(space)) return msg.util.error('invalid space. Please refer to `help roulette`')
+    if (!space) {
+      return msg.util.error('invalid usage. Please refer to `help roulette`.')
+    }
+    if (!bet) return msg.util.error("couldn't resolve your bet.")
+    if (bet.currencyValue === 0) {
+      return msg.util.error('you have to bet some money.')
+    }
+    if (bet.currencyValue > Roulette.MAXBET.price) {
+      return msg.util.error(`can't bet more than ${Roulette.MAXBET}.`)
+    }
+    if (!Roulette.SPACES.includes(space)) {
+      return msg.util.error('invalid space. Please refer to `help roulette`')
+    }
 
     const inventory = await this.client.inventories.fetch(msg.author.id)
-    if (!inventory.includes(bet)) return msg.util.error('you have insufficient funds.')
+    if (!inventory.includes(bet)) {
+      return msg.util.error('you have insufficient funds.')
+    }
 
     const player = {
       id: msg.member.id,
@@ -61,23 +71,30 @@ class RouletteCommand extends Command {
     }
 
     game.addBet(player, space, bet)
-    await msg.util.success(`You have started a new game of game with a bet of ${bet} on ${space}!`, game.statusEmbed)
+    await msg.util.success(
+      `You have started a new game of game with a bet of ${bet} on ${space}!`,
+      game.statusEmbed
+    )
 
     return game.start(msg.channel, time).then(() => {
       game.rewardWinners()
 
-      let content = `The ball landed on **${game.winningSpaces[1]} ${game.winningSpaces[0]}**!`
+      let content = `The ball landed on **${game.winningSpaces[1]} ${
+        game.winningSpaces[0]
+      }**!`
 
       if (game.winnerFields.length > 0) content += '\n**WINNERS:**'
       else content += '\nNobody won this round.'
 
-      return msg.util.send(buildEmbed({
-        title: 'Roulette Results',
-        content,
-        fields: game.winnerFields,
-        icon: 'game',
-        color: 'scarlet',
-      }))
+      return msg.util.send(
+        buildEmbed({
+          title: 'Roulette Results',
+          content,
+          fields: game.winnerFields,
+          icon: 'game',
+          color: 'scarlet',
+        })
+      )
     })
   }
 }

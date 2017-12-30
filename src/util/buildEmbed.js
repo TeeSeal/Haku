@@ -1,14 +1,16 @@
 const Color = require('./Color')
-const { stripIndents } = require('common-tags')
 const paginate = require('./paginate')
 
-function buildEmbed(obj) { // eslint-disable-line
+function buildEmbed(obj) {
+  // eslint-disable-line
   const embed = {}
   if (obj.icon) obj.thumbnail = `src/assets/icons/${obj.icon}.png`
 
   const files = [obj.thumbnail, obj.image]
     .filter(image => image && !image.startsWith('http'))
-    .map(image => { return { attachment: image } })
+    .map(image => {
+      return { attachment: image }
+    })
 
   for (const image of ['thumbnail', 'image']) {
     if (!obj[image]) continue
@@ -20,7 +22,7 @@ function buildEmbed(obj) { // eslint-disable-line
   if (obj.author) {
     embed.author = {
       name: obj.author.displayName,
-      icon_url: obj.author.user.displayAvatarURL() // eslint-disable-line
+      icon_url: obj.author.user.displayAvatarURL(), // eslint-disable-line
     }
   }
 
@@ -48,10 +50,12 @@ function buildEmbed(obj) { // eslint-disable-line
     }
 
     if (paginated.length > 1) {
+      const lines = [
+        `Page: ${page}/${paginated.length}`,
+        `Use: '${opts.commandName} page=<integer>' to view another page.`,
+      ]
       embed.footer = {
-        text: stripIndents`
-          Page: ${page}/${paginated.length} | Use: '${opts.commandName} page=<integer>' to view another page.
-        `,
+        text: lines.join(' | '),
       }
     }
   }

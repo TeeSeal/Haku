@@ -49,11 +49,15 @@ class EnableCommand extends Command {
 
   exec(msg, args) {
     const { toEnable, scope } = args
-    if (!toEnable) return msg.util.error('you need to specfy a command to enable.')
+    if (!toEnable) {
+      return msg.util.error('you need to specfy a command to enable.')
+    }
 
     const [table, id, formattedScope] = getDBData(msg, scope)
     if (!permCheck[table](msg.member)) {
-      return msg.util.error(`you do not have permission to enable commands ${formattedScope}.`)
+      return msg.util.error(
+        `you do not have permission to enable commands ${formattedScope}.`
+      )
     }
 
     const db = this.client.db[table]
@@ -61,17 +65,25 @@ class EnableCommand extends Command {
     let filtered
 
     if (toEnable instanceof Command) {
-      if (!disabled.includes(toEnable.id)) return msg.util.error(`**${toEnable.id}** is not disabled ${formattedScope}.`)
+      if (!disabled.includes(toEnable.id)) {
+        return msg.util.error(
+          `**${toEnable.id}** is not disabled ${formattedScope}.`
+        )
+      }
       filtered = [toEnable.id]
     } else {
       filtered = toEnable.filter(c => disabled.includes(c.id)).map(c => c.id)
-      if (filtered.size === 0) return msg.util.error(`all commands in **${toEnable.id}** are enabled.`)
+      if (filtered.size === 0) {
+        return msg.util.error(`all commands in **${toEnable.id}** are enabled.`)
+      }
     }
 
     for (const cmd of filtered) disabled.splice(disabled.indexOf(cmd.id), 1)
 
     db.set(id, { disabled })
-    return msg.util.success(`**${toEnable.id}** has been enabled ${formattedScope}.`)
+    return msg.util.success(
+      `**${toEnable.id}** has been enabled ${formattedScope}.`
+    )
   }
 }
 

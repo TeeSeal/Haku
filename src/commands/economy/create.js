@@ -85,7 +85,9 @@ class CreateCommand extends Command {
 
     if (args.type === 'recipe') {
       if (!args.result || !args.ingredients) {
-        return msg.util.error('give the recipe both a result and some ingredients.')
+        return msg.util.error(
+          'give the recipe both a result and some ingredients.'
+        )
       }
 
       args.recipe = {

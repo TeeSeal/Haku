@@ -6,8 +6,11 @@ const typeHandlers = {
     return msg.util.send(tag.content)
   },
   file(tag, msg) {
-    return msg.util.send({ files: [tag.content] })
-      .catch(() => msg.util.error('this tag is broken, might want to recreate it.'))
+    return msg.util
+      .send({ files: [tag.content] })
+      .catch(() =>
+        msg.util.error('this tag is broken, might want to recreate it.')
+      )
   },
 }
 
@@ -57,7 +60,9 @@ class TagCommand extends Command {
     const tags = await this.client.db.tags.fetch(msg.guild.id, 'tags')
 
     if (!name) {
-      if (tags.length === 0) return msg.util.info('there are currently no tags.')
+      if (tags.length === 0) {
+        return msg.util.info('there are currently no tags.')
+      }
 
       return msg.util.send(stripIndents`
         Available tags:
@@ -69,8 +74,13 @@ class TagCommand extends Command {
     if (!tag) return msg.util.error(`couldn't find tag: **${name}**.`)
 
     if (del || rename) {
-      if (tag.author !== msg.author.id || !msg.member.permissions.has('MANAGE_GUILD')) {
-        return msg.util.error(`you do not have permissions to moderate the **${name}** tag.`)
+      if (
+        tag.author !== msg.author.id
+        || !msg.member.permissions.has('MANAGE_GUILD')
+      ) {
+        return msg.util.error(
+          `you do not have permissions to moderate the **${name}** tag.`
+        )
       }
 
       let message
@@ -83,7 +93,8 @@ class TagCommand extends Command {
         message = `**${name}** tag renamed to **${rename}**.`
       }
 
-      return this.client.db.tags.set(msg.guild.id, 'tags', tags)
+      return this.client.db.tags
+        .set(msg.guild.id, 'tags', tags)
         .then(() => msg.util.success(message))
     }
 

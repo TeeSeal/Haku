@@ -31,23 +31,29 @@ class PlaylistCommand extends Command {
   exec(msg, args) {
     const { page } = args
     const playlist = this.client.music.playlists.get(msg.guild.id)
-    const [song, queue] = playlist ? [playlist.song, playlist.queue] : [null, null]
+    const [song, queue] = playlist
+      ? [playlist.song, playlist.queue]
+      : [null, null]
 
-    if (!playlist) { return msg.util.error('nothing is currently playing.') }
+    if (!playlist) {
+      return msg.util.error('nothing is currently playing.')
+    }
 
     const list = queue.map(s => `• ${s.linkString}`)
 
-    return msg.util.send(buildEmbed({
-      title: 'Playlist:',
-      description: `**Now playing:** ${song.linkString}`,
-      paginate: {
-        items: list,
-        commandName: this.id,
-        page,
-      },
-      icon: 'list',
-      color: 'blue',
-    }))
+    return msg.util.send(
+      buildEmbed({
+        title: 'Playlist:',
+        description: `**Now playing:** ${song.linkString}`,
+        paginate: {
+          items: list,
+          commandName: this.id,
+          page,
+        },
+        icon: 'list',
+        color: 'blue',
+      })
+    )
   }
 }
 

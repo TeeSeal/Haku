@@ -23,29 +23,39 @@ class CraftCommand extends Command {
 
   async exec(msg, args) {
     const { recipe } = args
-    if (!recipe) return msg.util.error('couldn\'t find recipe.')
+    if (!recipe) return msg.util.error("couldn't find recipe.")
 
     const inventory = await this.client.inventories.fetch(msg.author.id)
-    if (!inventory.has(recipe.id)) return msg.util.error(`you don't have any: **${recipe.name}**`)
-    return inventory.get(recipe.id).craft()
+    if (!inventory.has(recipe.id)) {
+      return msg.util.error(`you don't have any: **${recipe.name}**`)
+    }
+    return inventory
+      .get(recipe.id)
+      .craft()
       .then(() => {
-        msg.channel.send(buildEmbed({
-          title: 'SUCCESS',
-          fields: [
-            [
-              'Ingredients',
-              Object.keys(recipe.ingredients).map(([id, amount]) => Items.resolveGroup(id, amount))
-                .join(' + '),
+        msg.channel.send(
+          buildEmbed({
+            title: 'SUCCESS',
+            fields: [
+              [
+                'Ingredients',
+                Object.keys(recipe.ingredients)
+                  .map(([id, amount]) => Items.resolveGroup(id, amount))
+                  .join(' + '),
+              ],
+              [
+                'Result',
+                Items.resolveGroup(
+                  recipe.result.id,
+                  recipe.result.amount
+                ).toString(),
+              ],
             ],
-            [
-              'Result',
-              Items.resolveGroup(recipe.result.id, recipe.result.amount).toString(),
-            ],
-          ],
-          author: msg.member,
-          icon: 'craft',
-          color: 'gold',
-        }))
+            author: msg.member,
+            icon: 'craft',
+            color: 'gold',
+          })
+        )
       })
       .catch(err => msg.util.error(err))
   }

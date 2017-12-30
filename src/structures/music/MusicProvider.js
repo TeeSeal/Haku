@@ -8,11 +8,19 @@ const providersPath = path.join(__dirname, 'providers')
 class MusicProvider extends HTTPClient {
   // All providers must have this method. Must return an array of Song-like objects.
   // See SoundCloud.js or YouTube.js for reference
-  resolveResource() { throw new Error('not implemented.') }
+  resolveResource() {
+    throw new Error('not implemented.')
+  }
 
-  static get REGEXP() { throw new Error('not implemented.') }
-  static get aliases() { throw new Error('not implemented.') }
-  static get keychainKey() { throw new Error('not implemented.') }
+  static get REGEXP() {
+    throw new Error('not implemented.')
+  }
+  static get aliases() {
+    throw new Error('not implemented.')
+  }
+  static get keychainKey() {
+    throw new Error('not implemented.')
+  }
 
   static loadAll(keychain) {
     const providers = fs.readdirSync(providersPath).map(file => {
@@ -20,9 +28,11 @@ class MusicProvider extends HTTPClient {
       return new Provider(keychain[Provider.keychainKey])
     })
 
-    return new Collection(providers.map(provider => {
-      return [provider.constructor.name.toLowerCase(), provider]
-    }))
+    return new Collection(
+      providers.map(provider => {
+        return [provider.constructor.name.toLowerCase(), provider]
+      })
+    )
   }
 }
 
