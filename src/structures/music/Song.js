@@ -3,15 +3,18 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class Song {
-  constructor(song, opts) {
+  constructor(song, opts = {}) {
     Object.assign(this, song)
     this.member = opts.member
     this.volume = opts.volume
     this.dispatcher = null
   }
 
-  play(connection, opts) {
-    this.dispatcher = connection.playStream(this.stream, opts)
+  async play(connection, opts) {
+    const stream = await this.fetchStream()
+    if (!stream) return null
+
+    this.dispatcher = connection.playStream(stream, opts)
     return this.dispatcher
   }
 
@@ -43,6 +46,10 @@ class Song {
     const left = Song.format(this.duration - this.dispatcher.time + 1000)
 
     return `${current} / ${total}  |  ${left} left`
+  }
+
+  fetchStream() {
+    return this.stream
   }
 
   static format(time) {

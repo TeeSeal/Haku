@@ -1,5 +1,40 @@
 const { shuffle, buildEmbed } = require('../../util/Util')
 
+const embeds = {
+  outOfSongs: buildEmbed({
+    fields: [["We're out of songs.", 'Better queue up some more!']],
+    icon: 'clear',
+    color: 'red',
+  }),
+
+  playing(song) {
+    return buildEmbed({
+      title: song.title,
+      url: song.url,
+      fields: [
+        [
+          'Now playing.',
+          `Duration: ${song.durationString} | Volume: ${this.volume}%`,
+        ],
+      ],
+      author: song.member,
+      icon: 'play',
+      color: 'green',
+    })
+  },
+
+  skipping(song) {
+    return buildEmbed({
+      title: song.title,
+      url: song.url,
+      fields: [['An issue occured playing this song.', `Skipping it.`]],
+      author: song.member,
+      icon: 'skip',
+      color: 'cyan',
+    })
+  },
+}
+
 class Playlist {
   constructor(msg, guildOptions, handler) {
     this.handler = handler
@@ -26,11 +61,6 @@ class Playlist {
   filter(songs) {
     const removed = []
     const filtered = songs.filter(song => {
-      if (!song.stream) {
-        removed.push({ song, reason: 'Resource unavailable.' })
-        return false
-      }
-
       if (song.member.id === song.member.client.ownerID) return true
 
       if (song.duration > this.maxSongDuration * 6e4) {
@@ -57,38 +87,26 @@ class Playlist {
     return [filtered, removed]
   }
 
-  play(song) {
+  async play(song) {
     if (!song) {
-      this.channel.send(
-        buildEmbed({
-          fields: [["We're out of songs.", 'Better queue up some more!']],
-          icon: 'clear',
-          color: 'red',
-        })
-      )
+      this.channel.send(embeds.outOfSongs)
       return this.destroy()
     }
 
     this.song = song
     this._volume = this.convert(song.volume) || this.defaultVolume
+    this.channel.send(embeds.playing(song))
 
-    this.channel.send(
-      buildEmbed({
-        title: song.title,
-        url: song.url,
-        fields: [
-          [
-            'Now playing.',
-            `Duration: ${song.durationString} | Volume: ${this.volume}%`,
-          ],
-        ],
-        author: song.member,
-        icon: 'play',
-        color: 'green',
-      })
-    )
+    const dispatcher = await song.play(this.connection, {
+      volume: this._volume,
+    })
 
-    song.play(this.connection, { volume: this._volume }).on('end', reason => {
+    if (!dispatcher) {
+      this.channel.send(embeds.skipping(song))
+      return setTimeout(() => this.play(this.queue.shift()), 10)
+    }
+
+    dispatcher.on('end', reason => {
       if (reason === 'stop') return this.destroy()
       return setTimeout(() => this.play(this.queue.shift()), 10)
     })

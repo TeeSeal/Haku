@@ -26,6 +26,23 @@ class YouTube extends MusicProvider {
         : video.snippet.thumbnails.high.url,
       duration,
       url,
+
+      fetchStream() {
+        if (this.stream) return this.stream
+        return new Promise(resolve => {
+          const stream = ytdl(this.url, { filter: 'audioonly' })
+            .once('response', () => {
+              this.stream = stream
+              stream.removeAllListeners('error')
+              resolve(stream)
+            })
+            .once('error', () => {
+              this.stream = null
+              stream.removeAllListeners('response')
+              resolve(null)
+            })
+        })
+      },
     }
   }
 
@@ -33,7 +50,7 @@ class YouTube extends MusicProvider {
     return this.get(`videos`, {
       id,
       fields:
-        'items(id, snippet(title, thumbnails(maxres(url), high(url))), contentDetails(duration))',
+        'items(id,snippet(title,thumbnails(maxres(url),high(url))),contentDetails(duration))',
       part: 'snippet,contentDetails',
     })
   }
@@ -69,7 +86,7 @@ class YouTube extends MusicProvider {
     if (!query) return null
 
     const video = await this.getByID(query).then(result => result.items[0])
-    return [await YouTube.attachStream(this.formatSong(video))]
+    return [this.formatSong(video)]
   }
 
   async resolvePlaylist(query) {
@@ -85,11 +102,7 @@ class YouTube extends MusicProvider {
     const id = playlistItems.map(video => video.contentDetails.videoId).join()
     const videos = await this.getByID(id).then(result => result.items)
 
-    return Promise.all(
-      videos.map(video => {
-        return YouTube.attachStream(this.formatSong(video))
-      })
-    )
+    return videos.map(this.formatSong)
   }
 
   async resolveResource(query) {
@@ -99,22 +112,6 @@ class YouTube extends MusicProvider {
     }
 
     return this.resolveVideo(query)
-  }
-
-  static attachStream(song) {
-    return new Promise(resolve => {
-      const stream = ytdl(song.url, { filter: 'audioonly' })
-        .once('response', () => {
-          song.stream = stream
-          stream.removeAllListeners('error')
-          resolve(song)
-        })
-        .once('error', () => {
-          song.stream = null
-          stream.removeAllListeners('response')
-          resolve(song)
-        })
-    })
   }
 
   static extractVideoID(url) {
