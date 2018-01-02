@@ -3,8 +3,8 @@ const { stripIndents, getDBData } = require('../../util/Util')
 
 const permCheck = {
   client: member => member.id === member.client.ownerID,
-  guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  guilds: member => member.permissions.has('MANAGE_GUILD'),
+  channels: member => member.permissions.has('MANAGE_CHANNLES'),
 }
 
 class EnableCommand extends Command {
