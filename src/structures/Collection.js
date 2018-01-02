@@ -228,6 +228,10 @@ class Collection extends Map {
     return obj
   }
 
+  join(sep) {
+    return this.array().join(sep)
+  }
+
   static fromObject(obj) {
     const coll = new Collection()
     for (const key of Object.keys(obj)) coll.set(key, obj[key])

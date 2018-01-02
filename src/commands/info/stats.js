@@ -30,7 +30,7 @@ class StatsCommand extends Command {
 
     msg.channel.send(
       buildEmbed({
-        title: `Haku stats`,
+        title: 'Haku stats',
         fields: [
           ['Memory Usage', memUsage, true],
           ['Uptime', uptime, true],
