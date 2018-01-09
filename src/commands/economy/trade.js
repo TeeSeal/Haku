@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo')
 const { buildEmbed, stripIndents } = require('../../util/Util')
 const Items = require('../../structures/items/ItemHandler')
-const ReactionPoll = require('../../structures/ReactionPoll')
+const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
 const tradingUsers = new Set()
 
@@ -109,22 +109,22 @@ class TradeCommand extends Command {
 
     const statusMsg = await msg.util.send(`${msg.member} ${member}`, opts)
     const poll = new ReactionPoll(statusMsg, {
-      emojis: ['✅', '❌'],
+      emojis: {
+        '✅': 'yes',
+        '❌': 'no',
+      },
       users: [msg.author.id, member.id],
       time: 6e4,
     })
 
     poll.on('vote', () => {
-      if (
-        poll.votes.get('✅').length === 2
-        || poll.votes.get('❌').length > 0
-      ) {
+      if (poll.votes.get('yes').size === 2 || poll.votes.get('no').size > 0) {
         poll.stop()
       }
     })
 
     poll.once('end', votes => {
-      const success = votes.get('✅').length === 2
+      const success = votes.get('yes').size === 2
 
       if (success) {
         offInv.consume(offer)

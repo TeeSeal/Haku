@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
 const { buildEmbed } = require('../../util/Util')
-const ReactionPoll = require('../../structures/ReactionPoll')
+const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
 const voteSkips = new Set()
 
@@ -61,17 +61,17 @@ class SkipCommand extends Command {
 
     const statusMsg = await msg.util.send(members.array().join(), opts)
     const poll = new ReactionPoll(statusMsg, {
-      emojis: ['✅'],
+      emojis: { '✅': 'yes' },
       users: members.map(m => m.id),
       time: 3e4,
     })
 
     poll.on('vote', () => {
-      if (poll.votes.get('✅').length >= votesNeeded) poll.stop()
+      if (poll.votes.get('yes').size >= votesNeeded) poll.stop()
     })
 
     poll.once('end', votes => {
-      const success = votes.get('✅').length >= votesNeeded
+      const success = votes.get('yes').size >= votesNeeded
       voteSkips.delete(msg.guild.id)
 
       const { embed } = opts

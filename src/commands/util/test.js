@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util/Util')
+const HakuEmbed = require('../../structures/HakuEmbed')
 
 class TestCommand extends Command {
   constructor() {
@@ -27,15 +27,15 @@ class TestCommand extends Command {
     })
   }
 
-  exec(msg, args) {
-    const { a, flag, prefix } = args
-    return msg.channel.send(stripIndents`
-      \`\`\`json
-      a = ${a},
-      flag = ${flag},
-      prefix = ${prefix}
-      \`\`\`
-    `)
+  exec(msg) {
+    const embed = new HakuEmbed(msg.channel, {
+      pagination: {
+        items: ['foo', 'bar', 'baz', 'toumorokoshi', 'matsubokkuri'],
+        by: 2,
+      },
+    }).setTitle('TEST TEST')
+
+    return embed.send()
   }
 }
 

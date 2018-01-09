@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/TeeSeal/Haku#readme",
   "dependencies": {
-    "axios": "^0.17.1",
     "common-tags": "^1.5.1",
     "discord-akairo": "github:1computer1/discord-akairo",
     "discord.js": "https://github.com/hydrabolt/discord.js#master",
@@ -33,7 +32,7 @@
     "node-fetch": "^1.7.3",
     "opusscript": "^0.0.3",
     "pluralize": "^5.1.0",
-    "sequelize": "^4.23.4",
+    "sequelize": "^4.28.7",
     "sqlite3": "^3.1.13",
     "ytdl-core": "^0.14.4"
   },
