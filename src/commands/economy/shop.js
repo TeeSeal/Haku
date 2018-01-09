@@ -24,7 +24,7 @@ class ShopCommand extends Command {
             if (num < 1) return null
             return num
           },
-          default: 1,
+          default: 0,
         },
       ],
     })
@@ -62,7 +62,7 @@ class ShopCommand extends Command {
     })
 
     return new Embed(msg.channel, {
-      paginate: { items: fields, page },
+      pagination: { items: fields, page },
     })
       .setTitle('**SHOP**')
       .setIcon(Embed.icons.SHOP)

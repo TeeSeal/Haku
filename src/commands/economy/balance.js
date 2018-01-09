@@ -42,7 +42,7 @@ class BalanceCommand extends Command {
             if (num < 1) return null
             return num
           },
-          default: 1,
+          default: 0,
         },
       ],
     })
@@ -72,7 +72,7 @@ class BalanceCommand extends Command {
       .map(i => i.toString())
 
     return new Embed(msg.channel, {
-      paginate: { items, page },
+      pagination: { items, page },
     })
       .setTitle(`${user.username}'s items:`)
       .setDescription(inventory.currencyString)

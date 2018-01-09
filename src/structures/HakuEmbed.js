@@ -86,7 +86,7 @@ class HakuEmbed extends MessageEmbed {
   }
 
   setPageNumber(number) {
-    if (this.pagination.items.length < 1) return
+    if (this.pagination.items.length < 2) return
 
     const { length } = this.pagination.items
 
@@ -96,6 +96,7 @@ class HakuEmbed extends MessageEmbed {
   }
 
   handlePagination() {
+    if (this.pagination.items.length < 2) return
     new ReactionPagination(this.message, this.pagination.items, {
       current: this.pagination.page,
       users: this.opts.users,
@@ -110,13 +111,13 @@ class HakuEmbed extends MessageEmbed {
 
     let page = opts.page || 0
     if (page < 0) page = 0
-    if (page > paginated.length) page = paginated.length - 1
+    if (page >= paginated.length) page = paginated.length - 1
     const result = { page, commandName: opts.commandName }
 
     if (paginated.length !== 0) {
       if (Array.isArray(opts.items[0])) {
         result.type = 'fields'
-        result.items = paginated.map(pg => HakuEmbed.parseFields(pg))
+        result.items = paginated
       } else {
         result.type = 'description'
         result.items = paginated
