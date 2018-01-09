@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const { buildEmbed, stripIndents } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/ItemHandler')
 const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
@@ -82,9 +83,9 @@ class TradeCommand extends Command {
       return msg.util.error(`**${member.displayName}** has insufficient funds.`)
     }
 
-    const opts = buildEmbed({
-      title: 'ITEM TRADE:',
-      fields: [
+    const embed = new Embed(msg.channel)
+      .setTitle('ITEM TRADE:')
+      .addFields([
         [
           msg.author.tag,
           offer.map(item => `**${item.amount}** ${item.name}`).join('\n'),
@@ -95,27 +96,31 @@ class TradeCommand extends Command {
             ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n')
             : '---',
         ],
-      ],
-      description: stripIndents`
-        Both parties must click on the ✅ for the trade to be completed.
-        Otherwise click on the ❌ or ignore this message.
-      `,
-      icon: 'trade',
-      color: 'gold',
-    })
+      ])
+      .setDescription(
+        stripIndents`
+          Both parties must click on the ✅ for the trade to be completed.
+          Otherwise click on the ❌ or ignore this message.
+        `
+      )
+      .setIcon(Embed.icons.TRADE)
+      .setColor(Embed.colors.GOLD)
 
     tradingUsers.add(msg.author.id)
     tradingUsers.add(member.id)
 
-    const statusMsg = await msg.util.send(`${msg.member} ${member}`, opts)
-    const poll = new ReactionPoll(statusMsg, {
-      emojis: {
+    const statusMsg = await msg.util.send(`${msg.member} ${member}`, embed)
+    const poll = new ReactionPoll(
+      statusMsg,
+      {
         '✅': 'yes',
         '❌': 'no',
       },
-      users: [msg.author.id, member.id],
-      time: 6e4,
-    })
+      {
+        users: [msg.author.id, member.id],
+        time: 6e4,
+      }
+    )
 
     poll.on('vote', () => {
       if (poll.votes.get('yes').size === 2 || poll.votes.get('no').size > 0) {
@@ -139,9 +144,8 @@ class TradeCommand extends Command {
       tradingUsers.delete(msg.author.id)
       tradingUsers.delete(member.id)
 
-      const { embed } = opts
-      embed.description = `**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`
-      return statusMsg.edit(`${msg.member} ${member}`, { embed })
+      embed.setDescription(`**TRADE ${success ? 'COMPLETED' : 'CANCELED'}**`)
+      return statusMsg.edit(`${msg.member} ${member}`, embed)
     })
   }
 }

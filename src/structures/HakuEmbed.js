@@ -17,6 +17,7 @@ class HakuEmbed extends MessageEmbed {
   }
 
   async send() {
+    if (!this.channel) throw new Error('No channel given.')
     if (this.sent) return this.edit()
     this.setPage()
     this.message = await this.channel.send(this)
@@ -31,16 +32,16 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
-  attachIcon(name) {
-    if (this.icons.includes(name)) return this
-    this.icons.push(name)
-    this.attachFiles([`src/assets/icons/${name}.png`])
+  attachIcon(icon) {
+    if (this.icons.includes(icon)) return this
+    this.icons.push(icon)
+    this.attachFiles([`src/assets/icons/${icon}`])
     return this
   }
 
-  setIcon(name) {
-    if (!this.icons.includes(name)) this.attachIcon(name)
-    this.setThumbnail(`attachment://${name}.png`)
+  setIcon(icon) {
+    if (!this.icons.includes(icon)) this.attachIcon(icon)
+    this.setThumbnail(`attachment://${icon}`)
     return this
   }
 
@@ -127,15 +128,33 @@ class HakuEmbed extends MessageEmbed {
 
   static get colors() {
     return {
-      yellow: 16763904,
-      red: 16731469,
-      blue: 6711039,
-      purple: 12517631,
-      green: 5025610,
-      cyan: 6750207,
-      gold: 16758861,
-      orange: 16029762,
-      scarlet: 13369446,
+      YELLOW: 16763904,
+      RED: 16731469,
+      BLUE: 6711039,
+      PURPLE: 12517631,
+      GREEN: 5025610,
+      CYAN: 6750207,
+      GOLD: 16758861,
+      ORANGE: 16029762,
+      SCARLET: 13369446,
+    }
+  }
+
+  static get icons() {
+    return {
+      CLEAR: 'clear.png',
+      CRAFT: 'craft.png',
+      GAME: 'game.png',
+      LIST: 'list.png',
+      PAUSE: 'pause.png',
+      PLAY: 'play.png',
+      PLAYLIST_ADD: 'playlistAdd.png',
+      SHOP: 'shop.png',
+      SKIP: 'skip.png',
+      TIME: 'time.png',
+      TRADE: 'trade.png',
+      VOLUME_UP: 'volumeUp.png',
+      VOLUME_DOWN: 'volumeDown.png',
     }
   }
 

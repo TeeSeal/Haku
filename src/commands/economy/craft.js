@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
 const Items = require('../../structures/items/ItemHandler')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class CraftCommand extends Command {
   constructor() {
@@ -33,29 +33,27 @@ class CraftCommand extends Command {
       .get(recipe.id)
       .craft()
       .then(() => {
-        msg.channel.send(
-          buildEmbed({
-            title: 'SUCCESS',
-            fields: [
-              [
-                'Ingredients',
-                Object.keys(recipe.ingredients)
-                  .map(([id, amount]) => Items.resolveGroup(id, amount))
-                  .join(' + '),
-              ],
-              [
-                'Result',
-                Items.resolveGroup(
-                  recipe.result.id,
-                  recipe.result.amount
-                ).toString(),
-              ],
+        new Embed(msg.channel)
+          .setTitle('SUCCESS')
+          .addFields([
+            [
+              'Ingredients',
+              Object.keys(recipe.ingredients)
+                .map(([id, amount]) => Items.resolveGroup(id, amount))
+                .join(' + '),
             ],
-            author: msg.member,
-            icon: 'craft',
-            color: 'gold',
-          })
-        )
+            [
+              'Result',
+              Items.resolveGroup(
+                recipe.result.id,
+                recipe.result.amount
+              ).toString(),
+            ],
+          ])
+          .setAuthor(msg.member)
+          .setIcon(Embed.icons.CRAFT)
+          .setColor(Embed.colors.GOLD)
+          .send()
       })
       .catch(err => msg.util.error(err))
   }

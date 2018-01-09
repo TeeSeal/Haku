@@ -1,37 +1,33 @@
-const { shuffle, buildEmbed } = require('../../util/Util')
+const { shuffle } = require('../../util/Util')
+const Embed = require('../HakuEmbed')
 
 const embeds = {
-  outOfSongs: buildEmbed({
-    fields: [["We're out of songs.", 'Better queue up some more!']],
-    icon: 'clear',
-    color: 'red',
-  }),
+  outOfSongs: new Embed()
+    .addField("We're out of songs.", 'Better queue up some more!')
+    .setIcon(Embed.icons.CLEAR)
+    .setColor(Embed.colors.RED),
 
-  playing(song) {
-    return buildEmbed({
-      title: song.title,
-      url: song.url,
-      fields: [
-        [
-          'Now playing.',
-          `Duration: ${song.durationString} | Volume: ${this.volume}%`,
-        ],
-      ],
-      author: song.member,
-      icon: 'play',
-      color: 'green',
-    })
+  playing(song, volume) {
+    return new Embed()
+      .setTitle(song.title)
+      .setURL(song.url)
+      .addField(
+        'Now playing.',
+        `Duration: ${song.durationString} | Volume: ${volume}%`
+      )
+      .setAuthor(song.member)
+      .setIcon(Embed.icons.PLAY)
+      .setColor(Embed.colors.GREEN)
   },
 
   skipping(song) {
-    return buildEmbed({
-      title: song.title,
-      url: song.url,
-      fields: [['An issue occured playing this song.', `Skipping it.`]],
-      author: song.member,
-      icon: 'skip',
-      color: 'cyan',
-    })
+    return new Embed()
+      .setTitle(song.title)
+      .setURL(song.url)
+      .addField('An issue occured playing this song.', `Skipping it.`)
+      .setAuthor(song.member)
+      .setIcon(Embed.icons.SKIP)
+      .set(Embed.colors.CYAN)
   },
 }
 
@@ -95,7 +91,7 @@ class Playlist {
 
     this.song = song
     this._volume = this.convert(song.volume) || this.defaultVolume
-    this.channel.send(embeds.playing(song))
+    this.channel.send(embeds.playing(song, this.volume))
 
     const dispatcher = await song.play(this.connection, {
       volume: this._volume,
@@ -113,15 +109,15 @@ class Playlist {
   }
 
   add(songs) {
-    const [filtered, removed] = this.filter(songs)
-    this.queue = this.queue.concat(filtered)
+    const [added, removed] = this.filter(songs)
+    this.queue.push(...added)
 
     if (!this.song) {
-      if (filtered.length === 0) this.destroy()
+      if (added.length === 0) this.destroy()
       else this.connectAndPlay()
     }
 
-    return [filtered, removed]
+    return [added, removed]
   }
 
   shuffle() {

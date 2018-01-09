@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/ItemHandler')
 
 class ShopCommand extends Command {
@@ -61,18 +61,13 @@ class ShopCommand extends Command {
       ]
     })
 
-    return msg.util.send(
-      buildEmbed({
-        title: '**SHOP:**',
-        paginate: {
-          items: fields,
-          commandName: this.id,
-          page,
-        },
-        icon: 'shop',
-        color: 'gold',
-      })
-    )
+    return new Embed(msg.channel, {
+      paginate: { items: fields, page },
+    })
+      .setTitle('**SHOP**')
+      .setIcon(Embed.icons.SHOP)
+      .setColor(Embed.colors.GOLD)
+      .send()
   }
 }
 

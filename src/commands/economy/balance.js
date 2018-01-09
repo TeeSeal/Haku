@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util')
+const { stripIndents } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/ItemHandler')
 
 class BalanceCommand extends Command {
@@ -70,19 +71,14 @@ class BalanceCommand extends Command {
       .concat(inventory.recipes())
       .map(i => i.toString())
 
-    return msg.util.send(
-      buildEmbed({
-        title: `${user.username}'s items:`,
-        description: inventory.currencyString,
-        paginate: {
-          items,
-          commandName: this.id,
-          page,
-        },
-        icon: 'list',
-        color: 'blue',
-      })
-    )
+    return new Embed(msg.channel, {
+      paginate: { items, page },
+    })
+      .setTitle(`${user.username}'s items:`)
+      .setDescription(inventory.currencyString)
+      .setIcon(Embed.icons.LIST)
+      .setColor(Embed.colors.BLUE)
+      .send()
   }
 }
 
