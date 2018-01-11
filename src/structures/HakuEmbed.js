@@ -66,8 +66,13 @@ class HakuEmbed extends MessageEmbed {
   }
 
   setFields(fields) {
-    this.fields = []
+    this.clearFields()
     this.addFields(fields)
+    return this
+  }
+
+  clearFields() {
+    this.fields = []
     return this
   }
 
@@ -138,6 +143,7 @@ class HakuEmbed extends MessageEmbed {
       GOLD: 16758861,
       ORANGE: 16029762,
       SCARLET: 13369446,
+      WHITE: 15921906,
     }
   }
 
@@ -156,6 +162,8 @@ class HakuEmbed extends MessageEmbed {
       TRADE: 'trade.png',
       VOLUME_UP: 'volumeUp.png',
       VOLUME_DOWN: 'volumeDown.png',
+      POLL: 'poll.png',
+      STOP: 'stop.png',
     }
   }
 

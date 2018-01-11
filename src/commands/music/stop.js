@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
 const voteStops = new Set()
@@ -45,27 +45,27 @@ class StopCommand extends Command {
     const votesNeeded = Math.ceil(members.size / 2)
 
     const { song } = playlist
-    const opts = buildEmbed({
-      title: song.title,
-      fields: [
-        [
-          'VOTESTOP',
-          `Click the ✅ to vote.\n${votesNeeded
-            + 1} votes needed.\nVote will end in 30 seconds.`,
-        ],
-      ],
-      url: song.url,
-      author: msg.member,
-      icon: 'clear',
-      color: 'red',
-    })
+    const embed = await new Embed(msg.channel)
+      .setTitle(song.title)
+      .addField(
+        'VOTESTOP',
+        `Click the ✅ to vote.\n${votesNeeded
+          + 1} votes needed.\nVote will end in 30 seconds.`
+      )
+      .setURL(song.url)
+      .setAuthor(msg.member)
+      .setIcon(Embed.icons.STOP)
+      .setColor(Embed.colors.RED)
+      .send()
 
-    const statusMsg = await msg.util.send(members.array().join(), opts)
-    const poll = new ReactionPoll(statusMsg, {
-      emojis: { '✅': 'yes' },
-      users: members.map(m => m.id),
-      time: 3e4,
-    })
+    const poll = new ReactionPoll(
+      embed.message,
+      { '✅': 'yes' },
+      {
+        users: members.map(m => m.id),
+        time: 3e4,
+      }
+    )
 
     poll.on('vote', () => {
       if (poll.votes.get('yes').size >= votesNeeded) poll.stop()
@@ -75,17 +75,15 @@ class StopCommand extends Command {
       const success = votes.get('yes').size >= votesNeeded
       voteStops.delete(msg.guild.id)
 
-      const { embed } = opts
-      embed.fields = [
-        {
-          name: success ? '✅ Playback stopped.' : '❌ Votestop failed.',
-          value: '\u200b',
-        },
-      ]
+      embed
+        .clearFields()
+        .addField(
+          success ? '✅ Playback stopped.' : '❌ Votestop failed.',
+          '\u200b'
+        )
 
-      return statusMsg
-        .edit(members.array().join(), { embed })
-        .then(() => success ? playlist.stop() : null)
+      if (success) playlist.stop()
+      return embed.edit()
     })
   }
 }

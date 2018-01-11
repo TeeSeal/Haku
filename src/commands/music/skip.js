@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
 const voteSkips = new Set()
@@ -24,21 +24,21 @@ class SkipCommand extends Command {
     }
 
     const { song } = playlist
-    const opts = buildEmbed({
-      title: song.title,
-      fields: [['✅ Skipped.', '\u200b']],
-      url: song.url,
-      author: msg.member,
-      icon: 'skip',
-      color: 'cyan',
-    })
 
     if (
       msg.member.permissions.has('MANAGE_GUILD')
       || song.member.id === msg.member.id
       || msg.member.voiceChannel.members.size === 2
     ) {
-      return msg.util.send(opts).then(() => playlist.skip())
+      return new Embed(msg.channel)
+        .setTitle(song.title)
+        .addField('✅ Skipped.', '\u200b')
+        .setURL(song.url)
+        .setAuthor(msg.member)
+        .setIcon(Embed.icons.SKIP)
+        .setColor(Embed.colors.cyan)
+        .send()
+        .then(() => playlist.skip())
     }
 
     if (voteSkips.has(msg.guild.id)) {
@@ -51,20 +51,27 @@ class SkipCommand extends Command {
     )
     const votesNeeded = Math.ceil(members.size / 2)
 
-    opts.embed.fields = [
-      {
-        name: 'VOTESKIP',
-        value: `Click the ✅ to vote.\n${votesNeeded
-          + 1} votes needed.\nVote will end in 30 seconds.`,
-      },
-    ]
+    const embed = await new Embed(msg.channel)
+      .setTitle(song.title)
+      .addField(
+        'VOTESKIP',
+        `Click the ✅ to vote.\n${votesNeeded
+          + 1} votes needed.\nVote will end in 30 seconds.`
+      )
+      .setURL(song.url)
+      .setAuthor(msg.member)
+      .setIcon(Embed.icons.SKIP)
+      .setColor(Embed.colors.CYAN)
+      .send()
 
-    const statusMsg = await msg.util.send(members.array().join(), opts)
-    const poll = new ReactionPoll(statusMsg, {
-      emojis: { '✅': 'yes' },
-      users: members.map(m => m.id),
-      time: 3e4,
-    })
+    const poll = new ReactionPoll(
+      embed.message,
+      { '✅': 'yes' },
+      {
+        users: members.map(m => m.id),
+        time: 3e4,
+      }
+    )
 
     poll.on('vote', () => {
       if (poll.votes.get('yes').size >= votesNeeded) poll.stop()
@@ -74,16 +81,12 @@ class SkipCommand extends Command {
       const success = votes.get('yes').size >= votesNeeded
       voteSkips.delete(msg.guild.id)
 
-      const { embed } = opts
-      embed.fields = [
-        {
-          name: success ? '✅ Skipped.' : '❌ Voteskip failed.',
-          value: '\u200b',
-        },
-      ]
-      return statusMsg
-        .edit(members.array().join(), { embed })
-        .then(() => success ? playlist.skip() : null)
+      embed
+        .clearFields()
+        .addField(success ? '✅ Skipped.' : '❌ Voteskip failed.', '\u200b')
+
+      if (success) playlist.skip()
+      return embed.edit()
     })
   }
 }
