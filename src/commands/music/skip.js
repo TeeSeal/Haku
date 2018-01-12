@@ -36,7 +36,7 @@ class SkipCommand extends Command {
         .setURL(song.url)
         .setAuthor(msg.member)
         .setIcon(Embed.icons.SKIP)
-        .setColor(Embed.colors.cyan)
+        .setColor(Embed.colors.CYAN)
         .send()
         .then(() => playlist.skip())
     }
