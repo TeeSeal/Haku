@@ -49,7 +49,7 @@ class RepeatCommand extends Command {
     }
 
     if (times + playlist.queue.length > playlist.songLimit) {
-      times = playlist.songLimit - playlist.queue.length
+      times = playlist.songLimit - playlist.queue.length - 1
     }
 
     const arr = Array(times).fill(playlist.song)
