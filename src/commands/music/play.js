@@ -122,7 +122,7 @@ class PlayCommand extends Command {
       .setIcon(Embed.icons.PLAYLIST_ADD)
       .setColor(Embed.colors.BLUE)
 
-    if (items.length === 1) embed.setImage(items[0].thumbnail)
+    if (added.length === 1) embed.setImage(added[0].thumbnail)
 
     return embed.send()
   }
