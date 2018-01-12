@@ -62,7 +62,7 @@ class Playlist {
       if (song.duration > this.maxSongDuration * 6e4) {
         removed.push({
           song,
-          reason: `duration. (max. ${this.maxSongDuration / 60}min)`,
+          reason: `duration. (max. **${this.maxSongDuration / 60}** min.)`,
         })
         return false
       }
@@ -75,7 +75,9 @@ class Playlist {
       for (const song of filtered.splice(filtered.length - diff, diff)) {
         removed.push({
           song,
-          reason: `playlist song limit reached. (max. ${this.songLimit} songs)`,
+          reason: `playlist song limit reached. (max. **${
+            this.songLimit
+          }** songs)`,
         })
       }
     }

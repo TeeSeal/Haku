@@ -95,7 +95,7 @@ class PlayCommand extends Command {
 
     if (removed.length) {
       const items = removed.map(
-        obj => `• ${obj.song.linkString}\nReason: ${obj.reason}`
+        obj => `• ${obj.song.linkString}\n**Reason:** ${obj.reason}`
       )
 
       await new Embed(msg.channel, {
