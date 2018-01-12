@@ -38,8 +38,7 @@ class RepeatCommand extends Command {
     })
   }
 
-  exec(msg, args) {
-    const { times, end } = args
+  exec(msg, { times, end }) {
     const playlist = this.client.music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
@@ -47,6 +46,10 @@ class RepeatCommand extends Command {
       return msg.util.error(
         "you have to be in the voice channel I'm currently in."
       )
+    }
+
+    if (times + playlist.queue.length > playlist.songLimit) {
+      times = playlist.songLimit - playlist.queue.length
     }
 
     const arr = Array(times).fill(playlist.song)
