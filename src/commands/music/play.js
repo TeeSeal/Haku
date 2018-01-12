@@ -1,10 +1,6 @@
 const { Command } = require('discord-akairo')
-const {
-  buildEmbed,
-  stripIndents,
-  paginate,
-  shuffle,
-} = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
+const { stripIndents, shuffle } = require('../../util/Util')
 
 class PlayCommand extends Command {
   constructor() {
@@ -69,8 +65,7 @@ class PlayCommand extends Command {
     })
   }
 
-  async exec(msg, args) {
-    const { queries, rand, volume } = args
+  async exec(msg, { queries, rand, volume }) {
     if (queries.length === 0) {
       return msg.util.error('give me something to look for, yo..')
     }
@@ -98,47 +93,38 @@ class PlayCommand extends Command {
 
     const [added, removed] = playlist.add(songs)
 
-    if (removed.length !== 0) {
-      const rPaginated = paginate(removed)
-      const rLeftOver = rPaginated.slice(1).reduce((a, b) => a + b.length, 0)
-
-      const rPaginatedLines = rPaginated[0].map(
+    if (removed.length) {
+      const items = removed.map(
         obj => `• ${obj.song.linkString}\nReason: ${obj.reason}`
       )
 
-      if (rPaginated[1]) rPaginatedLines.push(`and ${rLeftOver} more.`)
-
-      await msg.util.send(
-        buildEmbed({
-          title: 'Failed to add:',
-          description: rPaginatedLines.join('\n'),
-          author: msg.member,
-          icon: 'clear',
-          color: 'red',
-        })
-      )
+      await new Embed(msg.channel, {
+        pagination: { items },
+      })
+        .setTitle('Failed to add:')
+        .setAuthor(msg.member)
+        .setIcon(Embed.icons.CLEAR)
+        .setColor(Embed.colors.RED)
+        .send()
     }
 
     if (added.length === 0) {
       return msg.util.error('nothing was added to the playlist.')
     }
 
-    const aPaginated = paginate(added)
-    const aLeftOver = aPaginated.slice(1).reduce((a, b) => a + b.length, 0)
+    const items = added.map(song => `• ${song.linkString}`)
 
-    const aPaginatedLines = aPaginated[0].map(song => `• ${song.linkString}`)
-    if (aPaginated[1]) aPaginatedLines.push(`and ${aLeftOver} more.`)
+    const embed = new Embed(msg.channel, {
+      pagination: { items },
+    })
+      .setTitle('Added to playlist:')
+      .setAuthor(msg.member)
+      .setIcon(Embed.icons.PLAYLIST_ADD)
+      .setColor(Embed.colors.BLUE)
 
-    return msg.util.send(
-      buildEmbed({
-        title: 'Added to playlist:',
-        description: aPaginatedLines.join('\n'),
-        image: aPaginated[0].length === 1 ? aPaginated[0][0].thumbnail : null,
-        author: msg.member,
-        icon: 'playlistAdd',
-        color: 'blue',
-      })
-    )
+    if (items.length === 1) embed.setImage(items[0].thumbnail)
+
+    return embed.send()
   }
 }
 

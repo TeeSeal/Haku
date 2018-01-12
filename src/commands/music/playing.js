@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class PlayingCommand extends Command {
   constructor() {
@@ -16,16 +16,14 @@ class PlayingCommand extends Command {
     if (!playlist) return msg.util.error('nothing is currently playing.')
     const { song } = playlist
 
-    return msg.util.send(
-      buildEmbed({
-        title: song.title,
-        fields: [[song.time, `Volume: ${playlist.volume}%`]],
-        url: song.url,
-        author: msg.member,
-        icon: 'time',
-        color: 'purple',
-      })
-    )
+    return new Embed(msg.channel)
+      .setTitle(song.title)
+      .setURL(song.url)
+      .setAuthor(msg.member)
+      .addField(song.time, `Volume: ${playlist.volume}%`)
+      .setIcon(Embed.icons.TIME)
+      .setColor(Embed.colors.PURPLE)
+      .send()
   }
 }
 

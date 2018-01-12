@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util')
+const { stripIndents } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class VolumeCommand extends Command {
   constructor() {
@@ -55,19 +56,19 @@ class VolumeCommand extends Command {
       )
     }
 
-    const icon = newVolume < volume ? 'volumeDown' : 'volumeUp'
+    const icon
+      = newVolume < volume ? Embed.icons.VOLUME_UP : Embed.icons.VOLUME_DOWN
 
     playlist.fadeVolume(newVolume)
-    return msg.util.send(
-      buildEmbed({
-        title: song.title,
-        fields: [[`Volume: ${newVolume}%`, '\u200b']],
-        url: song.url,
-        author: msg.member,
-        icon,
-        color: 'yellow',
-      })
-    )
+
+    return new Embed(msg.channel)
+      .setTitle(song.title)
+      .setURL(song.url)
+      .setAuthor(msg.member)
+      .addField(`Volume: ${newVolume}%`, '\u200b')
+      .setIcon(icon)
+      .setColor(Embed.colors.YELLOW)
+      .send()
   }
 }
 

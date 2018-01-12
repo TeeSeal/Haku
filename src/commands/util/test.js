@@ -27,15 +27,10 @@ class TestCommand extends Command {
     })
   }
 
-  exec(msg) {
-    const embed = new HakuEmbed(msg.channel, {
-      pagination: {
-        items: ['foo', 'bar', 'baz', 'toumorokoshi', 'matsubokkuri'],
-        by: 2,
-      },
-    }).setTitle('TEST TEST')
-
-    return embed.send()
+  async exec(msg) {
+    const m = await msg.channel.send('test')
+    const reaction = await m.react('⬅')
+    setTimeout(() => reaction.users.remove(), 1000)
   }
 }
 

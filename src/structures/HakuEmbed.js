@@ -88,16 +88,18 @@ class HakuEmbed extends MessageEmbed {
 
     this[method](this.pagination.items[number])
     this.setPageNumber(number)
+    this.pagination.page = number
   }
 
-  setPageNumber(number) {
+  setPageNumber(number, tooltip = true) {
     if (this.pagination.items.length < 2) return
 
-    const { length } = this.pagination.items
+    const { items, totalSize } = this.pagination
+    let footer = `Page: ${number + 1}/${items.length} | ${totalSize} items`
 
-    this.setFooter(
-      `Page: ${number + 1}/${length} | Use the arrows to cycle through pages.`
-    )
+    if (tooltip) footer += ' | Use the arrows to cycle through pages.'
+
+    this.setFooter(footer)
   }
 
   handlePagination() {
@@ -105,10 +107,15 @@ class HakuEmbed extends MessageEmbed {
     new ReactionPagination(this.message, this.pagination.items, {
       current: this.pagination.page,
       users: this.opts.users,
-    }).on('switch', (page, number) => {
-      this.setPage(page, number)
-      this.edit()
     })
+      .on('switch', (page, number) => {
+        this.setPage(page, number)
+        this.edit()
+      })
+      .on('end', () => {
+        this.setPageNumber(this.pagination.page, false)
+        this.edit()
+      })
   }
 
   static parsePagination(opts) {
@@ -117,7 +124,11 @@ class HakuEmbed extends MessageEmbed {
     let page = opts.page || 0
     if (page < 0) page = 0
     if (page >= paginated.length) page = paginated.length - 1
-    const result = { page, commandName: opts.commandName }
+    const result = {
+      totalSize: opts.items.length,
+      page,
+      commandName: opts.commandName,
+    }
 
     if (paginated.length !== 0) {
       if (Array.isArray(opts.items[0])) {
@@ -176,6 +187,13 @@ class HakuEmbed extends MessageEmbed {
         inline: field[2],
       }
     })
+  }
+
+  static resolvePage(word) {
+    if (!word || isNaN(word)) return null
+    const num = parseInt(word)
+    if (num < 1) return null
+    return num
   }
 }
 

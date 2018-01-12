@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class PlaylistCommand extends Command {
   constructor() {
@@ -11,13 +11,8 @@ class PlaylistCommand extends Command {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return null
-            return num
-          },
-          default: 1,
+          type: Embed.resolvePage,
+          default: 0,
         },
         {
           id: 'name',
@@ -28,8 +23,7 @@ class PlaylistCommand extends Command {
     })
   }
 
-  exec(msg, args) {
-    const { page } = args
+  exec(msg, { page }) {
     const playlist = this.client.music.playlists.get(msg.guild.id)
     const [song, queue] = playlist
       ? [playlist.song, playlist.queue]
@@ -39,21 +33,17 @@ class PlaylistCommand extends Command {
       return msg.util.error('nothing is currently playing.')
     }
 
-    const list = queue.map(s => `• ${s.linkString}`)
-
-    return msg.util.send(
-      buildEmbed({
-        title: 'Playlist:',
-        description: `**Now playing:** ${song.linkString}`,
-        paginate: {
-          items: list,
-          commandName: this.id,
-          page,
-        },
-        icon: 'list',
-        color: 'blue',
-      })
+    const items = [`**Now playing:** ${song.linkString}`].concat(
+      queue.map(s => `• ${s.linkString}`)
     )
+
+    return new Embed(msg.channel, {
+      pagination: { items, page },
+    })
+      .setTitle('Playlist:')
+      .setIcon(Embed.icons.LIST)
+      .setColor(Embed.colors.BLUE)
+      .send()
   }
 }
 

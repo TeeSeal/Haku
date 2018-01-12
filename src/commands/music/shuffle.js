@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, paginate } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class ShuffleCommand extends Command {
   constructor() {
@@ -21,25 +21,17 @@ class ShuffleCommand extends Command {
     }
 
     playlist.shuffle()
-    const list = playlist.queue.map(s => `• ${s.linkString}`)
-    const paginated = paginate(list)
-    const leftOver = paginated[1]
-      ? paginated.slice(1).reduce((a, b) => a + b.length, 0)
-      : null
-
-    const lines = [`**Now playing:** ${playlist.song.linkString}`, ''].concat(
-      paginated[0].join('\n')
+    const items = [`**Now playing:** ${playlist.song.linkString}`].concat(
+      playlist.queue.map(s => `• ${s.linkString}`)
     )
-    if (leftOver) lines.push(`and ${leftOver} more.`)
 
-    return msg.util.send(
-      buildEmbed({
-        title: 'SHUFFLED PLAYLIST:',
-        description: lines.join('\n'),
-        icon: 'list',
-        color: 'blue',
-      })
-    )
+    return new Embed(msg.channel, {
+      pagination: { items, page },
+    })
+      .setTitle('Shuffled playlist:')
+      .setIcon(Embed.icons.LIST)
+      .setColor(Embed.colors.BLUE)
+      .send()
   }
 }
 
