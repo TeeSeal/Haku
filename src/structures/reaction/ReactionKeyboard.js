@@ -7,7 +7,7 @@ class ReactionKeyboard extends EventEmitter {
     this.events = emojiToEvent
     this.emojis = Object.keys(emojiToEvent)
     this.users = users || null
-    this.time = time || 10e3
+    this.time = time || 3e4
     this.remove = remove || true
     this.reactions = []
 
