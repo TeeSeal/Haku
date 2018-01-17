@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, capitalize } = require('../../util/Util')
+const { capitalize } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const Kitsu = require('../../structures/api/kitsu/Kitsu')
 
 class AnimeCommand extends Command {
@@ -29,25 +30,22 @@ class AnimeCommand extends Command {
         ? anime.synopsis.slice(0, 1500).concat('...')
         : anime.synopsis
 
-    return msg.util.send(
-      buildEmbed({
-        title: `${anime.title} (${anime.japaneseTitle})`,
-        url: anime.url,
-        fields: [
-          ['Type', capitalize(anime.type), true],
-          ['Rating', '⭐'.repeat(anime.rating) || anime.rating, true],
-          ['Genres', anime.genres.join(', ')],
-          ['Episodes', anime.episodeCount, true],
-          ['Age Rating', anime.ageRatingString, true],
-          ['Start Date', anime.startDate, true],
-          anime.optionalField,
-          ['Trailer', anime.trailer],
-        ],
-        description: formattedSynopsis,
-        thumbnail: anime.poster,
-        color: 'orange',
-      })
-    )
+    return new Embed(msg.channel)
+      .setTitle(`${anime.title} (${anime.japaneseTitle})`)
+      .setURL(anime.url)
+      .addField('Type', capitalize(anime.type), true)
+      .addField('Rating', '⭐'.repeat(anime.rating) || anime.rating, true)
+      .addField('Genres', anime.genres.join(', '))
+      .addField('Episodes', anime.episodeCount, true)
+      .addField('Age Rating', anime.ageRatingString, true)
+      .addField('Start Date', anime.startDate, true)
+      .addField(...anime.optionalField)
+      .addField('Trailer', anime.trailer)
+      .setDescription(formattedSynopsis)
+      .setThumbnail(anime.poster)
+      .setColor(Embed.colors.ORANGE)
+      .setAuthor(msg.member)
+      .send()
   }
 }
 

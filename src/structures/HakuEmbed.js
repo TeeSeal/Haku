@@ -119,7 +119,12 @@ class HakuEmbed extends MessageEmbed {
   }
 
   static parsePagination(opts) {
-    const paginated = paginate(opts.items, opts.by)
+    if (!opts.items) return null
+
+    const items = Array.from(opts.items)
+    if (!items || items.length === 0) return null
+
+    const paginated = paginate(items, opts.by)
 
     let page = opts.page || 0
     if (page < 0) page = 0
@@ -130,15 +135,8 @@ class HakuEmbed extends MessageEmbed {
       commandName: opts.commandName,
     }
 
-    if (paginated.length !== 0) {
-      if (Array.isArray(opts.items[0])) {
-        result.type = 'fields'
-        result.items = paginated
-      } else {
-        result.type = 'description'
-        result.items = paginated
-      }
-    }
+    result.type = Array.isArray(items[0]) ? 'fields' : 'description'
+    result.items = paginated
 
     return result
   }

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const YuGiOh = require('../../structures/api/yugioh/YuGiOh')
 
 class YuGiOhCommand extends Command {
@@ -35,16 +35,15 @@ class YuGiOhCommand extends Command {
     if (card.defense) fields.unshift(['Defense', card.defense, true])
     if (card.attack) fields.unshift(['Attack', card.attack, true])
 
-    return msg.util.send(
-      buildEmbed({
-        title: card.name,
-        url: card.url,
-        fields,
-        description: `${card.shortDescription}\n\n${card.description}`,
-        thumbnail: card.image,
-        color: 'orange',
-      })
-    )
+    return new Embed(msg.channel)
+      .setTitle(card.name)
+      .setURL(card.url)
+      .setFields(fields)
+      .setDescription(`${card.shortDescription}\n\n${card.description}`)
+      .setThumbnail(card.image)
+      .setColor(Embed.colors.ORANGE)
+      .setAuthor(msg.member)
+      .send()
   }
 }
 
