@@ -7,7 +7,7 @@ class ReactionKeyboard extends EventEmitter {
     this.events = emojiToEvent
     this.emojis = Object.keys(emojiToEvent)
     this.users = users || null
-    this.time = time || 3e4
+    this.time = time || 6e4
     this.remove = remove || true
     this.reactions = []
 
@@ -63,6 +63,7 @@ class ReactionKeyboard extends EventEmitter {
 
   removeReactions() {
     for (const reaction of this.reactions) {
+      // TODO: Try to remove all reactions
       if (reaction.me) reaction.users.remove()
     }
   }
