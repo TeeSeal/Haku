@@ -44,16 +44,14 @@ class VolumeCommand extends Command {
     const { volume, song } = playlist
 
     if (!newVolume) {
-      return msg.util.send(
-        buildEmbed({
-          title: song.title,
-          fields: [[`Volume: ${volume}%`, '\u200b']],
-          url: song.url,
-          author: msg.member,
-          icon: 'volumeUp',
-          color: 'yellow',
-        })
-      )
+      return new Embed(msg.channel)
+        .setTitle(song.title)
+        .addField(`Volume: ${volume}%`, '\u200b')
+        .setURL(song.url)
+        .setAuthor(msg.member)
+        .setIcon(Embed.icons.VOLUME_UP)
+        .setColor(Embed.colors.YELLOW)
+        .send()
     }
 
     const icon

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class GuildInfoCommand extends Command {
   constructor() {
@@ -20,21 +20,18 @@ class GuildInfoCommand extends Command {
     ]
 
     const roles = msg.guild.roles.sort((a, b) => b.comparePositionTo(a))
-
-    const embed = buildEmbed({
-      title: `${msg.guild.name}`,
-      fields: [
+    return new Embed(msg.channel)
+      .setTitle(msg.guild.name)
+      .setFields([
         ['Owner', msg.guild.owner.toString(), true],
         ['Member Count', msg.guild.memberCount, true],
         ['Roles', roles.array().join(', ')],
         ['Configuration', configs.join('\n')],
-      ],
-      color: 'cyan',
-      thumbnail: msg.guild.iconURL(),
-      author: msg.member,
-    })
-
-    return msg.channel.send(embed)
+      ])
+      .setColor(Embed.colors.CYAN)
+      .setThumbnail(msg.guild.iconURL())
+      .setAuthor(msg.member)
+      .send()
   }
 }
 

@@ -2,7 +2,6 @@ const tags = require('common-tags')
 const path = require('path')
 
 const Color = require('./Color')
-const buildEmbed = require('./buildEmbed')
 const paginate = require('./paginate')
 
 class Util {
@@ -18,9 +17,6 @@ class Util {
   }
   static get COLOR() {
     return Color
-  }
-  static get buildEmbed() {
-    return buildEmbed
   }
   static get paginate() {
     return paginate

@@ -15,6 +15,7 @@ class HelpCommand extends Command {
     })
   }
 
+  // TODO: Rewrite with HakuEmbed.
   exec(msg, args) {
     const { command } = args
     if (command) return msg.util.send(command.description)

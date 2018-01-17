@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
 const Items = require('../../structures/items/ItemHandler')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 
 class InspectCommand extends Command {
   constructor() {
@@ -30,25 +30,24 @@ class InspectCommand extends Command {
     }
 
     if (item.type === 'recipe') {
-      return msg.util.send(
-        buildEmbed({
-          title: item.name.toUpperCase(),
-          fields: [
-            [
-              'Ingredients',
-              Object.entries(item.ingredients)
-                .map(([id, amount]) => Items.resolveGroup(id, amount))
-                .join(' + '),
-            ],
-            [
-              'Result',
-              Items.resolveGroup(item.result.id, item.result.amount).toString(),
-            ],
+      return new Embed(msg.channel)
+        .setTitle(item.name.toUpperCase())
+        .setFields([
+          [
+            'Ingredients',
+            Object.entries(item.ingredients)
+              .map(([id, amount]) => Items.resolveGroup(id, amount))
+              .join(' + '),
           ],
-          icon: 'craft',
-          color: 'gold',
-        })
-      )
+          [
+            'Result',
+            Items.resolveGroup(item.result.id, item.result.amount).toString(),
+          ],
+        ])
+        .setIcon(Embed.icons.CRAFT)
+        .setColor(Embed.colors.GOLD)
+        .setAuthor(msg.member)
+        .send()
     }
 
     return msg.util.send(item.examine(), {

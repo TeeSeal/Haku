@@ -1,6 +1,6 @@
 const Collection = require('../Collection')
 const Items = require('../items/ItemHandler')
-const { buildEmbed } = require('../../util/Util')
+const Embed = require('../HakuEmbed')
 
 const ongoing = new Map()
 
@@ -80,13 +80,12 @@ class Roulette {
       }
     )
 
-    return buildEmbed({
-      title: 'Roulette',
-      description: `Time Left: ${this.time} seconds`,
-      fields,
-      icon: 'game',
-      color: 'scarlet',
-    })
+    return new Embed()
+      .setTitle('Roulette')
+      .setDescription(`Time Left: ${this.time} seconds`)
+      .setFields(fields)
+      .setIcon(Embed.icons.GAME)
+      .setColor(Embed.icons.SCARLET)
   }
 
   start() {

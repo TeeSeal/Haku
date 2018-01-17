@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, buildEmbed } = require('../../util/Util')
+const { stripIndents } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const Roulette = require('../../structures/games/Roulette')
 
 const time = 30
@@ -86,15 +87,13 @@ class RouletteCommand extends Command {
       if (game.winnerFields.length > 0) content += '\n**WINNERS:**'
       else content += '\nNobody won this round.'
 
-      return msg.util.send(
-        buildEmbed({
-          title: 'Roulette Results',
-          content,
-          fields: game.winnerFields,
-          icon: 'game',
-          color: 'scarlet',
-        })
-      )
+      return new Embed(msg.channel)
+        .setTitle('Roulette Results')
+        .setDescription(content)
+        .setFields(game.winnerFields)
+        .setIcon(Embed.icons.GAME)
+        .setColor(Embed.colors.SCARLET)
+        .send()
     })
   }
 }

@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const { buildEmbed, stripIndents } = require('../../util/Util')
+const { stripIndents } = require('../../util/Util')
+const Embed = require('../../structures/HakuEmbed')
 const { version } = require('../../../package')
 const moment = require('moment')
 require('moment-duration-format')
@@ -28,20 +29,18 @@ class StatsCommand extends Command {
       Channels: ${this.client.channels.size}
     `
 
-    msg.channel.send(
-      buildEmbed({
-        title: 'Haku stats',
-        fields: [
-          ['Memory Usage', memUsage, true],
-          ['Uptime', uptime, true],
-          ['General', general, true],
-          ['Version', version, true],
-        ],
-        color: 'cyan',
-        thumbnail: this.client.user.avatarURL(),
-        footer: '© TeeSeal#0110',
-      })
-    )
+    return new Embed(msg.channel)
+      .setTitle(`${this.client.user.username} stats`)
+      .setFields([
+        ['Memory Usage', memUsage, true],
+        ['Uptime', uptime, true],
+        ['General', general, true],
+        ['Version', version, true],
+      ])
+      .setColor(Embed.colors.CYAN)
+      .setThumbnail(this.client.user.avatarURL())
+      .setFooter('© TeeSeal#0110')
+      .send()
   }
 }
 
