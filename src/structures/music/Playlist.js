@@ -47,11 +47,9 @@ class Playlist {
     this.paused = false
   }
 
-  connectAndPlay() {
-    this.voiceChannel.join().then(connection => {
-      this.connection = connection
-      this.play(this.queue.shift())
-    })
+  async connectAndPlay() {
+    this.connection = await this.voiceChannel.join()
+    this.play(this.queue.shift())
   }
 
   filter(songs) {
@@ -160,8 +158,9 @@ class Playlist {
     })
   }
 
-  skip() {
-    this.fadeVolume(0).then(() => this.song.dispatcher.end('skip'))
+  async skip() {
+    await this.fadeVolume(0)
+    this.song.dispatcher.end('skip')
   }
 
   stop() {
