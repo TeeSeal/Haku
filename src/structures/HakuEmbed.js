@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js')
-const { paginate } = require('../util/Util')
+const { paginate } = require('../util')
 const ReactionPagination = require('./reaction/ReactionPagination')
 
 class HakuEmbed extends MessageEmbed {

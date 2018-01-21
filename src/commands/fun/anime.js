@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { capitalize } = require('../../util/Util')
+const { capitalize } = require('../../util')
 const Embed = require('../../structures/HakuEmbed')
 const Kitsu = require('../../structures/api/kitsu/Kitsu')
 

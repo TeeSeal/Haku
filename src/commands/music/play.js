@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, shuffle } = require('../../util/Util')
+const { stripIndents, shuffle } = require('../../util')
 const { Guild } = require('../../db')
 const Embed = require('../../structures/HakuEmbed')
 const Music = require('../../structures/music')

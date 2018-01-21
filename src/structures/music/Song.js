@@ -1,4 +1,4 @@
-const { filterObject } = require('../../util/Util')
+const { filterObject } = require('../../util')
 const moment = require('moment')
 require('moment-duration-format')
 

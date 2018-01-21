@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { randomFrom } = require('../../util/Util')
+const { randomFrom } = require('../../util')
 const { Guild } = require('../../db')
 
 class EightBallCommand extends Command {

@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, getDBData } = require('../../util/Util')
+const { stripIndents, getDBData } = require('../../util')
 const db = require('../../db')
 
 const permCheck = {

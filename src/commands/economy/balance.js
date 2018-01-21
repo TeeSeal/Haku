@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util/Util')
+const { stripIndents } = require('../../util')
 const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/')
 const Inventory = require('../../structures/items/InventoryHandler')

@@ -1,5 +1,5 @@
 const Collection = require('../structures/Collection.js')
-const { deepFreeze } = require('../util/Util')
+const { deepFreeze } = require('../util')
 
 // ---- HOOKS ----
 async function cacheAll() {

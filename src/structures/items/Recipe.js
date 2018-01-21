@@ -1,6 +1,6 @@
 const ItemGroup = require('./ItemGroup')
 const pluralize = require('pluralize')
-const { filterObject, capitalize } = require('../../util/Util')
+const { filterObject, capitalize } = require('../../util')
 
 class Recipe extends ItemGroup {
   constructor(opts) {

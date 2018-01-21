@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util/Util')
+const { stripIndents } = require('../../util')
 const { Guild } = require('../../db')
 
 class PrefixCommand extends Command {
