@@ -67,16 +67,14 @@ class BalanceCommand extends Command {
       return msg.util.info(`${pron} currently ${pos} **${itemGroup}**.`)
     }
 
-    const items = inventory
-      .items()
-      .concat(inventory.recipes())
-      .map(i => i.toString())
+    const items = [inventory.currencyString]
+      .concat(inventory.items().map(i => i.toString()))
+      .concat(inventory.recipes().map(i => i.toString()))
 
     return new Embed(msg.channel, {
       pagination: { items, page },
     })
       .setTitle(`${user.username}'s items:`)
-      .setDescription(inventory.currencyString)
       .setIcon(Embed.icons.LIST)
       .setColor(Embed.colors.BLUE)
       .send()
