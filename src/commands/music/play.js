@@ -10,7 +10,7 @@ class PlayCommand extends Command {
       aliases: ['play', 'yt'],
       channelRestriction: 'guild',
       editable: false,
-      typing: true,
+      // typing: true,
       args: [
         {
           id: 'rand',

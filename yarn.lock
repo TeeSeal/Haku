@@ -360,12 +360,12 @@ detect-libc@^1.0.2:
   version "8.0.0-dev"
   resolved "https://codeload.github.com/1computer1/discord-akairo/tar.gz/1ada233a76f6880272ee3c60e093a7dea40ac688"
 
-"discord.js@github:teeseal/discord.js#production":
+"discord.js@github:hydrabolt/discord.js":
   version "12.0.0-dev"
-  resolved "https://codeload.github.com/teeseal/discord.js/tar.gz/f45045b6dae5db8067ed4b666ec068050375cb9f"
+  resolved "https://codeload.github.com/hydrabolt/discord.js/tar.gz/83de7c0d4cbe7081791bf38172940a4d5151d959"
   dependencies:
     pako "^1.0.0"
-    prism-media "^0.0.2"
+    prism-media "github:hydrabolt/prism-media#indev"
     snekfetch "^3.5.0"
     tweetnacl "^1.0.0"
     ws "^3.3.1"
@@ -1071,9 +1071,9 @@ prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
 
-prism-media@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/prism-media/-/prism-media-0.0.2.tgz#aa917b084576c4df6488e4ea8e7d6d44aed4b411"
+"prism-media@github:hydrabolt/prism-media#indev":
+  version "0.1.0"
+  resolved "https://codeload.github.com/hydrabolt/prism-media/tar.gz/f78989dfcd6686986895b42b35118c664edf3bc6"
 
 process-nextick-args@~1.0.6:
   version "1.0.7"
