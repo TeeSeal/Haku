@@ -76,6 +76,16 @@ class Util {
   static randomFrom(array) {
     return array[Math.floor(Math.random() * array.length)]
   }
+
+  static parserInRange(min, max) {
+    return word => {
+      if (!word || isNaN(word)) return null
+      const num = parseInt(word)
+      if (num < min) return min
+      if (num > max) return max
+      return num
+    }
+  }
 }
 
 module.exports = new Proxy(Util, {

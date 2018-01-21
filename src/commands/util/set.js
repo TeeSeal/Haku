@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util')
+const { stripIndents, parserInRange } = require('../../util')
 const Music = require('../../structures/music')
+const { Guild } = require('../../db')
 
 class SetCommand extends Command {
   constructor() {
@@ -13,49 +14,25 @@ class SetCommand extends Command {
           id: 'maxSongDuration',
           match: 'prefix',
           prefix: ['duration=', 'length=', 'd='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return 1
-            if (num > 120) return 120
-            return num
-          },
+          type: parserInRange(1, 240),
         },
         {
           id: 'defaultVolume',
           match: 'prefix',
           prefix: ['volume=', 'vol='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return 1
-            if (num > 100) return 100
-            return num
-          },
+          type: parserInRange(1, 100),
         },
         {
           id: 'maxVolume',
           match: 'prefix',
           prefix: ['maxVolume=', 'maxVol=', 'mv='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return 1
-            if (num > 100) return 100
-            return num
-          },
+          type: parserInRange(1, 100),
         },
         {
           id: 'songLimit',
           match: 'prefix',
           prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return 1
-            if (num > 100) return 100
-            return num
-          },
+          type: parserInRange(1, 100),
         },
       ],
       description: stripIndents`
@@ -78,9 +55,11 @@ class SetCommand extends Command {
     if (!Object.keys(args).some(key => args[key])) {
       return msg.util.error('what are you trying to update?')
     }
-    const { guilds } = this.client.db
-    const dbDefaultVolume = guilds.get(msg.guild.id).defaultVolume
-    const dbMaxVolume = guilds.get(msg.guild.id).maxVolume
+
+    const {
+      defaultVolume: dbDefaultVolume,
+      maxVolume: dbMaxVolume,
+    } = Guild.get(msg.guild.id)
     const playlist = Music.playlists.get(msg.guild.id)
     const obj = {}
 
@@ -119,7 +98,7 @@ class SetCommand extends Command {
     }
 
     const expression = getExpression(obj)
-    guilds.set(msg.guild.id, obj)
+    Guild.set(msg.guild.id, obj)
 
     return msg.util.success(`updated ${expression}.`)
   }
