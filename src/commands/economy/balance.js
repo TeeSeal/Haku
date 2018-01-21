@@ -1,7 +1,8 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util')
 const Embed = require('../../structures/HakuEmbed')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 
 class BalanceCommand extends Command {
   constructor() {
@@ -55,7 +56,7 @@ class BalanceCommand extends Command {
         ? ['you', "don't", 'have']
         : [user.username, "doesn't", 'has']
 
-    const inventory = await this.client.inventories.fetch(user.id)
+    const inventory = await Inventory.fetch(user.id)
     if (inventory.size === 0) {
       return msg.util.info(`can't show what ${pron} ${neg} have.`)
     }

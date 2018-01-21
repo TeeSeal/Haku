@@ -1,25 +1,23 @@
 const Inventory = require('./Inventory')
+const { User } = require('../../db')
+
+const inventories = new Map()
 
 class InventoryHandler {
-  constructor(database) {
-    this.db = database
-    this.inventories = new Map()
-  }
+  static async fetch(id) {
+    if (inventories.has(id)) return inventories.get(id)
 
-  async fetch(id) {
-    if (this.inventories.has(id)) return this.inventories.get(id)
-
-    const inventory = await this.db.fetch(id, 'inventory')
+    const inventory = await User.fetch(id, 'inventory')
     const instance = new Inventory(inventory, id, this)
 
-    this.inventories.set(id, instance)
-    setTimeout(() => this.inventories.delete(id), 6e5)
+    inventories.set(id, instance)
+    setTimeout(() => inventories.delete(id), 6e5)
 
     return instance
   }
 
-  save(inventory) {
-    return this.db.set(inventory.id, 'inventory', inventory.toJSON())
+  static save(inventory) {
+    return User.set(inventory.id, 'inventory', inventory.toJSON())
   }
 }
 

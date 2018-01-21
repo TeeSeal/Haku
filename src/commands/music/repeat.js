@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util')
+const Music = require('../../structures/music')
 
 class RepeatCommand extends Command {
   constructor() {
@@ -39,7 +40,7 @@ class RepeatCommand extends Command {
   }
 
   exec(msg, { times, end }) {
-    const playlist = this.client.music.playlists.get(msg.guild.id)
+    const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {

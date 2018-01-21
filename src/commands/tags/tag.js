@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('common-tags')
+const { Tag } = require('../../db')
 
 const typeHandlers = {
   text(tag, msg) {
@@ -57,7 +58,7 @@ class TagCommand extends Command {
 
   async exec(msg, args) {
     const { name, rename, del } = args
-    const tags = await this.client.db.tags.fetch(msg.guild.id, 'tags')
+    const tags = await Tag.fetch(msg.guild.id, 'tags')
 
     if (!name) {
       if (tags.length === 0) {
@@ -93,9 +94,9 @@ class TagCommand extends Command {
         message = `**${name}** tag renamed to **${rename}**.`
       }
 
-      return this.client.db.tags
-        .set(msg.guild.id, 'tags', tags)
-        .then(() => msg.util.success(message))
+      return Tag.set(msg.guild.id, 'tags', tags).then(() =>
+        msg.util.success(message)
+      )
     }
 
     return typeHandlers[tag.type](tag, msg)

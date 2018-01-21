@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 const Embed = require('../../structures/HakuEmbed')
 
 class CraftCommand extends Command {
@@ -25,7 +26,7 @@ class CraftCommand extends Command {
     const { recipe } = args
     if (!recipe) return msg.util.error("couldn't find recipe.")
 
-    const inventory = await this.client.inventories.fetch(msg.author.id)
+    const inventory = await Inventory.fetch(msg.author.id)
     if (!inventory.has(recipe.id)) {
       return msg.util.error(`you don't have any: **${recipe.name}**`)
     }

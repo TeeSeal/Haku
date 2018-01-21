@@ -26,9 +26,19 @@ class Util {
   }
 
   static getDBData(msg, scope) {
-    return scope === 'globally'
-      ? ['client', 'haku', scope]
-      : [`${scope}s`, msg[scope].id, `in this ${scope}`]
+    return {
+      globally: { modelName: 'Setting', formattedScope: 'globally' },
+      guild: {
+        modelName: 'Guild',
+        formattedScope: 'in this guild',
+        id: msg.guild.id,
+      },
+      channel: {
+        modelName: 'Channel',
+        formattedScope: 'in this channel',
+        id: msg.channel.id,
+      },
+    }[scope]
   }
 
   static filterObject(obj, keys, onlyTruthy) {

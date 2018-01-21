@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const { randomFrom } = require('../../util/Util')
+const { Guild } = require('../../db')
 
 class EightBallCommand extends Command {
   constructor() {
@@ -27,7 +28,7 @@ class EightBallCommand extends Command {
 
   exec(msg, args) {
     const { text, add, del } = args
-    const responses = this.client.db.guilds.get(msg.guild.id).eightBall.slice()
+    const responses = Guild.get(msg.guild.id).eightBall.slice()
 
     if (del) {
       if (!text) {
@@ -37,17 +38,17 @@ class EightBallCommand extends Command {
         return msg.util.error("couldn't find such a response.")
       }
       responses.splice(responses.indexOf(text), 1)
-      return this.client.db.guilds
-        .set(msg.guild.id, 'eightBall', responses)
-        .then(() => msg.util.success('response deleted.'))
+      return Guild.set(msg.guild.id, 'eightBall', responses).then(() =>
+        msg.util.success('response deleted.')
+      )
     }
 
     if (add) {
       if (!text) return msg.util.error('what response are you trying to add?')
       responses.push(text)
-      return this.client.db.guilds
-        .set(msg.guild.id, 'eightBall', responses)
-        .then(() => msg.util.success('new response added.'))
+      return Guild.set(msg.guild.id, 'eightBall', responses).then(() =>
+        msg.util.success('new response added.')
+      )
     }
 
     if (!text) return msg.util.error('gotta ask something.')

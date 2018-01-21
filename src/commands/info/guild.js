@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../structures/HakuEmbed')
+const { Guild } = require('../../db')
 
 class GuildInfoCommand extends Command {
   constructor() {
@@ -11,7 +12,7 @@ class GuildInfoCommand extends Command {
   }
 
   exec(msg) {
-    const config = this.client.db.guilds.get(msg.guild.id)
+    const config = Guild.get(msg.guild.id)
     const configs = [
       `Maximum amount of songs in playlist: **${config.songLimit}**`,
       `Maximum duration of a song: **${config.maxSongDuration}**`,

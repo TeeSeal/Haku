@@ -1,19 +1,18 @@
 const Song = require('./Song')
 const Playlist = require('./Playlist')
 const MusicProvider = require('./MusicProvider')
-const { defaultMusicProvider } = require('../../../config')
+const { Setting } = require('../../db')
+const keychain = require('../../../keychain')
+
+const providers = MusicProvider.loadAll(keychain)
+const playlists = new Map()
 
 class MusicHandler {
-  constructor(keychain) {
-    this.providers = MusicProvider.loadAll(keychain)
-    this.playlists = new Map()
-  }
-
-  resolveSongs(queries, opts) {
+  static resolveSongs(queries, opts) {
     return Promise.all(
       queries.map(async query => {
         const provider
-          = this.providers.find(prov => {
+          = providers.find(prov => {
             if (query.includes('~')) {
               const alias = query.split(' ').find(word => word.startsWith('~'))
 
@@ -26,7 +25,7 @@ class MusicHandler {
             }
 
             return prov.REGEXP.test(query)
-          }) || this.providers.get(defaultMusicProvider)
+          }) || providers.get(Setting.get('defaultMusicProvider'))
 
         const songs = await provider.resolveResource(query)
 
@@ -36,14 +35,18 @@ class MusicHandler {
     ).then(arr => arr.reduce((a1, a2) => a1.concat(a2), []))
   }
 
-  getPlaylist(msg, opts) {
-    if (this.playlists.has(msg.guild.id)) {
-      return this.playlists.get(msg.guild.id)
+  static getPlaylist(msg, opts) {
+    if (playlists.has(msg.guild.id)) {
+      return playlists.get(msg.guild.id)
     }
 
     const playlist = new Playlist(msg, opts, this)
-    this.playlists.set(msg.guild.id, playlist)
+    playlists.set(msg.guild.id, playlist)
     return playlist
+  }
+
+  static get playlists() {
+    return playlists
   }
 }
 

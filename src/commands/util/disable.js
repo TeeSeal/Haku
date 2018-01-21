@@ -1,11 +1,12 @@
 const { Command } = require('discord-akairo')
 const { stripIndents, getDBData } = require('../../util/Util')
+const db = require('../../db')
 
 const reserved = ['enable']
 const permCheck = {
-  client: member => member.id === member.client.ownerID,
-  guilds: member => member.permissions.has('MANAGE_GUILD'),
-  channels: member => member.permissions.has('MANAGE_CHANNLES'),
+  globally: member => member.id === member.client.ownerID,
+  guild: member => member.permissions.has('MANAGE_GUILD'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES'),
 }
 
 class DisableCommand extends Command {
@@ -57,15 +58,18 @@ class DisableCommand extends Command {
       return msg.util.error(`you can't disable **${toDisable.id}**.`)
     }
 
-    const [table, id, formattedScope] = getDBData(msg, scope)
-    if (!permCheck[table](msg.member)) {
+    const { modelName, formattedScope, id } = getDBData(msg, scope)
+    if (!permCheck[scope](msg.member)) {
       return msg.util.error(
         `you do not have permission to enable commands ${formattedScope}.`
       )
     }
 
-    const db = this.client.db[table]
-    const { disabled } = db.get(id)
+    const model = db[modelName]
+    const disabled
+      = modelName === 'Setting'
+        ? model.get('disabled')
+        : model.get(id, 'disabled')
 
     let filtered
     if (toDisable instanceof Command) {
@@ -86,7 +90,12 @@ class DisableCommand extends Command {
       }
     }
 
-    db.set(id, { disabled: disabled.concat(filtered) })
+    if (modelName === 'Setting') {
+      model.set('disabled', disabled.concat(filtered))
+    } else {
+      model.set(id, { disabled: disabled.concat(filtered) })
+    }
+
     return msg.util.success(
       `**${toDisable.id}** has been disabled ${formattedScope}.`
     )

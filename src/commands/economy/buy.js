@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 
 class BuyCommand extends Command {
   constructor() {
@@ -24,7 +25,7 @@ class BuyCommand extends Command {
     items = items.filter(item => Items.SHOP.has(item.id))
     if (items.size === 0) return msg.util.error('no such item(s) in the shop.')
 
-    const inventory = await this.client.inventories.fetch(msg.author.id)
+    const inventory = await Inventory.fetch(msg.author.id)
     const balance = inventory.currencyValue
     if (balance < items.totalValue) {
       return msg.util.error('you have insufficient funds to buy that.')

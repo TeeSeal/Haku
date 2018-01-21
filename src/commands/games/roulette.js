@@ -2,6 +2,7 @@ const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util')
 const Embed = require('../../structures/HakuEmbed')
 const Roulette = require('../../structures/games/Roulette')
+const Inventory = require('../../structures/items/InventoryHandler')
 
 const time = 30
 
@@ -49,7 +50,7 @@ class RouletteCommand extends Command {
       return msg.util.error('invalid space. Please refer to `help roulette`')
     }
 
-    const inventory = await this.client.inventories.fetch(msg.author.id)
+    const inventory = await Inventory.fetch(msg.author.id)
     if (!inventory.includes(bet)) {
       return msg.util.error('you have insufficient funds.')
     }

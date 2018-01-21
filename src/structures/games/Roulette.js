@@ -1,5 +1,5 @@
 const Collection = require('../Collection')
-const Items = require('../items/ItemHandler')
+const Items = require('../items')
 const Embed = require('../HakuEmbed')
 
 const ongoing = new Map()

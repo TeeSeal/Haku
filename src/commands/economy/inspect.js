@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 const Embed = require('../../structures/HakuEmbed')
 
 class InspectCommand extends Command {
@@ -22,7 +23,7 @@ class InspectCommand extends Command {
     const { item } = args
     if (!item) return msg.util.error("couldn't find that item.")
 
-    const inventory = await this.client.inventories.fetch(msg.author.id)
+    const inventory = await Inventory.fetch(msg.author.id)
     if (!inventory.has(item.id) && !Items.SHOP.has(item.id)) {
       return msg.util.error(
         'you can only inspect items in your inventory or in the shop.'

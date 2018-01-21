@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../structures/HakuEmbed')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
 
 class ShopCommand extends Command {
   constructor() {

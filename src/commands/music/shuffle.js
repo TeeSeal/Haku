@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../structures/HakuEmbed')
+const Music = require('../../structures/music')
 
 class ShuffleCommand extends Command {
   constructor() {
@@ -11,7 +12,7 @@ class ShuffleCommand extends Command {
   }
 
   exec(msg) {
-    const playlist = this.client.music.playlists.get(msg.guild.id)
+    const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {
@@ -26,7 +27,7 @@ class ShuffleCommand extends Command {
     )
 
     return new Embed(msg.channel, {
-      pagination: { items, page },
+      pagination: { items },
     })
       .setTitle('Shuffled playlist:')
       .setIcon(Embed.icons.LIST)

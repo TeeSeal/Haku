@@ -1,10 +1,11 @@
 const { Command } = require('discord-akairo')
 const { stripIndents, getDBData } = require('../../util/Util')
+const db = require('../../db')
 
 const permCheck = {
-  client: member => member.id === member.client.ownerID,
-  guilds: member => member.permissions.has('MANAGE_GUILD'),
-  channels: member => member.permissions.has('MANAGE_CHANNLES'),
+  globally: member => member.id === member.client.ownerID,
+  guild: member => member.permissions.has('MANAGE_GUILD'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES'),
 }
 
 class UnignoreCommand extends Command {
@@ -19,7 +20,7 @@ class UnignoreCommand extends Command {
         },
         {
           id: 'scope',
-          type: ['client', 'guild', 'channel'],
+          type: ['globally', 'guild', 'channel'],
           default: 'guild',
         },
       ],
@@ -40,15 +41,19 @@ class UnignoreCommand extends Command {
     if (!member) {
       return msg.util.error('you need to specfy a member to unignore.')
     }
+
+    const { modelName, formattedScope, id } = getDBData(msg, scope)
     if (!permCheck[scope](msg.member)) {
       return msg.util.error(
-        'you do not have permission to unignore members in that scope.'
+        `you do not have permission to enable commands ${formattedScope}.`
       )
     }
 
-    const [table, id] = getDBData(msg, scope)
-    const db = this.client.db[table]
-    const { blacklist } = db.get(id)
+    const model = db[modelName]
+    const blacklist
+      = modelName === 'Setting'
+        ? model.get('blacklist')
+        : model.get(id, 'blacklist')
 
     if (!blacklist.includes(member.id)) {
       return msg.util.error(
@@ -57,7 +62,13 @@ class UnignoreCommand extends Command {
     }
 
     blacklist.splice(blacklist.indexOf(member.id), 1)
-    db.set(id, { blacklist })
+
+    if (modelName === 'Setting') {
+      model.set('blacklist', blacklist)
+    } else {
+      model.set(id, { blacklist })
+    }
+
     return msg.util.success(
       `**${member.displayName}** has been unignored in this ${scope}.`
     )

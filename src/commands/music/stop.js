@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../structures/HakuEmbed')
 const ReactionPoll = require('../../structures/reaction/ReactionPoll')
+const Music = require('../../structures/music')
 
 const voteStops = new Set()
 
@@ -14,7 +15,7 @@ class StopCommand extends Command {
   }
 
   async exec(msg) {
-    const playlist = this.client.music.playlists.get(msg.guild.id)
+    const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
 

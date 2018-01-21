@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 
 class GiveCommand extends Command {
   constructor() {
@@ -33,7 +34,7 @@ class GiveCommand extends Command {
     const { user, items } = args
     if (!items.every(i => i)) return msg.util.error("couldn't resolve items.")
 
-    const inventory = await this.client.inventories.fetch(user.id)
+    const inventory = await Inventory.fetch(user.id)
     inventory.add(items)
     return msg.util.success(`gave ${user}: ${items}`)
   }

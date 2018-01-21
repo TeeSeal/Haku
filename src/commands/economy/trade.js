@@ -1,7 +1,8 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util')
 const Embed = require('../../structures/HakuEmbed')
-const Items = require('../../structures/items/ItemHandler')
+const Items = require('../../structures/items/')
+const Inventory = require('../../structures/items/InventoryHandler')
 const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 
 const tradingUsers = new Set()
@@ -73,8 +74,8 @@ class TradeCommand extends Command {
       return msg.util.error(`can't trade more than 5 items at once.`)
     }
 
-    const offInv = await this.client.inventories.fetch(msg.author.id)
-    const demInv = await this.client.inventories.fetch(member.id)
+    const offInv = await Inventory.fetch(msg.author.id)
+    const demInv = await Inventory.fetch(member.id)
 
     if (!offInv.includes(offer)) {
       return msg.util.error('you have insufficient funds.')

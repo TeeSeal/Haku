@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo')
 const Embed = require('../../structures/HakuEmbed')
+const Music = require('../../structures/music')
 
 class PlaylistCommand extends Command {
   constructor() {
@@ -24,7 +25,7 @@ class PlaylistCommand extends Command {
   }
 
   exec(msg, { page }) {
-    const playlist = this.client.music.playlists.get(msg.guild.id)
+    const playlist = Music.playlists.get(msg.guild.id)
     const [song, queue] = playlist
       ? [playlist.song, playlist.queue]
       : [null, null]

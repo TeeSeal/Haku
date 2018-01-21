@@ -1,5 +1,5 @@
 const ItemCollection = require('./ItemCollection')
-const ItemHandler = require('./ItemHandler')
+const ItemHandler = require('./')
 
 class Inventory extends ItemCollection {
   constructor(inventory, id, handler) {
@@ -12,7 +12,6 @@ class Inventory extends ItemCollection {
 
     this.id = id
     this.handler = handler
-
     for (const item of this.values()) item.bindTo(this)
   }
 

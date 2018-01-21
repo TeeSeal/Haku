@@ -1,6 +1,8 @@
 const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util/Util')
 const Embed = require('../../structures/HakuEmbed')
+const Music = require('../../structures/music')
+const { Guild } = require('../../db')
 
 class VolumeCommand extends Command {
   constructor() {
@@ -13,7 +15,7 @@ class VolumeCommand extends Command {
           type(word, msg) {
             if (!word || isNaN(word)) return null
             const num = parseInt(word)
-            const { maxVolume } = this.client.db.guilds.get(msg.guild.id)
+            const { maxVolume } = Guild.get(msg.guild.id)
             if (num < 1) return 1
             if (num > maxVolume) return maxVolume
             return num
@@ -32,7 +34,7 @@ class VolumeCommand extends Command {
 
   exec(msg, args) {
     const { newVolume } = args
-    const playlist = this.client.music.playlists.get(msg.guild.id)
+    const playlist = Music.playlists.get(msg.guild.id)
 
     if (!playlist) return msg.util.error('nothing is currently playing.')
     if (msg.member.voiceChannel.id !== msg.guild.me.voiceChannel.id) {

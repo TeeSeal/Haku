@@ -1,6 +1,8 @@
 const { Command } = require('discord-akairo')
-const Embed = require('../../structures/HakuEmbed')
 const { stripIndents, shuffle } = require('../../util/Util')
+const { Guild } = require('../../db')
+const Embed = require('../../structures/HakuEmbed')
+const Music = require('../../structures/music')
 
 class PlayCommand extends Command {
   constructor() {
@@ -28,7 +30,7 @@ class PlayCommand extends Command {
           type(word, msg) {
             if (!word || isNaN(word)) return null
             const num = parseInt(word)
-            const { maxVolume } = this.client.db.guilds.get(msg.guild.id)
+            const { maxVolume } = Guild.get(msg.guild.id)
             if (num < 1) return 1
             if (num > maxVolume) return maxVolume
             return num
@@ -81,10 +83,10 @@ class PlayCommand extends Command {
       )
     }
 
-    const guildOptions = this.client.db.guilds.get(msg.guild.id)
-    const playlist = this.client.music.getPlaylist(msg, guildOptions)
+    const guildOptions = Guild.get(msg.guild.id)
+    const playlist = Music.getPlaylist(msg, guildOptions)
 
-    const songs = await this.client.music.resolveSongs(queries, {
+    const songs = await Music.resolveSongs(queries, {
       member: msg.member,
       volume,
     })
