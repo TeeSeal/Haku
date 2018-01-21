@@ -21,7 +21,7 @@
   "dependencies": {
     "common-tags": "^1.5.1",
     "discord-akairo": "github:1computer1/discord-akairo",
-    "discord.js": "github:teeseal/discord.js#production",
+    "discord.js": "github:hydrabolt/discord.js",
     "fuse.js": "^3.2.0",
     "logr": "github:teeseal/logr",
     "moment": "^2.19.3",

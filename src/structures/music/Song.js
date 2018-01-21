@@ -14,7 +14,7 @@ class Song {
     const stream = await this.fetchStream()
     if (!stream) return null
 
-    this.dispatcher = connection.playStream(stream, opts)
+    this.dispatcher = connection.play(stream, opts)
     return this.dispatcher
   }
 
