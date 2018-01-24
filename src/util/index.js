@@ -86,6 +86,15 @@ class Util {
       return num
     }
   }
+
+  static flatten(arr, depth = 5) {
+    return depth !== 1
+      ? arr.reduce(
+        (a, v) => a.concat(Array.isArray(v) ? Util.flatten(v, depth - 1) : v),
+        []
+      )
+      : arr.reduce((a, v) => a.concat(v), [])
+  }
 }
 
 module.exports = new Proxy(Util, {
