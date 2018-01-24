@@ -1,8 +1,4 @@
 const DocBase = require('./DocBase')
-const { MessageEmbed } = require('discord.js')
-
-const ICON
-  = 'https://cdn.discordapp.com/icons/222078108977594368/bc226f09db83b9176c64d923ff37010b.webp'
 
 const types = {
   CLASS: 'class',
@@ -80,16 +76,9 @@ class DocElement extends DocBase {
     return `[${this.formattedName}](${this.url})`
   }
 
-  get embed() {
-    const [docs, branch] = this.doc.name.split('/')
-    const author = {
-      rpc: 'RPC Docs',
-      commando: 'Commando Docs',
-      main: `Discord.js Docs (${branch})`,
-    }[docs]
-
+  embed() {
+    const embed = this.doc.baseEmbed()
     let name = `__**${this.link}**__`
-
     const baseClass
       = this.extends && (this.doc.get(this.extends[0]) || this.extends[0])
 
@@ -101,10 +90,9 @@ class DocElement extends DocBase {
 
     if (this.access === 'private') name += ' **PRIVATE**'
 
-    const embed = new MessageEmbed()
+    embed
       .setDescription(`${name}\n${this.formatText(this.description)}`)
       .setURL(this.url)
-      .setAuthor(author, ICON)
 
     this.formatEmbed(embed)
 

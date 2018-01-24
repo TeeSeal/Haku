@@ -12,7 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/TeeSeal/Haku.git"
   },
-  "keywords": ["discord", "bot"],
+  "keywords": [
+    "discord",
+    "bot"
+  ],
   "author": "TeeSeal",
   "license": "MIT",
   "bugs": {
