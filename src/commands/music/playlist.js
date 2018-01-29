@@ -1,4 +1,5 @@
 const { Command } = require('discord-akairo')
+const { parserInRange } = require('../../util')
 const Embed = require('../../structures/HakuEmbed')
 const Music = require('../../structures/music')
 
@@ -12,7 +13,7 @@ class PlaylistCommand extends Command {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
-          type: Embed.resolvePage,
+          type: parserInRange(0),
           default: 0,
         },
         {
@@ -38,12 +39,12 @@ class PlaylistCommand extends Command {
       queue.map(s => `• ${s.linkString}`)
     )
 
-    return new Embed(msg.channel, {
-      pagination: { items, page },
-    })
+    return new Embed(msg.channel)
       .setTitle('Playlist:')
+      .setDescription(items)
       .setIcon(Embed.icons.LIST)
       .setColor(Embed.colors.BLUE)
+      .setPage(page)
       .send()
   }
 }

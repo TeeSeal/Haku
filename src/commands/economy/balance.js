@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents } = require('../../util')
+const { stripIndents, parserInRange } = require('../../util')
 const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/')
 const Inventory = require('../../structures/items/InventoryHandler')
@@ -37,12 +37,7 @@ class BalanceCommand extends Command {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return null
-            return num
-          },
+          type: parserInRange(0),
           default: 0,
         },
       ],
@@ -71,12 +66,12 @@ class BalanceCommand extends Command {
       .concat(inventory.items().map(i => i.toString()))
       .concat(inventory.recipes().map(i => i.toString()))
 
-    return new Embed(msg.channel, {
-      pagination: { items, page },
-    })
+    return new Embed(msg.channel)
       .setTitle(`${user.username}'s items:`)
+      .setDescription(items)
       .setIcon(Embed.icons.LIST)
       .setColor(Embed.colors.BLUE)
+      .setPage(page)
       .send()
   }
 }

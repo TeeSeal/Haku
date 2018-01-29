@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, shuffle, resolvePositiveInt } = require('../../util')
+const { stripIndents, shuffle, parserInRange } = require('../../util')
 const { Guild } = require('../../db')
 const Embed = require('../../structures/HakuEmbed')
 const Music = require('../../structures/music')
@@ -28,7 +28,8 @@ class PlayCommand extends Command {
           match: 'prefix',
           prefix: ['volume=', 'vol=', 'v='],
           type(word, msg) {
-            return resolvePositiveInt(word, Guild.get(msg.guild.id).maxVolume)
+            const parse = parserInRange(0, Guild.get(msg.guild.id).maxVolume)
+            return parse(word)
           },
         },
       ],

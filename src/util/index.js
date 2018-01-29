@@ -81,18 +81,10 @@ class Util {
     return word => {
       if (!word || isNaN(word)) return null
       const num = parseInt(word)
-      if (num < min) return min
-      if (num > max) return max
+      if (!isNaN(min) && num < min) return min
+      if (!isNaN(max) && num > max) return max
       return num
     }
-  }
-
-  static resolvePositiveInt(word, limit) {
-    if (!word || isNaN(word)) return null
-    const num = parseInt(word)
-    if (num < 1) return null
-    if (limit && num > limit) return limit
-    return num
   }
 }
 

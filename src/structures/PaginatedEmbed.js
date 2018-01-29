@@ -60,7 +60,8 @@ class PaginatedEmbed extends MessageEmbed {
   }
 
   setPage(number) {
-    this.page = number
+    if (isNaN(number)) return this
+    this.page = number - 1
     return this
   }
 

@@ -1,4 +1,5 @@
 const { Command } = require('discord-akairo')
+const { parserInRange } = require('../../util')
 const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/')
 
@@ -18,12 +19,7 @@ class ShopCommand extends Command {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
-          type: word => {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            if (num < 1) return null
-            return num
-          },
+          type: parserInRange(0),
           default: 0,
         },
       ],
@@ -61,12 +57,12 @@ class ShopCommand extends Command {
       ]
     })
 
-    return new Embed(msg.channel, {
-      pagination: { items: fields, page },
-    })
+    return new Embed(msg.channel)
       .setTitle('**SHOP**')
+      .setFields(fields)
       .setIcon(Embed.icons.SHOP)
       .setColor(Embed.colors.GOLD)
+      .setPage(page)
       .send()
   }
 }

@@ -26,10 +26,9 @@ class ShuffleCommand extends Command {
       playlist.queue.map(s => `• ${s.linkString}`)
     )
 
-    return new Embed(msg.channel, {
-      pagination: { items },
-    })
+    return new Embed(msg.channel)
       .setTitle('Shuffled playlist:')
+      .setDescription(items)
       .setIcon(Embed.icons.LIST)
       .setColor(Embed.colors.BLUE)
       .send()
