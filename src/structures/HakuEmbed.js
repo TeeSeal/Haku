@@ -94,8 +94,9 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
-  setDescription(description) {
-    this._description = description
+  setDescription(description, sup = false) {
+    if (sup) super.setDescription(description)
+    else this._description = description
     return this
   }
 
@@ -176,7 +177,10 @@ class HakuEmbed extends MessageEmbed {
   // Paginatino checks
   checkDescriptionPagination() {
     if (Array.isArray(this._description)) {
-      this.pagination = HakuEmbed.parsePagination(this._description)
+      this.pagination = HakuEmbed.parsePagination({
+        items: this._description,
+        page: this.page,
+      })
       return
     }
 
@@ -189,18 +193,23 @@ class HakuEmbed extends MessageEmbed {
       append: '...',
       prepend: '...',
     })
-    this.pagination = HakuEmbed.parsePagination(chunks)
+
+    this.pagination = HakuEmbed.parsePagination({
+      items: chunks,
+      page: this.page,
+      by: 1,
+    })
   }
 
   checkFieldPagination() {
+    if (this._fields.length <= this.fieldLimit) {
+      return this.setFields(this._fields, true)
+    }
+
     if (this.pagination) {
       throw new Error(
         "can't paginate both fields and description at the same time."
       )
-    }
-
-    if (this._fields.length <= this.fieldLimit) {
-      return this.setFields(this._fields, true)
     }
 
     this.pagination = HakuEmbed.parsePagination({
