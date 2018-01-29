@@ -86,6 +86,14 @@ class Util {
       return num
     }
   }
+
+  static resolvePositiveInt(word, limit) {
+    if (!word || isNaN(word)) return null
+    const num = parseInt(word)
+    if (num < 1) return null
+    if (limit && num > limit) return limit
+    return num
+  }
 }
 
 module.exports = new Proxy(Util, {

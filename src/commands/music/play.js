@@ -1,5 +1,5 @@
 const { Command } = require('discord-akairo')
-const { stripIndents, shuffle } = require('../../util')
+const { stripIndents, shuffle, resolvePositiveInt } = require('../../util')
 const { Guild } = require('../../db')
 const Embed = require('../../structures/HakuEmbed')
 const Music = require('../../structures/music')
@@ -10,7 +10,7 @@ class PlayCommand extends Command {
       aliases: ['play', 'yt'],
       channelRestriction: 'guild',
       editable: false,
-      typing: true,
+      // typing: true,
       args: [
         {
           id: 'rand',
@@ -28,12 +28,7 @@ class PlayCommand extends Command {
           match: 'prefix',
           prefix: ['volume=', 'vol=', 'v='],
           type(word, msg) {
-            if (!word || isNaN(word)) return null
-            const num = parseInt(word)
-            const { maxVolume } = Guild.get(msg.guild.id)
-            if (num < 1) return 1
-            if (num > maxVolume) return maxVolume
-            return num
+            return resolvePositiveInt(word, Guild.get(msg.guild.id).maxVolume)
           },
         },
       ],
@@ -100,10 +95,9 @@ class PlayCommand extends Command {
         obj => `• ${obj.song.linkString}\n**Reason:** ${obj.reason}`
       )
 
-      await new Embed(msg.channel, {
-        pagination: { items },
-      })
+      await new Embed(msg.channel)
         .setTitle('Failed to add:')
+        .setDescription(items)
         .setAuthor(msg.member)
         .setIcon(Embed.icons.CLEAR)
         .setColor(Embed.colors.RED)
@@ -116,10 +110,9 @@ class PlayCommand extends Command {
 
     const items = added.map(song => `• ${song.linkString}`)
 
-    const embed = new Embed(msg.channel, {
-      pagination: { items },
-    })
+    const embed = new Embed(msg.channel)
       .setTitle('Added to playlist:')
+      .setDescription(items)
       .setAuthor(msg.member)
       .setIcon(Embed.icons.PLAYLIST_ADD)
       .setColor(Embed.colors.BLUE)
