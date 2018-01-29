@@ -1,25 +1,31 @@
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed, Util: { splitMessage } } = require('discord.js')
+const { embed: { textLimit, fieldLimit } } = require('../../config')
 const { paginate } = require('../util')
 const ReactionPagination = require('./reaction/ReactionPagination')
 
 class HakuEmbed extends MessageEmbed {
-  constructor(channel, opts = {}) {
-    super(opts)
+  constructor(channel) {
+    super()
     this.channel = channel
     this.message = null
     this.sent = false
-    this.icons = []
-    this.pagination = opts.pagination
-      ? HakuEmbed.parsePagination(opts.pagination)
-      : null
 
-    this.opts = opts
+    this.icons = []
+    this.users = null
+
+    this.pagination = null
+    this.page = 0
+    this._description = ''
+    this._fields = []
+    this.textLimit = textLimit
+    this.fieldLimit = fieldLimit
   }
 
+  // Message actions
   async send() {
     if (!this.channel) throw new Error('No channel given.')
     if (this.sent) return this.edit()
-    this.setPage()
+    this.setPagination()
     this.message = await this.channel.send(this)
     this.sent = true
     if (this.pagination) this.handlePagination()
@@ -32,6 +38,7 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
+  // Custom embed methods
   attachIcon(icon) {
     if (this.icons.includes(icon)) return this
     this.icons.push(icon)
@@ -45,6 +52,33 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
+  addUser(user) {
+    if (!this.users) this.users = []
+    this.users.push(user)
+  }
+
+  setUsers(users) {
+    this.users = users
+  }
+
+  setTextLimit(number) {
+    if (number > 2000 || number < 1) return this
+    this.textLimit = number
+    return this
+  }
+
+  setFieldLimit(number) {
+    if (number > 20 || number < 1) return this
+    this.fieldLimit = number
+    return this
+  }
+
+  setPage(number) {
+    this.page = number
+    return this
+  }
+
+  // Overloaded methods
   setColor(name) {
     if (name in HakuEmbed.colors) super.setColor(HakuEmbed.colors[name])
     else super.setColor(name)
@@ -60,14 +94,29 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
-  addFields(fields) {
-    for (const field of fields) this.addField(...field)
+  setDescription(description) {
+    this._description = description
     return this
   }
 
-  setFields(fields) {
+  addField(name, value, inline = false) {
+    this._fields.push([name, value, inline])
+    return this
+  }
+
+  // Util methods
+  addFields(fields, sup = false) {
+    for (const field of fields) {
+      if (sup) super.addField(...field)
+      else this.addField(...field)
+    }
+
+    return this
+  }
+
+  setFields(fields, sup = false) {
     this.clearFields()
-    this.addFields(fields)
+    this.addFields(fields, sup)
     return this
   }
 
@@ -76,7 +125,14 @@ class HakuEmbed extends MessageEmbed {
     return this
   }
 
-  setPage(page, number) {
+  // Main pagination methods
+  setPagination() {
+    this.checkDescriptionPagination()
+    this.checkFieldPagination()
+    this.editPage()
+  }
+
+  editPage(page, number) {
     if (!this.pagination) return
     if (!page && !number) {
       number = this.pagination.page
@@ -86,12 +142,12 @@ class HakuEmbed extends MessageEmbed {
     const method
       = this.pagination.type === 'fields' ? 'setFields' : 'setDescription'
 
-    this[method](this.pagination.items[number])
-    this.setPageNumber(number)
+    this[method](this.pagination.items[number], true)
+    this.editPageNumber(number)
     this.pagination.page = number
   }
 
-  setPageNumber(number, tooltip = true) {
+  editPageNumber(number, tooltip = true) {
     if (this.pagination.items.length < 2) return
 
     const { items, totalSize } = this.pagination
@@ -103,21 +159,58 @@ class HakuEmbed extends MessageEmbed {
   }
 
   handlePagination() {
-    if (this.pagination.items.length < 2) return
     new ReactionPagination(this.message, this.pagination.items, {
       current: this.pagination.page,
-      users: this.opts.users,
+      users: this.users,
     })
       .on('switch', (page, number) => {
-        this.setPage(page, number)
+        this.editPage(page, number)
         this.edit()
       })
       .on('end', () => {
-        this.setPageNumber(this.pagination.page, false)
+        this.editPageNumber(this.pagination.page, false)
         this.edit()
       })
   }
 
+  // Paginatino checks
+  checkDescriptionPagination() {
+    if (Array.isArray(this._description)) {
+      this.pagination = HakuEmbed.parsePagination(this._description)
+      return
+    }
+
+    if (!this._description.length > this.textLimit) {
+      return super.setDescription(this._description)
+    }
+    const chunks = splitMessage(this._description, {
+      maxLength: this.textLimit,
+      char: ' ',
+      append: '...',
+      prepend: '...',
+    })
+    this.pagination = HakuEmbed.parsePagination(chunks)
+  }
+
+  checkFieldPagination() {
+    if (this.pagination) {
+      throw new Error(
+        "can't paginate both fields and description at the same time."
+      )
+    }
+
+    if (this._fields.length <= this.fieldLimit) {
+      return this.setFields(this._fields, true)
+    }
+
+    this.pagination = HakuEmbed.parsePagination({
+      items: this._fields,
+      page: this.page,
+      by: this.fieldLimit,
+    })
+  }
+
+  // Static helpers
   static parsePagination(opts) {
     if (!opts.items) return null
 
@@ -132,7 +225,6 @@ class HakuEmbed extends MessageEmbed {
     const result = {
       totalSize: opts.items.length,
       page,
-      commandName: opts.commandName,
     }
 
     result.type = Array.isArray(items[0]) ? 'fields' : 'description'
@@ -141,6 +233,14 @@ class HakuEmbed extends MessageEmbed {
     return result
   }
 
+  static resolvePage(word) {
+    if (!word || isNaN(word)) return null
+    const num = parseInt(word)
+    if (num < 1) return null
+    return num
+  }
+
+  // Constants
   static get colors() {
     return {
       YELLOW: 16763904,
@@ -174,24 +274,6 @@ class HakuEmbed extends MessageEmbed {
       POLL: 'poll.png',
       STOP: 'stop.png',
     }
-  }
-
-  static parseFields(fields) {
-    if (!fields) return []
-    return fields.map(field => {
-      return {
-        name: field[0],
-        value: field[1],
-        inline: field[2],
-      }
-    })
-  }
-
-  static resolvePage(word) {
-    if (!word || isNaN(word)) return null
-    const num = parseInt(word)
-    if (num < 1) return null
-    return num
   }
 }
 
