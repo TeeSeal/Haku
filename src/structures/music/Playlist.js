@@ -27,7 +27,7 @@ const embeds = {
       .addField('An issue occured playing this song.', `Skipping it.`)
       .setAuthor(song.member)
       .setIcon(Embed.icons.SKIP)
-      .set(Embed.colors.CYAN)
+      .setColor(Embed.colors.CYAN)
   },
 }
 

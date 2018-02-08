@@ -11,7 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/TeeSeal/Haku.git"
   },
-  "keywords": ["discord", "bot"],
+  "keywords": [
+    "discord",
+    "bot"
+  ],
   "author": "TeeSeal",
   "license": "MIT",
   "bugs": {
@@ -25,13 +28,13 @@
     "fuse.js": "^3.2.0",
     "logr": "github:teeseal/logr",
     "moment": "^2.19.3",
-    "moment-duration-format": "^1.3.0",
-    "node-fetch": "^1.7.3",
-    "opusscript": "^0.0.3",
-    "pluralize": "^5.1.0",
+    "moment-duration-format": "^2.2.1",
+    "node-fetch": "^2.0.0",
+    "opusscript": "^0.0.6",
+    "pluralize": "^7.0.0",
     "sequelize": "^4.28.7",
     "sqlite3": "^3.1.13",
-    "ytdl-core": "^0.14.4"
+    "ytdl-core": "^0.20.1"
   },
   "devDependencies": {
     "eslint": "^4.12.1"
