@@ -146,10 +146,12 @@ class DocElement extends DocBase {
   attachParams(embed) {
     if (!this.params) return
     const params = this.params.map(
-      param => stripIndents`
-			${param.formattedName} ${param.formattedType}
-			${param.description}
-		`
+      param => {
+        return stripIndents`
+          ${param.formattedName} ${param.formattedType}
+          ${param.description}
+        `
+      }
     )
 
     embed.addField('Params', params.join('\n\n'))

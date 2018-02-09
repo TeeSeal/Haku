@@ -1,6 +1,6 @@
 const request = require('snekfetch')
 const Fuse = require('fuse.js')
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed, Util: { escapeMarkdown } } = require('discord.js')
 
 const DocBase = require('./DocBase')
 const DocClass = require('./DocClass')
@@ -38,15 +38,24 @@ class Doc extends DocBase {
   }
 
   formatType(types) {
-    return types
-      .map(text => {
-        if (!/^\w+$/.test(text)) return `\\${text}`
-        const typeElem = this.children.get(text.toLowerCase())
+    const typestring = types
+      .map((text, index) => {
+        if (/<|>/.test(text)) {
+          return text
+            .split('')
+            .map(char => `\\${char}`)
+            .join('')
+        }
 
-        if (!typeElem) return `**${text}**`
-        return `**${typeElem.link}**`
+        const typeElem = this.children.get(text.toLowerCase())
+        const prependOr
+          = index !== 0 && /\w/.test(types[index - 1]) && /\w/.test(text)
+
+        return (prependOr ? '|' : '') + (typeElem ? typeElem.link : text)
       })
       .join('')
+
+    return `**${typestring}**`
   }
 
   get(query) {
@@ -134,6 +143,20 @@ class Doc extends DocBase {
     )
 
     return new Doc(name, JSON.parse(text))
+  }
+
+  static recursiveEscapeMarkdown(obj) {
+    if (typeof obj === 'string') {
+      return escapeMarkdown(obj)
+    }
+
+    if (obj instanceof Object) {
+      for (const [key, value] of Object.entries(obj)) {
+        obj[key] = Doc.recursiveEscapeMarkdown(value)
+      }
+    }
+
+    return obj
   }
 }
 
