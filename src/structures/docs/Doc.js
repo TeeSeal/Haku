@@ -25,12 +25,12 @@ class Doc extends DocBase {
 
     this.fuse = new Fuse(this.toJSON(), {
       shouldSort: true,
-      threshold: 0.3,
+      threshold: 0.5,
       location: 0,
-      distance: 40,
+      distance: 80,
       maxPatternLength: 32,
       minMatchCharLength: 1,
-      keys: ['name', 'description'],
+      keys: ['name', 'id'],
       id: 'id',
     })
 
@@ -42,6 +42,7 @@ class Doc extends DocBase {
       .map(text => {
         if (!/^\w+$/.test(text)) return `\\${text}`
         const typeElem = this.children.get(text.toLowerCase())
+
         if (!typeElem) return `**${text}**`
         return `**${typeElem.link}**`
       })
@@ -49,37 +50,50 @@ class Doc extends DocBase {
   }
 
   get(query) {
-    const [parentName, childName] = query
-      .split(/\.|#/)
-      .map(text => text.toLowerCase())
+    const terms = query.split(/\.|#/).map(text => text.toLowerCase())
 
-    const parent = this.children.get(parentName)
-    if (!parent || !childName) return parent || null
+    let elem = this.children.get(terms.shift())
+    if (!elem || !terms.length) return elem || null
 
-    const child = parent.children.get(childName)
-    return child || null
+    while (terms.length) {
+      const term = terms.shift()
+      const child = elem.children.get(term)
+
+      if (!child) return null
+      elem = terms.length && child.typeElement ? child.typeElement : child
+    }
+
+    return elem
   }
 
   search(query) {
-    const res = this.fuse.search(query).slice(0, 10)
-    return res.map(id => this.get(id))
+    const result = this.fuse.search(query).slice(0, 10)
+    if (!result.length) return null
+    return result.map(name => this.get(name))
+  }
+
+  resolveEmbed(query) {
+    const element = this.get(query)
+    if (element) return element.embed()
+
+    const searchResults = this.search(query)
+    if (!searchResults) return null
+
+    return this.baseEmbed()
+      .setTitle(`Search results:`)
+      .setDescription(searchResults.map(el => `**${el.link}**`).join('\n'))
   }
 
   toJSON() {
-    const parents = this.children.map(({ name, description }) => {
-      return { name, description, id: name }
-    })
+    const parents = this.children.map(({ name }) => ({ id: name, name }))
 
     const children = this.children
-      .map(parent => {
-        return parent.children.map(child => {
-          return {
-            name: child.name,
-            description: child.description,
-            id: `${parent.name}#${child.name}`,
-          }
-        })
-      })
+      .map(parent =>
+        parent.children.map(child => ({
+          id: `${parent.name}#${child.name}`,
+          name: child.name,
+        }))
+      )
       .reduce((a, b) => a.concat(b))
 
     return parents.concat(children)

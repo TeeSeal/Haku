@@ -12,10 +12,6 @@ class DocParam extends DocElement {
     return this.optional ? `\`[${this.name}]\`` : `\`${this.name}\``
   }
 
-  get formattedType() {
-    return this.doc.formatType(this.type)
-  }
-
   get url() {
     return null
   }

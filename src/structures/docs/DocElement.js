@@ -1,4 +1,5 @@
 const DocBase = require('./DocBase')
+const { stripIndents } = require('common-tags')
 
 const types = {
   CLASS: 'class',
@@ -69,11 +70,20 @@ class DocElement extends DocBase {
   }
 
   get formattedType() {
-    return this.type
+    return this.doc.formatType(this.type)
   }
 
   get link() {
     return `[${this.formattedName}](${this.url})`
+  }
+
+  get typeElement() {
+    if (!this.type) return null
+
+    return this.type
+      .filter(text => /^\w+$/.test(text))
+      .map(text => this.doc.children.get(text.toLowerCase()))
+      .find(elem => elem)
   }
 
   embed() {
@@ -104,6 +114,7 @@ class DocElement extends DocBase {
     this.attachMethods(embed)
     this.attachEvents(embed)
     this.attachParams(embed)
+    this.attachType(embed)
     this.attachReturn(embed)
     this.attachExamples(embed)
   }
@@ -134,11 +145,12 @@ class DocElement extends DocBase {
 
   attachParams(embed) {
     if (!this.params) return
-    const params = this.params.map(param => {
-      return `${param.formattedName} ${param.formattedType}\n${
-        param.description
-      }`
-    })
+    const params = this.params.map(
+      param => stripIndents`
+			${param.formattedName} ${param.formattedType}
+			${param.description}
+		`
+    )
 
     embed.addField('Params', params.join('\n\n'))
   }
@@ -146,6 +158,11 @@ class DocElement extends DocBase {
   attachReturn(embed) {
     if (!this.returns) return
     embed.addField('Returns', this.formattedReturn)
+  }
+
+  attachType(embed) {
+    if (!this.type) return
+    embed.addField('Type', this.formattedType)
   }
 
   attachExamples(embed) {
