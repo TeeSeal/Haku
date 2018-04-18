@@ -49,7 +49,7 @@ class Doc extends DocBase {
 
         const typeElem = this.children.get(text.toLowerCase())
         const prependOr
-          = index !== 0 && /\w/.test(types[index - 1]) && /\w/.test(text)
+          = index !== 0 && /\w|>/.test(types[index - 1]) && /\w/.test(text)
 
         return (prependOr ? '|' : '') + (typeElem ? typeElem.link : text)
       })

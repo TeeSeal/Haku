@@ -176,8 +176,15 @@ class DocElement extends DocBase {
   }
 
   formatText(text) {
+    if (!text) return ''
     return text
-      .replace(/\{@link (.+?)\}/g, (match, name) => this.doc.resolve(name).link)
+      .replace(
+        /\{@link (.+?)\}/g,
+        (match, name) => {
+          const element = this.doc.get(name)
+          return element ? element.link : name
+        }
+      )
       .replace(
         /(```[^]+?```)|(^[*-].+$)?\n(?![*-])/gm,
         (match, codeblock, hasListBefore) => {

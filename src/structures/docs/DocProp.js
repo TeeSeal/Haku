@@ -5,7 +5,7 @@ class DocProp extends DocElement {
   constructor(parent, data) {
     super(parent.doc, DocElement.types.PROP, data, parent)
     this.access = data.access || 'public'
-    this.type = flatten(data.type)[0]
+    this.type = flatten(data.type)
   }
 
   get formattedName() {
