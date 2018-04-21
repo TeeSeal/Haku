@@ -16,7 +16,7 @@ class DocMethod extends DocElement {
   get formattedName() {
     return [
       this.parent.name,
-      this.scope === 'static' ? '.' : '#',
+      this.static ? '.' : '#',
       this.name,
       '()',
     ].join('')

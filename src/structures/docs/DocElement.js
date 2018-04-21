@@ -50,7 +50,7 @@ class DocElement extends DocBase {
 
   get url() {
     const path = this.parent
-      ? `${this.parent.docType}/${this.parent.name}?scrollTo=${this.name}`
+      ? `${this.parent.docType}/${this.parent.name}?scrollTo=${this.static ? 's-' : ''}${this.name}`
       : `${this.docType}/${this.name}`
 
     return this.doc.baseURL + path
@@ -77,6 +77,10 @@ class DocElement extends DocBase {
     return `[${this.formattedName}](${this.url})`
   }
 
+  get static() {
+    return this.scope === 'static'
+  }
+
   get typeElement() {
     if (!this.type) return null
 
@@ -89,10 +93,9 @@ class DocElement extends DocBase {
   embed() {
     const embed = this.doc.baseEmbed()
     let name = `__**${this.link}**__`
-    const baseClass
-      = this.extends && (this.doc.get(this.extends[0]) || this.extends[0])
 
-    if (baseClass) {
+    if (this.extends) {
+      const baseClass = this.doc.get(this.extends[0]) || this.extends[0]
       name += ` (extends **${
         typeof baseClass === 'string' ? baseClass : baseClass.link
       }**)`
