@@ -25,11 +25,6 @@ class AnimeCommand extends Command {
     const anime = await Kitsu.resolve(query)
     if (!anime) return msg.util.error("couldn't find anime.")
 
-    const formattedSynopsis
-      = anime.synopsis.length > 1550
-        ? anime.synopsis.slice(0, 1500).concat('...')
-        : anime.synopsis
-
     return new Embed(msg.channel)
       .setTitle(`${anime.title} (${anime.japaneseTitle})`)
       .setURL(anime.url)
@@ -41,7 +36,7 @@ class AnimeCommand extends Command {
       .addField('Start Date', anime.startDate, true)
       .addField(...anime.optionalField)
       .addField('Trailer', anime.trailer)
-      .setDescription(formattedSynopsis)
+      .setDescription(anime.synopsis)
       .setThumbnail(anime.poster)
       .setColor(Embed.colors.ORANGE)
       .setAuthor(msg.member)

@@ -10,7 +10,6 @@ class PaginatedEmbed extends MessageEmbed {
     this.message = null
     this.sent = false
 
-
     this.users = null
     this.pagination = null
     this.page = 0
@@ -164,12 +163,14 @@ class PaginatedEmbed extends MessageEmbed {
       return super.setDescription(this._description)
     }
 
-    const chunks = splitMessage(this._description, {
+    let chunks = splitMessage(this._description, {
       maxLength: this.textLimit,
       char: ' ',
       append: '...',
       prepend: '...',
     })
+
+    if (typeof chunks === 'string') chunks = [chunks]
 
     this.pagination = PaginatedEmbed.parsePagination({
       items: chunks,
