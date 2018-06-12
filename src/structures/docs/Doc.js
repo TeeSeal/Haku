@@ -40,7 +40,7 @@ class Doc extends DocBase {
   formatType(types) {
     const typestring = types
       .map((text, index) => {
-        if (/<|>/.test(text)) {
+        if (/<|>|\*/.test(text)) {
           return text
             .split('')
             .map(char => `\\${char}`)
