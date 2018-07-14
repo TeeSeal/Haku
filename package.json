@@ -23,10 +23,10 @@
   "homepage": "https://github.com/TeeSeal/Haku#readme",
   "dependencies": {
     "common-tags": "^1.8.0",
-    "discord-akairo": "github:1computer1/discord-akairo",
-    "discord.js": "github:teeseal/discord.js#production",
+    "discord-akairo": "1computer1/discord-akairo#03805445a3feef113c2b6f1711f1adb46f4ac40a",
+    "discord.js": "teeseal/discord.js#production",
     "fuse.js": "^3.2.1",
-    "logr": "github:teeseal/logr",
+    "logr": "teeseal/logr",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
     "node-fetch": "^2.1.2",
