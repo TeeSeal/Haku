@@ -4,8 +4,7 @@
   "description": "A discord bot.",
   "main": "haku.js",
   "scripts": {
-    "start": "node haku.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
