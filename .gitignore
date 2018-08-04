@@ -40,3 +40,4 @@ keychain.json
 src/db/database.sqlite
 .DS_Store
 src/commands/test
+.env

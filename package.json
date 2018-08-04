@@ -4,7 +4,8 @@
   "description": "A discord bot.",
   "main": "haku.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "node -r dotenv/config index.js"
   },
   "repository": {
     "type": "git",
@@ -22,20 +23,19 @@
   "homepage": "https://github.com/TeeSeal/Haku#readme",
   "dependencies": {
     "common-tags": "^1.8.0",
-    "discord-akairo": "1computer1/discord-akairo#03805445a3feef113c2b6f1711f1adb46f4ac40a",
-    "discord.js": "teeseal/discord.js#production",
+    "discord-akairo": "1computer1/discord-akairo",
+    "discord.js": "discordjs/discord.js",
     "fuse.js": "^3.2.1",
     "logr": "teeseal/logr",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
     "node-fetch": "^2.1.2",
-    "opusscript": "^0.0.6",
     "pluralize": "^7.0.0",
     "sequelize": "^4.38.0",
-    "sqlite3": "^4.0.1",
-    "ytdl-core": "^0.20.4"
+    "sqlite3": "^4.0.1"
   },
   "devDependencies": {
+    "dotenv": "^6.0.0",
     "eslint": "^5.0.1"
   }
 }
