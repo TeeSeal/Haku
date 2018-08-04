@@ -3,7 +3,7 @@ const Items = require('../../structures/items/')
 const Inventory = require('../../structures/items/InventoryHandler')
 
 class GiveCommand extends Command {
-  constructor() {
+  constructor () {
     super('give', {
       aliases: ['give'],
       ownerOnly: true,
@@ -13,24 +13,24 @@ class GiveCommand extends Command {
       args: [
         {
           id: 'user',
-          type(word, msg) {
+          type (word, msg) {
             if (word === 'me') return msg.author
             return this.client.util.resolveUser(
               word,
               msg.guild.members.map(m => m.user)
             )
-          },
+          }
         },
         {
           id: 'items',
           match: 'rest',
-          type: Items.resolveCollection,
-        },
-      ],
+          type: Items.resolveCollection
+        }
+      ]
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { user, items } = args
     if (!items.every(i => i)) return msg.util.error("couldn't resolve items.")
 

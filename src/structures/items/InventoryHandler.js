@@ -4,7 +4,7 @@ const { User } = require('../../db')
 const inventories = new Map()
 
 class InventoryHandler {
-  static async fetch(id) {
+  static async fetch (id) {
     if (inventories.has(id)) return inventories.get(id)
 
     const inventory = await User.fetch(id, 'inventory')
@@ -16,7 +16,7 @@ class InventoryHandler {
     return instance
   }
 
-  static save(inventory) {
+  static save (inventory) {
     return User.set(inventory.id, 'inventory', inventory.toJSON())
   }
 }

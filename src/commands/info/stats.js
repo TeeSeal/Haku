@@ -6,14 +6,14 @@ const moment = require('moment')
 require('moment-duration-format')
 
 class StatsCommand extends Command {
-  constructor() {
+  constructor () {
     super('stats', {
       aliases: ['stats'],
-      description: 'Get some information about the bot.',
+      description: 'Get some information about the bot.'
     })
   }
 
-  exec(msg) {
+  exec (msg) {
     const uptime = moment
       .duration(this.client.uptime)
       .format('d[ days], h[ hours], m[ minutes, and ]s[ seconds]')
@@ -35,7 +35,7 @@ class StatsCommand extends Command {
         ['Memory Usage', memUsage, true],
         ['Uptime', uptime, true],
         ['General', general, true],
-        ['Version', version, true],
+        ['Version', version, true]
       ])
       .setColor(Embed.colors.CYAN)
       .setThumbnail(this.client.user.avatarURL())

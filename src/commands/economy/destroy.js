@@ -2,7 +2,7 @@ const { Command } = require('discord-akairo')
 const Items = require('../../structures/items/')
 
 class DestroyCommand extends Command {
-  constructor() {
+  constructor () {
     super('destroy', {
       aliases: ['destroy'],
       ownerOnly: true,
@@ -12,13 +12,13 @@ class DestroyCommand extends Command {
         {
           id: 'item',
           match: 'rest',
-          type: Items.resolveGroup,
-        },
-      ],
+          type: Items.resolveGroup
+        }
+      ]
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { item } = args
     if (!item) return msg.util.error("couldn't find that item.")
     Items.destroy(item.id)

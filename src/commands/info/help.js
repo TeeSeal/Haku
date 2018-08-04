@@ -2,21 +2,21 @@ const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util')
 
 class HelpCommand extends Command {
-  constructor() {
+  constructor () {
     super('help', {
       aliases: ['help'],
       args: [
         {
           id: 'command',
-          type: 'command',
-        },
+          type: 'command'
+        }
       ],
-      description: 'Get help.',
+      description: 'Get help.'
     })
   }
 
   // TODO: Rewrite with HakuEmbed.
-  exec(msg, args) {
+  exec (msg, args) {
     const { command } = args
     if (command) return msg.util.send(command.description)
     const channel = msg.channel.type === 'dm' ? msg.channel : msg.author

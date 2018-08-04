@@ -1,5 +1,5 @@
 class Card {
-  constructor(opts) {
+  constructor (opts) {
     this.name = opts.name
     this.image = opts.image_path
     this.description = opts.text
@@ -21,7 +21,7 @@ class Card {
 
     this.legality = {
       tcg: opts.legality.TCG.Traditional || opts.legality.TCG.Advanced,
-      ocg: opts.legality.OCG.Advanced,
+      ocg: opts.legality.OCG.Advanced
     }
 
     this.attack = opts.attack
@@ -30,7 +30,7 @@ class Card {
     this.property = opts.property
   }
 
-  getCardType(opts) {
+  getCardType (opts) {
     const type = ['Pendulum', 'Xyz', 'Synchro', 'Fusion', 'Link'].find(
       t => opts[`is_${t.toLowerCase()}`]
     )
@@ -38,13 +38,13 @@ class Card {
     return type || 'Normal'
   }
 
-  get monsterRank() {
+  get monsterRank () {
     if (this.cardType === 'Link') return `Rating ${this.linkNumber}`
     if (this.cardType === 'Xyz') return `Rank ${this.level}`
     return `Level ${this.level}`
   }
 
-  get shortDescription() {
+  get shortDescription () {
     if (this.type === 'Spell') return `${this.property} Spell Card`
     if (this.type === 'Trap') return `${this.property} Trap Card`
     return `${this.monsterRank} ${this.attribute} ${

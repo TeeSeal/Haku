@@ -1,46 +1,46 @@
 const Collection = require('../Collection')
 
 class ItemCollection extends Collection {
-  items() {
+  items () {
     return this.getType('item')
   }
-  recipes() {
+  recipes () {
     return this.getType('recipe')
   }
-  currencies() {
+  currencies () {
     return this.getType('currency')
   }
 
-  exceptCurrencies() {
+  exceptCurrencies () {
     return this.clone().filter(item => item.type !== 'currency')
   }
 
-  sortedCurrencies() {
+  sortedCurrencies () {
     return Array.from(this.currencies().values()).sort(
       (c1, c2) => c2.value - c1.value
     )
   }
 
-  get currencyString() {
+  get currencyString () {
     if (this.currencies().size === 0) return ''
     return this.sortedCurrencies()
       .map(curr => `**${curr.amount}**${curr.name}`)
       .join('  ')
   }
 
-  get currencyValue() {
+  get currencyValue () {
     return ItemCollection.getValue(this.currencies())
   }
 
-  get totalValue() {
+  get totalValue () {
     return ItemCollection.getValue(this)
   }
 
-  getType(type) {
+  getType (type) {
     return this.clone().filter(itemGroup => itemGroup.type === type)
   }
 
-  toString() {
+  toString () {
     const items = Array.from(this.values())
     if (items.length === 0) return 'nothing'
     if (items.length === 1) return items[0].toString()
@@ -48,17 +48,17 @@ class ItemCollection extends Collection {
     return `${items.join(', ')} and ${last}`
   }
 
-  clone() {
+  clone () {
     return new ItemCollection(this)
   }
 
-  toJSON() {
+  toJSON () {
     const result = {}
     for (const item of this.values()) result[item.id] = item.amount
     return result
   }
 
-  static getValue(coll) {
+  static getValue (coll) {
     return coll.reduce((amount, item) => amount + item.price, 0)
   }
 }

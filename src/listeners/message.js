@@ -5,14 +5,14 @@ const Inventory = require('../structures/items/InventoryHandler')
 const cooldowns = new Set()
 
 class MessageListener extends Listener {
-  constructor() {
+  constructor () {
     super('message', {
       emitter: 'client',
-      event: 'message',
+      event: 'message'
     })
   }
 
-  async exec(msg) {
+  async exec (msg) {
     if (!cooldowns.has(msg.author.id) && !msg.author.bot) {
       const inventory = await Inventory.fetch(msg.author.id)
       inventory.add(

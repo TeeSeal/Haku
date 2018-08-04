@@ -4,7 +4,7 @@ const Embed = require('../../structures/HakuEmbed')
 const Items = require('../../structures/items/')
 
 class ShopCommand extends Command {
-  constructor() {
+  constructor () {
     super('shop', {
       aliases: ['shop'],
       description: 'View the shop.',
@@ -13,20 +13,20 @@ class ShopCommand extends Command {
         {
           id: 'items',
           match: 'rest',
-          type: Items.resolveCollection,
+          type: Items.resolveCollection
         },
         {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
           type: parserInRange(0),
-          default: 0,
-        },
-      ],
+          default: 0
+        }
+      ]
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     let { items, page } = args
 
     const shop = Items.SHOP
@@ -53,7 +53,7 @@ class ShopCommand extends Command {
       return [
         item.name,
         Items.convertToCurrency(item.price).currencyString,
-        true,
+        true
       ]
     })
 

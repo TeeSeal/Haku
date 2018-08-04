@@ -3,7 +3,7 @@ const { stripIndents } = require('../../util')
 const { Tag } = require('../../db')
 
 class TagAddCommand extends Command {
-  constructor() {
+  constructor () {
     super('tag-add', {
       aliases: ['tag-add', 'ta', '+t', 't+', 'tag+', '+tag', 'add-tag'],
       channelRestriction: 'guild',
@@ -13,20 +13,20 @@ class TagAddCommand extends Command {
           id: 'name',
           match: 'prefix',
           prefix: ['n=', 'name='],
-          type: 'string',
+          type: 'string'
         },
         {
           id: 'type',
           match: 'prefix',
           prefix: ['t=', 'type='],
           type: ['text', 'file'],
-          default: 'text',
+          default: 'text'
         },
         {
           id: 'content',
           type: 'string',
-          match: 'rest',
-        },
+          match: 'rest'
+        }
       ],
       description: stripIndents`
         Create a new tag in the guild.
@@ -40,11 +40,11 @@ class TagAddCommand extends Command {
         **Usage:**
         \`tag-add name=smh shaking my head\` => creates a new tag called \`smh\` with the content \`shaking my head\`.
         \`tag-add name=smh type=file <IMAGE_URL>\` => when used, this tag will send the image as a file instead of displaying the link.
-      `,
+      `
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { name, content } = args
     if (!name) return msg.util.error('gotta give the tag a name.')
     if (!content) return msg.util.error('gotta give the tag some content.')

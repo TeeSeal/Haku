@@ -3,30 +3,30 @@ const { randomFrom } = require('../../util')
 const { Guild } = require('../../db')
 
 class EightBallCommand extends Command {
-  constructor() {
+  constructor () {
     super('8ball', {
       aliases: ['8ball', '8b'],
       args: [
         {
           id: 'text',
-          match: 'rest',
+          match: 'rest'
         },
         {
           id: 'add',
           match: 'flag',
-          prefix: '-add',
+          prefix: '-add'
         },
         {
           id: 'del',
           match: 'flag',
-          prefix: '-del',
-        },
+          prefix: '-del'
+        }
       ],
-      description: 'Ask the Magic 8Ball a question.',
+      description: 'Ask the Magic 8Ball a question.'
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { text, add, del } = args
     const responses = Guild.get(msg.guild.id).eightBall.slice()
 

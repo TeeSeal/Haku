@@ -3,7 +3,7 @@ const pluralize = require('pluralize')
 const { filterObject, capitalize } = require('../../util')
 
 class Recipe extends ItemGroup {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.shop = opts.shop
@@ -13,7 +13,7 @@ class Recipe extends ItemGroup {
     this.ingredients = this.recipe.ingredients
   }
 
-  toJSON() {
+  toJSON () {
     return filterObject(
       this,
       ['id', 'value', 'shop', 'type', 'rarity', 'recipe'],
@@ -21,7 +21,7 @@ class Recipe extends ItemGroup {
     )
   }
 
-  get name() {
+  get name () {
     const name = this.id
       .split(' ')
       .slice(1)
@@ -31,14 +31,14 @@ class Recipe extends ItemGroup {
     return `${pluralize(name, this.amount || 1)} 📃`
   }
 
-  examine() {
+  examine () {
     return Object.entries(this.ingredients)
       .map(([id, amount]) => `**${amount} ${id}**`)
       .join(' | ')
       .concat(` => **${this.result.amount} ${this.result.id}**`)
   }
 
-  craft() {
+  craft () {
     return new Promise((resolve, reject) => {
       const hasItems = Object.entries(this.ingredients).every(
         ([id, amount]) =>
@@ -46,9 +46,11 @@ class Recipe extends ItemGroup {
       )
 
       if (!hasItems) {
+        /* eslint-disable prefer-promise-reject-errors */
         return reject(
           'you have insufficient funds. Inspect this recipe to see what ingredients are needed.'
         )
+        /* eslint-enable prefer-promise-reject-errors */
       }
 
       for (const [id, amount] of Object.entries(this.ingredients)) {

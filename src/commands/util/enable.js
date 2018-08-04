@@ -5,18 +5,18 @@ const db = require('../../db')
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class EnableCommand extends Command {
-  constructor() {
+  constructor () {
     super('enable', {
       aliases: ['enable'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'toEnable',
-          type(word) {
+          type (word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)
@@ -26,13 +26,13 @@ class EnableCommand extends Command {
             const result = this.handler.findCommand(word)
             if (result) return result
             return this.handler.categories.get(word)
-          },
+          }
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Enable a disabled command.
@@ -44,11 +44,11 @@ class EnableCommand extends Command {
         \`enable ping\` => enables the ping command in the guild.
         \`enable ping channel\` => enables the ping command in the channel.
         \`enable !music\` => enables all music commands in the guild.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { toEnable, scope } = args
     if (!toEnable) {
       return msg.util.error('you need to specfy a command to enable.')
@@ -62,8 +62,8 @@ class EnableCommand extends Command {
     }
 
     const model = db[modelName]
-    const disabled
-      = modelName === 'Setting'
+    const disabled =
+      modelName === 'Setting'
         ? model.get('disabled')
         : model.get(id, 'disabled')
 

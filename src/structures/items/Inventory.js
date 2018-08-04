@@ -2,7 +2,7 @@ const ItemCollection = require('./ItemCollection')
 const ItemHandler = require('./')
 
 class Inventory extends ItemCollection {
-  constructor(inventory, id, handler) {
+  constructor (inventory, id, handler) {
     super(
       Object.entries(inventory)
         .map(([name, amount]) => ItemHandler.resolveGroup(name, amount))
@@ -15,7 +15,7 @@ class Inventory extends ItemCollection {
     for (const item of this.values()) item.bindTo(this)
   }
 
-  includes(items) {
+  includes (items) {
     const hasItems = items
       .exceptCurrencies()
       .every(
@@ -27,7 +27,7 @@ class Inventory extends ItemCollection {
     return false
   }
 
-  add(items, amount) {
+  add (items, amount) {
     if (items instanceof ItemCollection) {
       for (const item of items.values()) this.addItemGroup(item)
       return this
@@ -39,7 +39,7 @@ class Inventory extends ItemCollection {
     return this
   }
 
-  addItemGroup(item) {
+  addItemGroup (item) {
     if (!this.has(item.id)) {
       this.set(item.id, item.groupOf(0).bindTo(this))
     }
@@ -47,7 +47,7 @@ class Inventory extends ItemCollection {
     this.get(item.id).add(item.amount)
   }
 
-  consume(items, amount) {
+  consume (items, amount) {
     if (!(items instanceof ItemCollection)) {
       return this.add(items, -amount || -1)
     }
@@ -56,7 +56,7 @@ class Inventory extends ItemCollection {
     }
   }
 
-  setBalance(amount) {
+  setBalance (amount) {
     const currencies = ItemHandler.convertToCurrency(amount)
     for (const key of this.currencies().keys()) this.delete(key)
     for (const currency of currencies.values()) {
@@ -65,11 +65,11 @@ class Inventory extends ItemCollection {
     this.save()
   }
 
-  convertCurrencies() {
+  convertCurrencies () {
     this.setBalance(this.currencyValue)
   }
 
-  save() {
+  save () {
     return this.handler.save(this)
   }
 }

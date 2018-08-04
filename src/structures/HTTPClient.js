@@ -3,16 +3,16 @@ const { URL } = require('url')
 const { version } = require('../../package')
 
 class HTTPClient {
-  constructor(opts) {
+  constructor (opts) {
     this.baseURL = opts.baseURL
     this.params = opts.params || {}
     this.headers = {
       'User-Agent': `Haku bot v${version} (https://github.com/TeeSeal/Haku)`,
-      ...opts.headers,
+      ...opts.headers
     }
   }
 
-  get(url, type = 'json', params = {}) {
+  get (url, type = 'json', params = {}) {
     if (type instanceof Object) {
       params = type
       type = 'json'
@@ -23,7 +23,7 @@ class HTTPClient {
     )
   }
 
-  buildURL(url, params) {
+  buildURL (url, params) {
     url = new URL(url, this.baseURL)
     params = { ...this.params, ...params }
 

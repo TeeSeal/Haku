@@ -3,20 +3,20 @@ const { stripIndents } = require('common-tags')
 const { Tag } = require('../../db')
 
 const typeHandlers = {
-  text(tag, msg) {
+  text (tag, msg) {
     return msg.util.send(tag.content)
   },
-  file(tag, msg) {
+  file (tag, msg) {
     return msg.util
       .send({ files: [tag.content] })
       .catch(() =>
         msg.util.error('this tag is broken, might want to recreate it.')
       )
-  },
+  }
 }
 
 class TagCommand extends Command {
-  constructor() {
+  constructor () {
     super('tag', {
       aliases: ['tag', 't', 'tags'],
       split: 'sticky',
@@ -25,18 +25,18 @@ class TagCommand extends Command {
         {
           id: 'name',
           match: 'rest',
-          type: 'string',
+          type: 'string'
         },
         {
           id: 'rename',
           match: 'prefix',
-          prefix: ['name=', 'rename=', 'rn='],
+          prefix: ['name=', 'rename=', 'rn=']
         },
         {
           id: 'del',
           match: 'flag',
-          prefix: ['-d', '-del', '-delete'],
-        },
+          prefix: ['-d', '-del', '-delete']
+        }
       ],
       description: stripIndents`
         Show, rename or delete a tag.
@@ -52,11 +52,11 @@ class TagCommand extends Command {
         \`tag smh -delete\` => deletes the \`smh\` tag.
 
         **NOTE:** If you do not supply a tag name, all available tag names will be displayed.
-      `,
+      `
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { name, rename, del } = args
     const tags = await Tag.fetch(msg.guild.id, 'tags')
 
@@ -76,8 +76,8 @@ class TagCommand extends Command {
 
     if (del || rename) {
       if (
-        tag.author !== msg.author.id
-        || !msg.member.permissions.has('MANAGE_GUILD')
+        tag.author !== msg.author.id ||
+        !msg.member.permissions.has('MANAGE_GUILD')
       ) {
         return msg.util.error(
           `you do not have permissions to moderate the **${name}** tag.`

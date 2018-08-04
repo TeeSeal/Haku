@@ -4,21 +4,21 @@ const Embed = require('../../structures/HakuEmbed')
 const Kitsu = require('../../structures/api/kitsu/Kitsu')
 
 class AnimeCommand extends Command {
-  constructor() {
+  constructor () {
     super('anime', {
       aliases: ['anime'],
       args: [
         {
           id: 'query',
           type: 'lowercase',
-          match: 'rest',
-        },
+          match: 'rest'
+        }
       ],
-      description: 'Search kitsu.io for details on an anime.',
+      description: 'Search kitsu.io for details on an anime.'
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { query } = args
     if (!query) return msg.util.error('please specify a name.')
 

@@ -3,7 +3,7 @@ const Items = require('../../structures/items/')
 const Inventory = require('../../structures/items/InventoryHandler')
 
 class BuyCommand extends Command {
-  constructor() {
+  constructor () {
     super('buy', {
       aliases: ['buy'],
       description: 'Buy an item from the shop.',
@@ -12,13 +12,13 @@ class BuyCommand extends Command {
         {
           id: 'items',
           match: 'rest',
-          type: Items.resolveCollection,
-        },
-      ],
+          type: Items.resolveCollection
+        }
+      ]
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     let { items } = args
     if (!items) return msg.util.error("dunno what you're trying to buy.")
 

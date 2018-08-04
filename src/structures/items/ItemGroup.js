@@ -3,7 +3,7 @@ const fs = require('fs')
 const { capitalize, rootDir } = require('../../util')
 
 class ItemGroup {
-  constructor(opts) {
+  constructor (opts) {
     this.id = opts.id
     this.value = opts.value
     this.type = opts.type
@@ -11,22 +11,22 @@ class ItemGroup {
     this.setAmount(typeof opts.amount === 'number' ? opts.amount : 1)
   }
 
-  setAmount(amount) {
+  setAmount (amount) {
     this.amount = amount
     this.price = this.value * amount
     return this
   }
 
-  bindTo(inventory) {
+  bindTo (inventory) {
     this.inventory = inventory
     return this
   }
 
-  groupOf(amount) {
+  groupOf (amount) {
     return new this.constructor({ ...this.toJSON(), amount })
   }
 
-  add(amount) {
+  add (amount) {
     if (!this.inventory) return
 
     this.setAmount(this.amount + amount)
@@ -40,19 +40,19 @@ class ItemGroup {
     return this.inventory.save()
   }
 
-  consume(amount) {
+  consume (amount) {
     this.add(-amount)
   }
 
-  priceString() {
+  priceString () {
     return this.currencyPrice().currencyString
   }
 
-  examine() {
+  examine () {
     return this.description || 'Dunno what that is.'
   }
 
-  get name() {
+  get name () {
     const nameString = pluralize(this.id, Math.abs(this.amount) || 1)
       .split(' ')
       .map(word => capitalize(word))
@@ -60,7 +60,7 @@ class ItemGroup {
     return `${nameString}${this.emoji ? ` ${this.emoji}` : ''}`
   }
 
-  get imagePath() {
+  get imagePath () {
     if (this.url) return this.url
     if (fs.existsSync(`${rootDir}/assets/items/${this.id}.png`)) {
       return `${rootDir}/assets/items/${this.id}.png`
@@ -68,7 +68,7 @@ class ItemGroup {
     return null
   }
 
-  toString() {
+  toString () {
     return `**${this.amount || 1} ${this.name}**`
   }
 }

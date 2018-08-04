@@ -1,26 +1,26 @@
 const PaginatedEmbed = require('./PaginatedEmbed')
 
 class HakuEmbed extends PaginatedEmbed {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.icons = []
   }
 
   // Custom embed methods
-  attachIcon(icon) {
+  attachIcon (icon) {
     if (this.icons.includes(icon)) return this
     this.icons.push(icon)
     this.attachFiles([`src/assets/icons/${icon}`])
     return this
   }
 
-  setIcon(icon) {
+  setIcon (icon) {
     if (!this.icons.includes(icon)) this.attachIcon(icon)
     this.setThumbnail(`attachment://${icon}`)
     return this
   }
 
-  setAuthor(member) {
+  setAuthor (member) {
     if (member.user) {
       super.setAuthor(member.displayName, member.user.displayAvatarURL())
     } else {
@@ -30,7 +30,7 @@ class HakuEmbed extends PaginatedEmbed {
   }
 
   // Constants
-  static get colors() {
+  static get colors () {
     return {
       YELLOW: 16763904,
       RED: 16731469,
@@ -41,11 +41,11 @@ class HakuEmbed extends PaginatedEmbed {
       GOLD: 16758861,
       ORANGE: 16029762,
       SCARLET: 13369446,
-      WHITE: 15921906,
+      WHITE: 15921906
     }
   }
 
-  static get icons() {
+  static get icons () {
     return {
       CLEAR: 'clear.png',
       CRAFT: 'craft.png',
@@ -61,7 +61,7 @@ class HakuEmbed extends PaginatedEmbed {
       VOLUME_UP: 'volumeUp.png',
       VOLUME_DOWN: 'volumeDown.png',
       POLL: 'poll.png',
-      STOP: 'stop.png',
+      STOP: 'stop.png'
     }
   }
 }

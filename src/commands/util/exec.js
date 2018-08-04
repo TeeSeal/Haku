@@ -2,7 +2,7 @@ const { Command } = require('discord-akairo')
 const execute = require('util').promisify(require('child_process').exec)
 
 class ExecCommand extends Command {
-  constructor() {
+  constructor () {
     super('exec', {
       aliases: ['exec'],
       ownerOnly: true,
@@ -10,13 +10,13 @@ class ExecCommand extends Command {
       args: [
         {
           id: 'command',
-          match: 'rest',
-        },
-      ],
+          match: 'rest'
+        }
+      ]
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { command } = args
     if (!command) return msg.util.error('give me something to run.')
 

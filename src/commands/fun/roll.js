@@ -2,20 +2,20 @@ const { Command } = require('discord-akairo')
 const { stripIndents } = require('../../util')
 
 class RollCommand extends Command {
-  constructor() {
+  constructor () {
     super('roll', {
       aliases: ['roll'],
       args: [
         {
           id: 'from',
           type: 'integer',
-          default: 0,
+          default: 0
         },
         {
           id: 'to',
           type: 'integer',
-          default: 0,
-        },
+          default: 0
+        }
       ],
       description: stripIndents`
         Roll a random number.
@@ -27,13 +27,13 @@ class RollCommand extends Command {
         \`roll\` => random number between 1 and 100.
         \`roll 30\` => random number between 1 and 30.
         \`roll 30 100\` => random number between 30 and 100.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
-    const [from, to]
-      = args.to === 0
+  exec (msg, args) {
+    const [from, to] =
+      args.to === 0
         ? args.from === 0 ? [0, 100] : [0, args.from]
         : [args.from, args.to]
 

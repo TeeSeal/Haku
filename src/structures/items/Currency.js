@@ -3,14 +3,14 @@ const pluralize = require('pluralize')
 const { filterObject, capitalize } = require('../../util')
 
 class Currency extends ItemGroup {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.emoji = opts.emoji
     this.description = opts.description
   }
 
-  toJSON() {
+  toJSON () {
     return filterObject(
       this,
       ['id', 'value', 'description', 'emoji', 'type'],
@@ -18,10 +18,10 @@ class Currency extends ItemGroup {
     )
   }
 
-  get name() {
+  get name () {
     return (
-      this.emoji
-      || pluralize(this.id, Math.abs(this.amount) || 1)
+      this.emoji ||
+      pluralize(this.id, Math.abs(this.amount) || 1)
         .split(' ')
         .map(word => capitalize(word))
         .join(' ')

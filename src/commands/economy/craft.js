@@ -4,7 +4,7 @@ const Inventory = require('../../structures/items/InventoryHandler')
 const Embed = require('../../structures/HakuEmbed')
 
 class CraftCommand extends Command {
-  constructor() {
+  constructor () {
     super('craft', {
       aliases: ['craft'],
       description: 'Craft an item.',
@@ -13,16 +13,16 @@ class CraftCommand extends Command {
         {
           id: 'recipe',
           match: 'rest',
-          type(string) {
+          type (string) {
             if (!string.includes('recipe')) string = `recipe: ${string}`
             return Items.resolveGroup(string)
-          },
-        },
-      ],
+          }
+        }
+      ]
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { recipe } = args
     if (!recipe) return msg.util.error("couldn't find recipe.")
 
@@ -41,15 +41,15 @@ class CraftCommand extends Command {
               'Ingredients',
               Object.keys(recipe.ingredients)
                 .map(([id, amount]) => Items.resolveGroup(id, amount))
-                .join(' + '),
+                .join(' + ')
             ],
             [
               'Result',
               Items.resolveGroup(
                 recipe.result.id,
                 recipe.result.amount
-              ).toString(),
-            ],
+              ).toString()
+            ]
           ])
           .setAuthor(msg.member)
           .setIcon(Embed.icons.CRAFT)

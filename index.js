@@ -1,6 +1,5 @@
 const { AkairoClient, CommandUtil } = require('discord-akairo')
 const { ownerID } = require('./config.json')
-const { token } = require('./keychain')
 const logr = require('logr')
 const { sequelize, Guild } = require('./src/db')
 
@@ -12,17 +11,17 @@ const client = new AkairoClient({
   automateCategories: true,
   commandDirectory: 'src/commands/',
   inhibitorDirectory: 'src/inhibitors/',
-  listenerDirectory: 'src/listeners/',
+  listenerDirectory: 'src/listeners/'
 })
 
-async function init() {
+async function init () {
   try {
     logr.info('Connecting to database...')
     await sequelize.sync()
     logr.success('OK')
 
     logr.info('Logging in...')
-    client.login(token)
+    client.login(process.env.TOKEN)
   } catch (err) {
     throw err
   }
@@ -39,17 +38,17 @@ process.on('unhandledRejection', err => {
 })
 
 Object.assign(CommandUtil.prototype, {
-  info(content, opts) {
+  info (content, opts) {
     const name = this.message.member
       ? this.message.member.displayName
       : this.message.author.username
     return this.send(`**${name}** | ${content}`, opts)
   },
 
-  success(content, opts) {
+  success (content, opts) {
     return this.info(`✅ ${content}`, opts)
   },
-  error(content, opts) {
+  error (content, opts) {
     return this.info(`❌ ${content}`, opts)
-  },
+  }
 })

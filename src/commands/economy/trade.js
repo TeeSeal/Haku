@@ -8,7 +8,7 @@ const ReactionPoll = require('../../structures/reaction/ReactionPoll')
 const tradingUsers = new Set()
 
 class TradeCommand extends Command {
-  constructor() {
+  constructor () {
     super('trade', {
       aliases: ['trade'],
       channelRestriction: 'guild',
@@ -16,17 +16,17 @@ class TradeCommand extends Command {
       args: [
         {
           id: 'member',
-          type: 'member',
+          type: 'member'
         },
         {
           id: 'tradeDetails',
           match: 'rest',
-          type(string) {
+          type (string) {
             return string
               .split(' for ')
               .map(str => Items.resolveCollection(str))
-          },
-        },
+          }
+        }
       ],
       description: stripIndents`
         Trade items with someone.
@@ -45,11 +45,11 @@ class TradeCommand extends Command {
 
         **NOTE:** to ask for items in return place them after the \`for\` keyword.
         Most item names used above are not actual items, they were used for demonstrational purposes.
-      `,
+      `
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { member, tradeDetails: [offer, demand] } = args
     if (!member) {
       return msg.util.error('you need to specify a user to trade with.')
@@ -62,9 +62,9 @@ class TradeCommand extends Command {
     }
 
     if (
-      !offer
-      || !offer.every(item => item)
-      || (demand && !demand.every(item => item))
+      !offer ||
+      !offer.every(item => item) ||
+      (demand && !demand.every(item => item))
     ) {
       return msg.util.error(
         "couldn't understand your offer/demand. Use `help trade` to see how to use this correctly"
@@ -89,14 +89,14 @@ class TradeCommand extends Command {
       .addFields([
         [
           msg.author.tag,
-          offer.map(item => `**${item.amount}** ${item.name}`).join('\n'),
+          offer.map(item => `**${item.amount}** ${item.name}`).join('\n')
         ],
         [
           member.user.tag,
           demand
             ? demand.map(item => `**${item.amount}** ${item.name}`).join('\n')
-            : '---',
-        ],
+            : '---'
+        ]
       ])
       .setDescription(
         stripIndents`
@@ -115,11 +115,11 @@ class TradeCommand extends Command {
       statusMsg,
       {
         '✅': 'yes',
-        '❌': 'no',
+        '❌': 'no'
       },
       {
         users: [msg.author.id, member.id],
-        time: 6e4,
+        time: 6e4
       }
     )
 

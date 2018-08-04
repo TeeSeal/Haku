@@ -6,18 +6,18 @@ const reserved = ['enable']
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class DisableCommand extends Command {
-  constructor() {
+  constructor () {
     super('disable', {
       aliases: ['disable'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'toDisable',
-          type(word) {
+          type (word) {
             if (word.startsWith('!')) {
               word = word.slice(1)
               const result = this.handler.categories.get(word)
@@ -27,13 +27,13 @@ class DisableCommand extends Command {
             const result = this.handler.findCommand(word)
             if (result) return result
             return this.handler.categories.get(word)
-          },
+          }
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Disable a command.
@@ -45,11 +45,11 @@ class DisableCommand extends Command {
         \`disable ping\` => disables the ping command in the guild.
         \`disable ping channel\` => disables the ping command in the channel.
         \`disable !music\` => disables all music commands in the guild.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { toDisable, scope } = args
     if (!toDisable) {
       return msg.util.error('you need to specfy a command/category to disable.')
@@ -66,8 +66,8 @@ class DisableCommand extends Command {
     }
 
     const model = db[modelName]
-    const disabled
-      = modelName === 'Setting'
+    const disabled =
+      modelName === 'Setting'
         ? model.get('disabled')
         : model.get(id, 'disabled')
 

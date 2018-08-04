@@ -6,7 +6,7 @@ const ItemCollection = require('./ItemCollection')
 const itemTypes = {
   item: require('./Item'),
   recipe: require('./Recipe'),
-  currency: require('./Currency'),
+  currency: require('./Currency')
 }
 
 const items = new ItemCollection(
@@ -22,17 +22,17 @@ const fuse = new Fuse(items.array(), {
   distance: 100,
   maxPatternLength: 32,
   minMatchCharLength: 1,
-  keys: ['id'],
+  keys: ['id']
 })
 
 const baseCurrency = findBaseCurrency()
 
 class ItemHandler {
-  constructor() {
+  constructor () {
     throw new Error('this class may not be instantiated.')
   }
 
-  static findAmountAndName(string, overwriteAmount) {
+  static findAmountAndName (string, overwriteAmount) {
     const words = string.split(' ')
     let amount = [words[0], words[words.length - 1]].find(word =>
       /(^-?\d+$)|(^an?$)/.test(word)
@@ -48,7 +48,7 @@ class ItemHandler {
     return { name: words.join(' ').toLowerCase(), amount }
   }
 
-  static resolveGroup(string, count) {
+  static resolveGroup (string, count) {
     if (!string) return null
     let { name, amount } = ItemHandler.findAmountAndName(string, count)
     let recipe
@@ -68,7 +68,7 @@ class ItemHandler {
     return new itemTypes[obj.type](obj).groupOf(amount)
   }
 
-  static resolveCollection(string) {
+  static resolveCollection (string) {
     if (!string) return null
     const coll = new ItemCollection(
       string
@@ -88,7 +88,7 @@ class ItemHandler {
     return coll
   }
 
-  static convertToCurrency(amount) {
+  static convertToCurrency (amount) {
     const result = []
 
     for (const currency of items.sortedCurrencies()) {
@@ -102,21 +102,21 @@ class ItemHandler {
     )
   }
 
-  static formatName(name, amount) {
+  static formatName (name, amount) {
     return pluralize(name, amount)
       .split(' ')
       .map(word => capitalize(word))
       .join(' ')
   }
 
-  static formatRecipeName(name) {
+  static formatRecipeName (name) {
     const words = name.split(' ')
     const recipeWord = words.find(word => /recipe/.test(word))
     if (recipeWord) words.splice(words.indexOf(recipeWord), 1)
     return words.join(' ').toLowerCase()
   }
 
-  static create(opts) {
+  static create (opts) {
     if (opts.type === 'recipe') {
       opts.id = `recipe: ${ItemHandler.formatRecipeName(opts.id)}`
     }
@@ -127,31 +127,31 @@ class ItemHandler {
     return writeItems()
   }
 
-  static update(opts) {
+  static update (opts) {
     if (!items.has(opts.id)) return ItemHandler.create(opts)
     const item = new itemTypes[opts.type](opts)
     items.set(item.id, item)
     return writeItems()
   }
 
-  static destroy(id) {
+  static destroy (id) {
     if (!items.has(id)) return
     items.delete(id)
     return writeItems()
   }
 
-  static baseCurrency() {
+  static baseCurrency () {
     return new itemTypes[baseCurrency.type](baseCurrency)
   }
-  static all(filter) {
+  static all (filter) {
     return items.filter(filter)
   }
-  static get SHOP() {
+  static get SHOP () {
     return items.filter(item => item.shop)
   }
 }
 
-function findBaseCurrency() {
+function findBaseCurrency () {
   const currencies = Array.from(
     items.filter(item => item.type === 'currency').values()
   )
@@ -159,7 +159,7 @@ function findBaseCurrency() {
   return currencies[values.indexOf(Math.min(...values))]
 }
 
-function writeItems() {
+function writeItems () {
   return fs.writeFileSync(
     `${rootDir}/assets/items.json`,
     JSON.stringify(items.array().map(i => i.toJSON()), null, 2),

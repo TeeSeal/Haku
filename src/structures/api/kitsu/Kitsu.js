@@ -2,29 +2,29 @@ const HTTPClient = require('../../HTTPClient')
 const Anime = require('./Anime')
 
 class Kitsu extends HTTPClient {
-  constructor() {
+  constructor () {
     super({
       baseURL: 'https://kitsu.io/api/edge/',
       headers: {
         Accept: 'application/vnd.api+json',
-        'Content-Type': 'application/vnd.api+json',
-      },
+        'Content-Type': 'application/vnd.api+json'
+      }
     })
   }
 
-  search(query) {
+  search (query) {
     return this.get('anime', { 'filter[text]': query }).then(res => res.data[0])
   }
 
-  getByID(id) {
+  getByID (id) {
     return this.get(`anime/${id}`).then(res => res.data)
   }
 
-  getGenres(id) {
+  getGenres (id) {
     return this.get(`anime/${id}/genres`).then(res => res.data)
   }
 
-  async resolve(string) {
+  async resolve (string) {
     const result = /^\d+$/.test(string)
       ? await this.getByID(string)
       : await this.search(string)

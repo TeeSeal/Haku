@@ -2,7 +2,7 @@ const ReactionKeyboard = require('./ReactionKeyboard')
 const { EventEmitter } = require('events')
 
 class ReactionPagination extends EventEmitter {
-  constructor(message, pages, opts = {}) {
+  constructor (message, pages, opts = {}) {
     super()
     this.message = message
     this.pages = pages
@@ -14,12 +14,12 @@ class ReactionPagination extends EventEmitter {
     this.listen()
   }
 
-  listen() {
+  listen () {
     this.kb = new ReactionKeyboard(
       this.message,
       {
         '⬅': 'left',
-        '➡': 'right',
+        '➡': 'right'
       },
       this.opts
     )
@@ -39,7 +39,7 @@ class ReactionPagination extends EventEmitter {
     this.kb.once('end', () => this.emit('end'))
   }
 
-  stop() {
+  stop () {
     this.kb.stop()
   }
 }

@@ -2,14 +2,14 @@ const config = require('../../../config')
 const settings = { blacklist: [], disabled: [], ...config }
 const { extend } = require('../CollectionModel')
 
-async function afterSync() {
+async function afterSync () {
   for (const [name, value] of Object.entries(settings)) {
-    const stringValue
-      = value instanceof Object ? JSON.stringify(value) : value.toString()
+    const stringValue =
+      value instanceof Object ? JSON.stringify(value) : value.toString()
 
     const [row] = await this.findCreateFind({
       where: { name },
-      defaults: { name, value: stringValue, type: typeof value },
+      defaults: { name, value: stringValue, type: typeof value }
     })
 
     this.collection.set(row[this.pk], row)
@@ -22,17 +22,17 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        primaryKey: true
       },
       value: DataTypes.STRING,
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     {
-      hooks: { afterSync },
+      hooks: { afterSync }
     }
   )
 
-  Setting.prototype.parsedValue = function parsedValue() {
+  Setting.prototype.parsedValue = function parsedValue () {
     if (this.type === 'number') return Number(this.value)
     if (this.type === 'object') return JSON.parse(this.value)
     return this.value
@@ -42,17 +42,17 @@ module.exports = (sequelize, DataTypes) => {
   const { get } = Setting
 
   Object.assign(Setting, {
-    get(name) {
+    get (name) {
       return get.call(this, name).parsedValue()
     },
 
-    async getAll() {
+    async getAll () {
       const res = {}
       for (const setting of await this.all()) {
         res[setting.name] = setting.parsedValue()
       }
       return res
-    },
+    }
   })
 
   return Setting

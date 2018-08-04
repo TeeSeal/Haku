@@ -5,24 +5,24 @@ const db = require('../../db')
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class UnignoreCommand extends Command {
-  constructor() {
+  constructor () {
     super('unignore', {
       aliases: ['unignore', 'whitelist'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'member',
-          type: 'member',
+          type: 'member'
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Unignore an ignored user.
@@ -32,11 +32,11 @@ class UnignoreCommand extends Command {
         **Usage:**
         \`unignore TeeSeal\` => unignores the user in the current guild.
         \`unignore TeeSeal channel\` => unignores the user in the current channel.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { member, scope } = args
     if (!member) {
       return msg.util.error('you need to specfy a member to unignore.')
@@ -50,8 +50,8 @@ class UnignoreCommand extends Command {
     }
 
     const model = db[modelName]
-    const blacklist
-      = modelName === 'Setting'
+    const blacklist =
+      modelName === 'Setting'
         ? model.get('blacklist')
         : model.get(id, 'blacklist')
 

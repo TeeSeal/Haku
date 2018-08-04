@@ -5,24 +5,24 @@ const db = require('../../db')
 const permCheck = {
   globally: member => member.id === member.client.ownerID,
   guild: member => member.permissions.has('MANAGE_GUILD'),
-  channel: member => member.permissions.has('MANAGE_CHANNLES'),
+  channel: member => member.permissions.has('MANAGE_CHANNLES')
 }
 
 class IgnoreCommand extends Command {
-  constructor() {
+  constructor () {
     super('ignore', {
       aliases: ['ignore', 'blacklist'],
       channelRestriction: 'guild',
       args: [
         {
           id: 'member',
-          type: 'member',
+          type: 'member'
         },
         {
           id: 'scope',
           type: ['globally', 'guild', 'channel'],
-          default: 'guild',
-        },
+          default: 'guild'
+        }
       ],
       description: stripIndents`
         Prevent a user from using commands.
@@ -32,11 +32,11 @@ class IgnoreCommand extends Command {
         **Usage:**
         \`ignore TeeSeal\` => ignores the user in the current guild.
         \`ignore TeeSeal channel\` => ignores the user in the current channel.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { member, scope } = args
     if (!member) return msg.util.error('you need to specfy a member to ignore.')
 
@@ -48,8 +48,8 @@ class IgnoreCommand extends Command {
     }
 
     const model = db[modelName]
-    const blacklist
-      = modelName === 'Setting'
+    const blacklist =
+      modelName === 'Setting'
         ? model.get('blacklist')
         : model.get(id, 'blacklist')
 

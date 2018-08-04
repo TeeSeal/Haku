@@ -7,15 +7,15 @@ const Inventory = require('../../structures/items/InventoryHandler')
 const time = 30
 
 class RouletteCommand extends Command {
-  constructor() {
+  constructor () {
     super('roulette', {
       aliases: ['roulette', 'rlt'],
       args: [
         {
           id: 'bet',
           type: Roulette.resolveBet,
-          match: 'rest',
-        },
+          match: 'rest'
+        }
       ],
       description: stripIndents`
         Play casino roulette!
@@ -29,11 +29,11 @@ class RouletteCommand extends Command {
 
         Refer to the image below for valid betting spaces:
         https://i.imgur.com/eYQV1my.png
-      `,
+      `
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { space, bet } = args.bet
 
     if (!space) {
@@ -58,7 +58,7 @@ class RouletteCommand extends Command {
     const player = {
       id: msg.member.id,
       displayName: msg.member.displayName,
-      inventory,
+      inventory
     }
 
     const game = Roulette.findCreate(msg.channel)

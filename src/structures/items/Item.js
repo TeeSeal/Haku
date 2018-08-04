@@ -2,7 +2,7 @@ const ItemGroup = require('./ItemGroup')
 const { filterObject } = require('../../util')
 
 class Item extends ItemGroup {
-  constructor(opts) {
+  constructor (opts) {
     super(opts)
 
     this.description = opts.description
@@ -12,7 +12,7 @@ class Item extends ItemGroup {
     this.url = opts.url
   }
 
-  toJSON() {
+  toJSON () {
     return filterObject(
       this,
       ['id', 'value', 'shop', 'description', 'emoji', 'rarity', 'url', 'type'],

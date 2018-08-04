@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 class Anime {
-  constructor(opts) {
+  constructor (opts) {
     const attr = opts.attributes
     this.title = attr.titles.en_jp
     this.japaneseTitle = attr.titles.ja_jp
@@ -21,36 +21,36 @@ class Anime {
     this._endDate = attr.endDate
   }
 
-  get trailer() {
+  get trailer () {
     if (this.youtubeID) {
       return `https://www.youtube.com/watch?v=${this.youtubeID}`
     }
     return 'N/A'
   }
 
-  get ageRatingString() {
+  get ageRatingString () {
     if (![this.ageRating, this.ageRatingGuide].some(prop => prop)) return 'N/A'
     return `${this.ageRating}${
       this.ageRatingGuide ? ` | ${this.ageRatingGuide}` : ''
     }`
   }
 
-  get startDate() {
+  get startDate () {
     if (this._startDate) return moment(this._startDate).format('LL')
     return 'Not yet aired.'
   }
 
-  get endDate() {
+  get endDate () {
     if (this._endDate) return moment(this._endDate).format('LL')
     return null
   }
 
-  get airWeekDay() {
+  get airWeekDay () {
     if (this._startDate) return `${moment(this._startDate).format('dddd')}s`
     return null
   }
 
-  get optionalField() {
+  get optionalField () {
     return this.endDate
       ? ['End Date', this.endDate, true]
       : this.airWeekDay

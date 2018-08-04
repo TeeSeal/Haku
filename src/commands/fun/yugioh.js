@@ -3,21 +3,21 @@ const Embed = require('../../structures/HakuEmbed')
 const YuGiOh = require('../../structures/api/yugioh/YuGiOh')
 
 class YuGiOhCommand extends Command {
-  constructor() {
+  constructor () {
     super('yugioh', {
       aliases: ['yugioh', 'ygo'],
       args: [
         {
           id: 'query',
           type: 'lowercase',
-          match: 'rest',
-        },
+          match: 'rest'
+        }
       ],
-      description: 'Search for info on a Yu-Gi-Oh! card.',
+      description: 'Search for info on a Yu-Gi-Oh! card.'
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { query } = args
     if (!query) return msg.util.error('please specify a name.')
 
@@ -25,7 +25,7 @@ class YuGiOhCommand extends Command {
     if (!card) return msg.util.error("couldn't find card.")
 
     const fields = [
-      ['Legality', `TCG: ${card.legality.tcg} | OCG: ${card.legality.ocg}`],
+      ['Legality', `TCG: ${card.legality.tcg} | OCG: ${card.legality.ocg}`]
     ]
 
     if (card.materials) fields.unshift(['Materials', card.materials])

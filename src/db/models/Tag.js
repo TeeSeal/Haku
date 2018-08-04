@@ -6,17 +6,17 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: {
         type: DataTypes.STRING,
-        primaryKey: true,
+        primaryKey: true
       },
       tags: {
         type: DataTypes.JSON,
-        defaultValue: [],
-      },
+        defaultValue: []
+      }
     },
     {
       hooks: {
-        afterSync: setDefaults,
-      },
+        afterSync: setDefaults
+      }
     }
   )
 

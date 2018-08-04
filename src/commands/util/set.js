@@ -4,7 +4,7 @@ const Music = require('../../structures/music')
 const { Guild } = require('../../db')
 
 class SetCommand extends Command {
-  constructor() {
+  constructor () {
     super('set', {
       aliases: ['default', 'def', 'set'],
       channelRestriction: 'guild',
@@ -14,26 +14,26 @@ class SetCommand extends Command {
           id: 'maxSongDuration',
           match: 'prefix',
           prefix: ['duration=', 'length=', 'd='],
-          type: parserInRange(1, 240),
+          type: parserInRange(1, 240)
         },
         {
           id: 'defaultVolume',
           match: 'prefix',
           prefix: ['volume=', 'vol='],
-          type: parserInRange(1, 100),
+          type: parserInRange(1, 100)
         },
         {
           id: 'maxVolume',
           match: 'prefix',
           prefix: ['maxVolume=', 'maxVol=', 'mv='],
-          type: parserInRange(1, 100),
+          type: parserInRange(1, 100)
         },
         {
           id: 'songLimit',
           match: 'prefix',
           prefix: ['songLimit=', 'songs=', 'maxSongs=', 'sl='],
-          type: parserInRange(1, 100),
-        },
+          type: parserInRange(1, 100)
+        }
       ],
       description: stripIndents`
         Set some default values for the guild.
@@ -46,11 +46,11 @@ class SetCommand extends Command {
         **Usage:**
         \`set duration=20 volume=30 maxVolume=70\` => sets the values.
         \`set duration=20 v=30 mv=70\` => shortcuts.
-      `,
+      `
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     const { maxSongDuration, defaultVolume, maxVolume, songLimit } = args
     if (!Object.keys(args).some(key => args[key])) {
       return msg.util.error('what are you trying to update?')
@@ -58,7 +58,7 @@ class SetCommand extends Command {
 
     const {
       defaultVolume: dbDefaultVolume,
-      maxVolume: dbMaxVolume,
+      maxVolume: dbMaxVolume
     } = Guild.get(msg.guild.id)
     const playlist = Music.playlists.get(msg.guild.id)
     const obj = {}
@@ -104,7 +104,7 @@ class SetCommand extends Command {
   }
 }
 
-function getExpression(obj) {
+function getExpression (obj) {
   const arr = Object.keys(obj).map(key => `**${key}**(${obj[key]})`)
   if (arr.length === 1) return arr[0]
   const last = arr.pop()

@@ -2,7 +2,7 @@ const { Command } = require('discord-akairo')
 const Items = require('../../structures/items/')
 
 class CreateCommand extends Command {
-  constructor() {
+  constructor () {
     super('create', {
       aliases: ['create'],
       ownerOnly: true,
@@ -11,13 +11,13 @@ class CreateCommand extends Command {
       args: [
         {
           id: 'type',
-          type: ['item', 'recipe', 'currency'],
+          type: ['item', 'recipe', 'currency']
         },
         {
           id: 'id',
           match: 'prefix',
           prefix: ['name=', 'n='],
-          type: 'lowercase',
+          type: 'lowercase'
         },
         {
           id: 'value',
@@ -28,55 +28,55 @@ class CreateCommand extends Command {
             const num = parseInt(word)
             if (num < 1) return 1
             return num
-          },
+          }
         },
         {
           id: 'shop',
           match: 'flag',
           prefix: ['-inShop', '-shop', '-s'],
-          default: false,
+          default: false
         },
         {
           id: 'description',
           match: 'prefix',
           prefix: ['description=', 'desc=', 'd='],
-          default: 'This item has no description.',
+          default: 'This item has no description.'
         },
         {
           id: 'emoji',
           match: 'prefix',
-          prefix: ['emoji=', 'e='],
+          prefix: ['emoji=', 'e=']
         },
         {
           id: 'rarity',
           match: 'prefix',
           prefix: ['rarity=', 'r='],
           type: ['common', 'uncommon', 'rare', 'epic', 'legendary'],
-          default: 'common',
+          default: 'common'
         },
         {
           id: 'url',
           match: 'prefix',
           prefix: ['url=', 'link='],
-          type: 'url',
+          type: 'url'
         },
         {
           id: 'result',
           match: 'prefix',
           prefix: ['result=', 'r='],
-          type: Items.resolveGroup,
+          type: Items.resolveGroup
         },
         {
           id: 'ingredients',
           match: 'prefix',
           prefix: ['ingredients=', 'i='],
-          type: Items.resolveCollection,
-        },
-      ],
+          type: Items.resolveCollection
+        }
+      ]
     })
   }
 
-  exec(msg, args) {
+  exec (msg, args) {
     for (const prop of ['type', 'id', 'value']) {
       if (!args[prop]) return msg.util.error(`please specify **${prop}**`)
     }
@@ -93,9 +93,9 @@ class CreateCommand extends Command {
       args.recipe = {
         result: {
           id: args.result.id,
-          amount: args.result.amount,
+          amount: args.result.amount
         },
-        ingredients: args.ingredients.toJSON(),
+        ingredients: args.ingredients.toJSON()
       }
     }
 

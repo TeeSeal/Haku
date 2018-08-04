@@ -5,7 +5,7 @@ const Items = require('../../structures/items/')
 const Inventory = require('../../structures/items/InventoryHandler')
 
 class BalanceCommand extends Command {
-  constructor() {
+  constructor () {
     super('balance', {
       aliases: ['balance', 'inventory', 'bal'],
       ownderOnly: true,
@@ -26,28 +26,28 @@ class BalanceCommand extends Command {
         {
           id: 'user',
           type: 'user',
-          default: msg => msg.author,
+          default: msg => msg.author
         },
         {
           id: 'item',
           match: 'rest',
-          type: Items.resolveGroup,
+          type: Items.resolveGroup
         },
         {
           id: 'page',
           match: 'prefix',
           prefix: ['page=', 'p='],
           type: parserInRange(0),
-          default: 0,
-        },
-      ],
+          default: 0
+        }
+      ]
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { user, item, page } = args
-    const [pron, neg, pos]
-      = user.id === msg.author.id
+    const [pron, neg, pos] =
+      user.id === msg.author.id
         ? ['you', "don't", 'have']
         : [user.username, "doesn't", 'has']
 

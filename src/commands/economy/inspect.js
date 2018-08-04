@@ -4,7 +4,7 @@ const Inventory = require('../../structures/items/InventoryHandler')
 const Embed = require('../../structures/HakuEmbed')
 
 class InspectCommand extends Command {
-  constructor() {
+  constructor () {
     super('inspect', {
       aliases: ['inspect'],
       description: 'Inspect an item.',
@@ -13,13 +13,13 @@ class InspectCommand extends Command {
         {
           id: 'item',
           match: 'rest',
-          type: Items.resolveGroup,
-        },
-      ],
+          type: Items.resolveGroup
+        }
+      ]
     })
   }
 
-  async exec(msg, args) {
+  async exec (msg, args) {
     const { item } = args
     if (!item) return msg.util.error("couldn't find that item.")
 
@@ -38,12 +38,12 @@ class InspectCommand extends Command {
             'Ingredients',
             Object.entries(item.ingredients)
               .map(([id, amount]) => Items.resolveGroup(id, amount))
-              .join(' + '),
+              .join(' + ')
           ],
           [
             'Result',
-            Items.resolveGroup(item.result.id, item.result.amount).toString(),
-          ],
+            Items.resolveGroup(item.result.id, item.result.amount).toString()
+          ]
         ])
         .setIcon(Embed.icons.CRAFT)
         .setColor(Embed.colors.GOLD)
@@ -52,7 +52,7 @@ class InspectCommand extends Command {
     }
 
     return msg.util.send(item.examine(), {
-      files: item.imagePath ? [item.imagePath] : [],
+      files: item.imagePath ? [item.imagePath] : []
     })
   }
 }
